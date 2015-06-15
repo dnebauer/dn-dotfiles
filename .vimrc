@@ -112,13 +112,12 @@ NeoBundle 'mattn/calendar-vim'                                  " }}}3
     " - papercolor
     NeoBundle 'NLKNguyen/papercolor-theme'                      " }}}3
 " completion                                                    " {{{3
-NeoBundle 'Shougo/neocomplete'         " completion engine
-    " most recently used
-    NeoBundle 'Shougo/neomru.vim'
-    " perl completion
-    NeoBundle 'c9s/perlomni.vim'
-NeoBundle 'Shougo/neosnippet'          " snippets engine
-NeoBundle 'honza/vim-snippets'         " snippets collection
+NeoBundle 'Shougo/neocomplete'                 " completion engine
+    NeoBundle 'Shougo/neomru.vim'              " most recently used
+    NeoBundle 'Shougo/context_filetype.vim'    " contextual filetype
+    NeoBundle 'c9s/perlomni.vim'               " perl completion
+NeoBundle 'Shougo/neosnippet'                  " snippets engine
+    NeoBundle 'honza/vim-snippets'             " snippets collection
 " delimitate (autocomplete parens, quotes, brackets, etc.)        {{{3
 NeoBundle 'raimondi/delimitmate'                                " }}}3
 " domains (find meaning of internet domain)                       {{{3
@@ -507,22 +506,26 @@ endif
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
                                                                 " }}}2
 " snippets                                                        {{{2
-" plugin key-mappings
+" plugin key-mappings                                             {{{3
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_target)
-" SuperTab like snippets behaviour
+" SuperTab like snippets behaviour                                {{{3
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
+            \ "\<Plug>(neosnippet_expand_or_jump)"
+            \ : pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
-" for snippet_complete marker
+            \ "\<Plug>(neosnippet_expand_or_jump)"
+            \ : "\<TAB>"
+" for snippet_complete marker                                     {{{3
 if has('conceal')
     set conceallevel=2 concealcursor=niv
-endif
-
+endif                                                           " }}}3
+" use ultisnips snippets                                          {{{3
+let g:neosnippet#snippets_directory =
+            \ $VIMHOME . '/bundle/vim-snippets/snippets/'
+                                                                " }}}3
+                                                                " }}}2
 " NAVIGATION AND EDITING KEYS:                                  " {{{1
 " unite.vim                                                       {{{3
 " - buffers
