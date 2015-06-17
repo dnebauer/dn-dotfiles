@@ -92,6 +92,9 @@ zle -N magic-enter
 bindkey -M viins   '^M'  magic-enter
 # - tmux help
 autoload helptmux
+# - git aliases
+autoload git-add-all
+alias gaa=git-add-all
 
 # Oh My Zsh configuration
 # =======================
