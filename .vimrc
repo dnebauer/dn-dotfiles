@@ -793,6 +793,156 @@ augroup all_files
                 \ endtry                                        " }}}2
 augroup END
 
+" PRINTING:                                                       {{{1
+" windows                                                         {{{2
+"   use default print system                                      }}}2
+" unix                                                            {{{2
+"   pseudocode                                                    {{{3
+"   if kprinter4 available
+"     if iconv and enscript also available
+"       - use iconv to convert encoding to latin1
+"       - use enscript to wrap text, add header/footer
+"         and create postscript file
+"       - use kprinter4 to print postscript
+"     else
+"       - use vim's default postscript output
+"       - use kprinter4 to print postscript
+"     endif
+"   else
+"     fall back to vim default
+"   endif                                                         }}}3
+" function VrcUseVimPostScript(fname)                             {{{3
+" intent: print vim's postscript output
+" params: 1 - filepath to vim's postscript output
+" prints: feedback
+" return: nil
+" depend: assumes kprinter4 is available
+" note:   vim handles return values from printing as per v:shell_error
+"         that is, boolean values are reversed (1=failure, 0=success)
+function! VrcUseVimPostScript(fname)
+    let l:print_cmd = 'kprinter4' . ' ' . shellescape(a:fname)
+    let l:feedback = systemlist(l:print_cmd)
+    if v:shell_error
+        echoerr 'Problem with printing'
+        echoerr 'Command executed was:'
+        echoerr '  ' . l:print_cmd
+        if len(l:feedback)
+            echoerr 'Shell feedback:'
+            for l:line in l:feedback
+                echo '  ' . l:line
+            endfor
+        endif
+    endif
+    call delete(a:fname)
+    return v:shell_error
+endfunction                                                     " }}}3
+" function VrcCreatePostScript(fname)                             {{{3
+" intent: create own postscript and print it
+" params: 1 - filepath to vim's postscript output
+" prints: feedback
+" return: nil
+" depend: assumes kprinter4, iconv and enscript are available
+" note:   vim handles return values from printing as per v:shell_error
+"         that is, boolean values are reversed (1=failure, 0=success)
+function! VrcCreatePostScript(fname)
+    " in this function return boolean values are reversed
+    " - vim clearly expects return values as per v:shell_error logic
+    " ignoring vim's postscript output and creating our own
+    call delete(a:fname)
+    " get filepath of postscript output file
+    let l:ps_output = tempname() . '.ps'
+    let l:source = expand('%p')
+    " generate postscript
+    " - iconv converts encoding to latin1
+    " - enscript generate postscript
+    "   . bug means enscript does not honour its '--footer' argument
+    "   . can fix with custom header file
+    "   . use custom header file '~/.enscript/simple2.hdr' if present
+    "   . additional bug means '$=' escape for total page count does not work
+    "   . so use 'Page X' rather than 'Page X of Y' in footer
+    let l:postscript_cmd = ''
+                \ . ' ' . 'iconv'
+                \ . ' ' . '-c '
+                \ . ' ' . '--from-code=' . &encoding
+                \ . ' ' . '--to-code=iso-8859-1'
+                \ . ' ' . shellescape(l:source)
+                \ . ' ' . '|'
+                \ . ' ' . 'enscript'
+                \ . ' ' . '--word-wrap'
+                \ . ' ' . '--mark-wrapped-lines=arrow'
+    if filereadable(resolve($HOME . '/.enscript/simple2.hdr'))
+        let l:postscript_cmd .= ' ' . '--fancy-header=simple2'
+    endif
+    let l:postscript_cmd .= ''
+                \ . ' ' . "--header='|" . l:source . "|%D{%Y-%m-%d %H:%M}'"
+                \ . ' ' . "--footer='|Page $%|'"
+                \ . ' ' . '--output=' . shellescape(l:ps_output)
+    let l:feedback = systemlist(l:postscript_cmd)
+    if v:shell_error
+        echo 'Problem generating postscript'
+        echo 'Command executed was:'
+        echo '  ' . l:postscript_cmd
+        if len(l:feedback)
+            echo 'Shell feedback:'
+            for l:line in l:feedback
+                echo '  ' . l:line
+            endfor
+        endif
+        return 1
+    endif
+    " print postscript file
+    let l:print_cmd = 'kprinter4' . ' ' . shellescape(l:ps_output)
+    let l:feedback = systemlist(l:print_cmd)
+    if v:shell_error
+        echoerr 'Problem with printing'
+        echoerr 'Command executed was:'
+        echoerr '  ' . l:print_cmd
+        if len(l:feedback)
+            echoerr 'Shell feedback:'
+            for l:line in l:feedback
+                echo '  ' . l:line
+            endfor
+        endif
+    endif
+    return v:shell_error
+endfunction                                                     " }}}3
+" command PrintFeature                                            {{{3
+" function DnPrintFeature()                                       {{{4
+" intent: set to print using vim's postscript output (has colour syntax)
+"         or using enscript-generated postscript (has word wrap)
+" params: nil
+" prints: user question and feedback
+" return: nil
+function! DnPrintFeature()
+    if executable('kprinter4')
+        if executable('iconv') && executable('enscript')
+            echo 'Can print with colour syntax or wrapping (but not both!)'
+            let l:prompt = 'Use which feature?'
+            let l:options = "Colour &syntax\n&Word wrap\n&Cancel"
+            let l:choice = confirm(l:prompt, l:options, 0, 'Question')
+            if l:choice == 1
+                set printexpr=VrcUseVimPostScript(v:fname_in)
+                echo 'Set to print with colour syntax'
+            elseif l:choice == 2
+                set printexpr=VrcCreatePostScript(v:fname_in)
+                echo 'Set to print with word wrap'
+            endif
+        else    " kprinter4 present but missing iconv and/or enscript
+            set printexpr=VrcUseVimPostScript(v:fname_in)
+            echo 'Not possible to print using word wrap'
+            echo 'Set to print using colour syntax'
+        endif
+    else
+        echo 'Using default printer settings'
+    endif
+endfunction                                                     " }}}4
+command! PrintFeature call DnPrintFeature()                     " }}}3
+" default setting                                                 {{{3
+if $VIM_OS == 'unix' && executable('kprinter4')
+    set printexpr=VrcUseVimPostScript(v:fname_in)
+endif                                                           " }}}3
+                                                                " }}}2
+
 " MISCELLANEOUS:                                                  {{{1
 " use of clipboard with copying                                   {{{2
 " - all yanked, deleted, changed and pasted text is
@@ -818,140 +968,6 @@ if $VIM_OS == 'unix'
     set dictionary-=/usr/share/dict/words
     set dictionary+=/usr/share/dict/words
 endif                                                           " }}}2
-" printing                                                        {{{2
-" print options                                                   {{{3
-" - accept defaults:
-"   paper = A4, duplex = long, collate = yes,
-"   include syntax colour = try                                   }}}3
-" print routine                                                   {{{3
-if $VIM_OS == 'unix'
-" - two methods are provided below
-" - first (VrcPrintFile) sends vim-generated postscript
-"   to kprinter
-"   . note this method does not line wrap
-" - second (VrcPrintWrapFile) ignores vim postscript file
-"   . it uses enscript to wrap file and generate postscript
-"   . then uses kprinter to print the postscript output
-    function! VrcPrintFile(fname)                               " {{{4
-        " printer must accept postscript file
-        " must be able to add postscript filepath directly to args
-        let l:printer_cmd = 'kprinter4'
-        let l:printer_args = ' '
-        " check for needed executables
-        if !executable(l:printer_cmd)
-            call delete(a:fname)
-            echo "Need '" . l:printer_cmd . "' to print output"
-            return 1
-        endif
-        " print
-        let l:cmd = l:printer_cmd . l:printer_args . shellescape(a:fname)
-        let l:feedback = []
-        let l:feedback = systemlist(l:cmd)
-        if v:shell_error
-            echoerr 'Problem with printing'
-            echoerr 'Command executed was:'
-            echoerr '  ' . l:cmd
-            if len(l:feedback)
-                echoerr 'Shell feedback:'
-                for l:line in l:feedback
-                    echo '  ' . l:line
-                endfor
-            endif
-        endif
-        call delete(a:fname)
-        return v:shell_error
-    endfunction                                                 " }}}4
-    function! VrcPrintWrapFile(fname)                           " {{{4
-        " in this function return boolean values are reversed
-        " - vim clearly expects return values as per v:shell_error logic
-        " ignoring vim's postscript output and creating our own
-        call delete(a:fname)
-        " get filepath of postscript output file
-        let l:ps_output = tempname() . '.ps'
-        let l:source = expand('%p')
-        " encoder
-        " - ensures text can be read by preprocessor
-        let l:converter = 'iconv'
-        let l:converter_cmd = l:converter
-                    \ . ' ' . '-c '
-                    \ . ' ' . '--from-code=' . &encoding
-                    \ . ' ' . '--to-code=iso-8859-1'
-                    \ . ' ' . shellescape(l:source)
-        " preprocessor must produce postscript output
-        " - enscript has a bug that means it does not honour the
-        "   '--footer' argument
-        " - a custom header file can be used
-        " - the custom header is assumed to be '~/.enscript/simple2.hdr'
-        " - despite this the $= escape for total pacge count does not work
-        " - hence the format below of 'Page X' rather than 'Page X of Y'
-        let l:preprocessor = 'enscript'
-        let l:preprocessor_cmd = l:converter_cmd . ' ' . '|'  
-                    \ . ' ' . l:preprocessor
-                    \ . ' ' . '--word-wrap'
-                    \ . ' ' . '--mark-wrapped-lines=arrow'
-        if filereadable(resolve($HOME . '/.enscript/simple2.hdr'))
-            let l:preprocessor_cmd .= ' ' . '--fancy-header=simple2'
-        endif
-        let l:preprocessor_cmd .=
-                    \   ' ' . "--header='|" . l:source . "|%D{%Y-%m-%d %H:%M}'"
-                    \ . ' ' . "--footer='|Page $%|'"
-                    \ . ' ' . '--output=' . shellescape(l:ps_output)
-        " printer must accept postscript file
-        " must be able to add postscript filepath directly to args
-        let l:printer = 'kprinter4'
-        let l:printer_cmd = l:printer
-                    \ . ' ' . shellescape(l:ps_output)
-        " check for needed executables
-        if !executable(l:converter)
-            echo "Need '" . l:converter. "' to encode source"
-            return 1
-        endif
-        if !executable(l:preprocessor)
-            echo "Need '" . l:preprocessor. "' to preprocess output"
-            return 1
-        endif
-        if !executable(l:printer)
-            echo "Need '" . l:printer . "' to print output"
-            return 1
-        endif
-        " preprocess
-        let l:feedback = []
-        let l:feedback = systemlist(l:preprocessor_cmd)
-        if v:shell_error
-            echo 'Problem with preprocessing output'
-            echo 'Command executed was:'
-            echo '  ' . l:preprocessor_cmd
-            if len(l:feedback)
-                echo 'Shell feedback:'
-                for l:line in l:feedback
-                    echo '  ' . l:line
-                endfor
-            endif
-            return 1
-        endif
-        " print
-        let l:feedback = []
-        let l:feedback = systemlist(l:printer_cmd)
-        if v:shell_error
-            echoerr 'Problem with printing'
-            echoerr 'Command executed was:'
-            echoerr '  ' . l:printer_cmd
-            if len(l:feedback)
-                echoerr 'Shell feedback:'
-                for l:line in l:feedback
-                    echo '  ' . l:line
-                endfor
-            endif
-        endif
-        return v:shell_error
-    endfunction                                                 " }}}4
-    if executable('enscript')
-        set printexpr=VrcPrintWrapFile(v:fname_in)
-    else
-        set printexpr=VrcPrintFile(v:fname_in)
-    endif
-endif
-                                                                " }}}2
 " avoid using shift for ':'                                       {{{2
 " ';' synonym for ':': : [N,V]
 nnoremap ; :
