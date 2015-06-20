@@ -44,13 +44,37 @@ function! VrcHasFunction(function, plugin)
         echoerr "Plugin '" . a:plugin . "' does not appear to be loaded"
     endif
 endfunction                                                     " }}}2
+" function VrcAddThesaurus(thesaurus)                             {{{2
+" intent: add thesaurus file
+" params: 1 - thesaurus filepath
+" prints: error message if thesaurus file not found
+" return: nil
+function! VrcAddThesaurus(thesaurus)
+    " make sure thesaurus file exists
+    if strlen(a:thesaurus) == 0
+        return
+    endif
+    if !filereadable(resolve(expand(a:thesaurus)))
+        echoerr "Cannot find thesaurus file '" . a:thesaurus . "'"
+        return
+    endif
+    " add to thesaurus file variable (string, comma-delimited)
+    if strlen(a:thesaurus) > 0
+        let &thesaurus .= ','
+    endif
+    let &thesaurus .= a:thesaurus
+endfunction                                                     " }}}2
 
 " VARIABLES:                                                    " {{{1
-" set local home variable $VIMHOME                                {{{2
+" set os-dependent variables                                      {{{2
 if has('win32') || has ('win64')
-    let $VIMHOME = $HOME . '/vimfiles'
+    let $VIM_HOME = $HOME . '/vimfiles'
+    let $VIM_RC = '_vimrc'
+    let $VIM_OS = 'windows'
 elseif has('unix')
-    let $VIMHOME = $HOME . '/.vim'
+    let $VIM_HOME = $HOME . '/.vim'
+    let $VIM_RC = '.vimrc'
+    let $VIM_OS = 'unix'
 endif                                                           " }}}2
 
 " HANDLE PLUGINS:                                               " {{{1
@@ -73,8 +97,8 @@ if system('uname -o') =~ '^GNU/'
     let g:make = 'make'
 endif
 " load neobundle
-set runtimepath+=$VIMHOME/bundle/neobundle.vim/
-call neobundle#begin(expand("$VIMHOME/bundle/"))
+set runtimepath+=$VIM_HOME/bundle/neobundle.vim/
+call neobundle#begin(expand("$VIM_HOME/bundle/"))
 " load plugins                                                    {{{2
 " neobundle manages itself                                        {{{3
 NeoBundleFetch 'Shougo/neobundle.vim'
@@ -118,6 +142,7 @@ NeoBundle 'Shougo/neocomplete'                 " completion engine
     NeoBundle 'c9s/perlomni.vim'               " perl completion
 NeoBundle 'Shougo/neosnippet'                  " snippets engine
     NeoBundle 'honza/vim-snippets'             " snippets collection
+    NeoBundle 'Shougo/neosnippet-snippets'     " prevent runtime error
 " delimitate (autocomplete parens, quotes, brackets, etc.)        {{{3
 NeoBundle 'raimondi/delimitmate'                                " }}}3
 " domains (find meaning of internet domain)                       {{{3
@@ -267,14 +292,14 @@ set showmatch
 " guifont: any spaces after commas must be escaped
 "          cannot use quotes around font name
 if has('gui_running')
-    if has('unix')
+    if $VIM_OS == 'unix'
         set guifont=Andale\ Mono\ 18,
                     \\ FreeMono\ 16,
                     \\ Courier\ 18,
                     \\ Bitstream\ Vera\ Sans\ Mono\ 16,
                     \\ Monospace\ 18
     endif
-    if has('win32') || has('win64')
+    if $VIM_OS == 'windows'
         set gfn=Bitstream\ Vera\ Sans\ Mono:h10
     endif
 else  " no gui
@@ -346,6 +371,23 @@ let g:tagbar_type_markdown = {
         \ 's' : 'section',
     \ },
     \ 'sort': 0,
+\ }                                                             " }}}3
+" perl support                                                    {{{3
+" - based on ctags settings in ctags config file
+" - ctags config file provided by debian package 'dn-ctags-conf'
+let g:tagbar_type_perl = {
+    \ 'ctagstype': 'perl',
+    \ 'kinds' : [
+        \ 'a:attribute',
+        \ 't:subtype',
+        \ 's:subroutines',
+        \ 'c:constants',
+        \ 'e:extends',
+        \ 'u:use',
+        \ 'r:role',
+    \ ],
+    \ 'sro' : '::',
+    \ 'kind2scope' : {},
 \ }                                                             " }}}3
 " php support                                                   " {{{3
 " - from https://github.com/vim-php/tagbar-phpctags.vim
@@ -523,7 +565,7 @@ if has('conceal')
 endif                                                           " }}}3
 " use ultisnips snippets                                          {{{3
 let g:neosnippet#snippets_directory =
-            \ $VIMHOME . '/bundle/vim-snippets/snippets/'
+            \ $VIM_HOME . '/bundle/vim-snippets/snippets/'
                                                                 " }}}3
                                                                 " }}}2
 " NAVIGATION AND EDITING KEYS:                                  " {{{1
@@ -622,7 +664,7 @@ vnoremap <silent> <Leader>r :call VrcVisual('replace')<CR>
 nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 
 " SPELLING AND THESAURUS:                                         {{{1
-" using combined AU/GB spell file in $VIMHOME/spell/
+" using combined AU/GB spell file in $VIM_HOME/spell/
 set spell spelllang=en_au
 " function VrcSpellStatus()                                       {{{2
 " intent: display spell check status
@@ -662,6 +704,8 @@ nnoremap <Leader>s? z=
 " jump to misspelled word and make suggestions: ]= , [= [N,V]
 noremap ]= ]sz=
 noremap [= [sz=
+" add thesaurus
+call VrcAddThesaurus($VIM_HOME . '/thes/moby.thes')
 
 " SAVING AND BUFFER BEHAVIOUR:                                    {{{1
 " auto re-read of file if changed outside vim
@@ -676,12 +720,12 @@ set history=50
 " undo history persists in a file
 set undofile
 " avoid clutter of backup|swap|undo files in local dir
-if has('unix')
+if $VIM_OS == 'unix'
     set directory=./backup,~/var/vim/swap,.,/tmp
     set backupdir=./backup,~/var/vim/backup,.,/tmp
     set undodir=./backup,~/var/vim/undo,.,/tmp
 endif
-if has('win32') || has('win64')
+if $VIM_OS == 'windows'
     set directory=C:/Windows/Temp
     set backupdir=C:/Windows/Temp
     set undodir=C:/Windows/Temp
@@ -770,17 +814,144 @@ set clipboard=unnamed,autoselect                                " }}}2
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,
             \.ind,.idx,.ilg,.inx,.out,.toc                      " }}}2
 " dictionaries                                                    {{{2
-if has('unix')
-    set dictionary-=/usr/share/dict/words dictionary+=/usr/share/dict/words
+if $VIM_OS == 'unix'
+    set dictionary-=/usr/share/dict/words
+    set dictionary+=/usr/share/dict/words
 endif                                                           " }}}2
 " printing                                                        {{{2
-set printoptions=paper:A4,duplex:off,collate:n,syntax:n
-if has('unix')
-    if executable('kprinter')
-        set printexpr=system('kprinter'\ .\ '\ '\ .\ v:fname_in)\
-            \ .\ delete(v:fname_in)\ +\ v:shell_error
+" print options                                                   {{{3
+" - accept defaults:
+"   paper = A4, duplex = long, collate = yes,
+"   include syntax colour = try                                   }}}3
+" print routine                                                   {{{3
+if $VIM_OS == 'unix'
+" - two methods are provided below
+" - first (VrcPrintFile) sends vim-generated postscript
+"   to kprinter
+"   . note this method does not line wrap
+" - second (VrcPrintWrapFile) ignores vim postscript file
+"   . it uses enscript to wrap file and generate postscript
+"   . then uses kprinter to print the postscript output
+    function! VrcPrintFile(fname)                               " {{{4
+        " printer must accept postscript file
+        " must be able to add postscript filepath directly to args
+        let l:printer_cmd = 'kprinter4'
+        let l:printer_args = ' '
+        " check for needed executables
+        if !executable(l:printer_cmd)
+            call delete(a:fname)
+            echo "Need '" . l:printer_cmd . "' to print output"
+            return 1
+        endif
+        " print
+        let l:cmd = l:printer_cmd . l:printer_args . shellescape(a:fname)
+        let l:feedback = []
+        let l:feedback = systemlist(l:cmd)
+        if v:shell_error
+            echoerr 'Problem with printing'
+            echoerr 'Command executed was:'
+            echoerr '  ' . l:cmd
+            if len(l:feedback)
+                echoerr 'Shell feedback:'
+                for l:line in l:feedback
+                    echo '  ' . l:line
+                endfor
+            endif
+        endif
+        call delete(a:fname)
+        return v:shell_error
+    endfunction                                                 " }}}4
+    function! VrcPrintWrapFile(fname)                           " {{{4
+        " in this function return boolean values are reversed
+        " - vim clearly expects return values as per v:shell_error logic
+        " ignoring vim's postscript output and creating our own
+        call delete(a:fname)
+        " get filepath of postscript output file
+        let l:ps_output = tempname() . '.ps'
+        let l:source = expand('%p')
+        " encoder
+        " - ensures text can be read by preprocessor
+        let l:converter = 'iconv'
+        let l:converter_cmd = l:converter
+                    \ . ' ' . '-c '
+                    \ . ' ' . '--from-code=' . &encoding
+                    \ . ' ' . '--to-code=iso-8859-1'
+                    \ . ' ' . shellescape(l:source)
+        " preprocessor must produce postscript output
+        " - enscript has a bug that means it does not honour the
+        "   '--footer' argument
+        " - a custom header file can be used
+        " - the custom header is assumed to be '~/.enscript/simple2.hdr'
+        " - despite this the $= escape for total pacge count does not work
+        " - hence the format below of 'Page X' rather than 'Page X of Y'
+        let l:preprocessor = 'enscript'
+        let l:preprocessor_cmd = l:converter_cmd . ' ' . '|'  
+                    \ . ' ' . l:preprocessor
+                    \ . ' ' . '--word-wrap'
+                    \ . ' ' . '--mark-wrapped-lines=arrow'
+        if filereadable(resolve($HOME . '/.enscript/simple2.hdr'))
+            let l:preprocessor_cmd .= ' ' . '--fancy-header=simple2'
+        endif
+        let l:preprocessor_cmd .=
+                    \   ' ' . "--header='|" . l:source . "|%D{%Y-%m-%d %H:%M}'"
+                    \ . ' ' . "--footer='|Page $%|'"
+                    \ . ' ' . '--output=' . shellescape(l:ps_output)
+        " printer must accept postscript file
+        " must be able to add postscript filepath directly to args
+        let l:printer = 'kprinter4'
+        let l:printer_cmd = l:printer
+                    \ . ' ' . shellescape(l:ps_output)
+        " check for needed executables
+        if !executable(l:converter)
+            echo "Need '" . l:converter. "' to encode source"
+            return 1
+        endif
+        if !executable(l:preprocessor)
+            echo "Need '" . l:preprocessor. "' to preprocess output"
+            return 1
+        endif
+        if !executable(l:printer)
+            echo "Need '" . l:printer . "' to print output"
+            return 1
+        endif
+        " preprocess
+        let l:feedback = []
+        let l:feedback = systemlist(l:preprocessor_cmd)
+        if v:shell_error
+            echo 'Problem with preprocessing output'
+            echo 'Command executed was:'
+            echo '  ' . l:preprocessor_cmd
+            if len(l:feedback)
+                echo 'Shell feedback:'
+                for l:line in l:feedback
+                    echo '  ' . l:line
+                endfor
+            endif
+            return 1
+        endif
+        " print
+        let l:feedback = []
+        let l:feedback = systemlist(l:printer_cmd)
+        if v:shell_error
+            echoerr 'Problem with printing'
+            echoerr 'Command executed was:'
+            echoerr '  ' . l:printer_cmd
+            if len(l:feedback)
+                echoerr 'Shell feedback:'
+                for l:line in l:feedback
+                    echo '  ' . l:line
+                endfor
+            endif
+        endif
+        return v:shell_error
+    endfunction                                                 " }}}4
+    if executable('enscript')
+        set printexpr=VrcPrintWrapFile(v:fname_in)
+    else
+        set printexpr=VrcPrintFile(v:fname_in)
     endif
-endif                                                           " }}}2
+endif
+                                                                " }}}2
 " avoid using shift for ':'                                       {{{2
 " ';' synonym for ':': : [N,V]
 nnoremap ; :
@@ -821,8 +992,8 @@ augroup END                                                     " }}}2
 " - reload after changing
 augroup vimrc_files
     au!
-    if has('unix') && filereadable($HOME . '/.vimrc')
-        au BufWritePost .vimrc source ~/.vimrc
+    if $VIM_OS == 'unix'
+        au BufWritePost .vimrc source %
     endif
 augroup END                                                     " }}}2
 " txt2tags                                                        {{{2
