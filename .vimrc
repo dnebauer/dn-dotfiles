@@ -64,6 +64,20 @@ function! VrcAddThesaurus(thesaurus)
     endif
     let &thesaurus .= a:thesaurus
 endfunction                                                     " }}}2
+" function VrcHasExecutables(executables)                         {{{3
+" intent: ensure all executables are available
+" params: 1 - list of executables
+" prints: nil - fails silently if executables missing
+" return: boolean
+function! VrcHasExecutables(executables)
+    let l:result = 1    " true
+    for l:executable in a:executables
+        if !executable(l:executable)
+            let l:result = 0    " false
+        endif
+    endfor
+    return l:result
+endfunction                                                     " }}}3
 
 " VARIABLES:                                                    " {{{1
 " set os-dependent variables                                      {{{2
@@ -868,7 +882,7 @@ function! VrcEnscriptPostScript(fname)
     call delete(a:fname)
     " get filepath of postscript output file
     let l:ps_output = tempname() . '.ps'
-    let l:source = expand('%p')
+    let l:source = expand('%')
     " generate postscript
     " - iconv converts encoding to latin1
     " - enscript generate postscript
@@ -918,11 +932,136 @@ function! VrcEnscriptPostScript(fname)
     let l:print_cmd = 'kprinter4' . ' ' . shellescape(l:ps_output)
     let l:feedback = systemlist(l:print_cmd)
     if v:shell_error
-        echoerr 'Problem with printing'
-        echoerr 'Command executed was:'
-        echoerr '  ' . l:print_cmd
+        echo 'Problem with printing'
+        echo 'Command executed was:'
+        echo '  ' . l:print_cmd
         if len(l:feedback)
-            echoerr 'Shell feedback:'
+            echo 'Shell feedback:'
+            for l:line in l:feedback
+                echo '  ' . l:line
+            endfor
+        endif
+    endif
+    return v:shell_error
+endfunction                                                     " }}}3
+" function VrcHighlightLanguages()                                {{{3
+" intent: get list of supported highlight languages
+" params: nil
+" prints: nil
+" return: nil
+" depend: assumes highlight is available
+function! VrcHighlightLanguages()
+    let l:cmd = ''
+                \ . ' ' . 'highlight --list-scripts=langs'
+                \ . ' ' . '|'
+                \ . ' ' . 'grep -v ''^$'''
+                \ . ' ' . '|'
+                \ . ' ' . 'sed ''1d'''
+                \ . ' ' . '|'
+                \ . ' ' . 'sed ''$d'''
+                \ . ' ' . '|'
+                \ . ' ' . 'cut -d '':'' -f 2'
+                \ . ' ' . '|'
+                \ . ' ' . 'sed ''s/([^)]\+)//'''
+                \ . ' ' . '|'
+                \ . ' ' . 'sed ''s/^ \+//'''
+                \ . ' ' . '|'
+                \ . ' ' . 'sed ''s/ \+$//'''
+    let l:langs = systemlist(l:cmd)
+    if v:shell_error
+        echo 'Problem getting list of supported highlight languages'
+        echo 'Command executed was:'
+        echo '  ' . l:cmd
+        if len(l:feedback)
+            echo 'Shell feedback:'
+            for l:line in l:langs
+                echo '  ' . l:line
+            endfor
+        endif
+        return 0    " failure
+    endif
+    return l:langs
+endfunction                                                     " }}}3
+" function VrcHighlightPostScript(fname)                          {{{3
+" intent: create postscript from enscript and print it
+" params: 1 - filepath to vim's default postscript output
+" prints: feedback
+" return: nil
+" depend: assumes kprinter4, iconv and enscript are available
+" note:   vim handles return values from printing as per v:shell_error
+"         that is, boolean values are reversed (1=failure, 0=success)
+function! VrcHighlightPostScript(fname)
+    " in this function return boolean values are reversed
+    " - vim clearly expects return values as per v:shell_error logic
+    " ignoring vim's postscript output and creating our own
+    call delete(a:fname)
+    " get temporary directory name
+    let l:tempdir_cmd = 'mktemp --directory'
+    let l:tempdir = system(l:tempdir_cmd)
+    let l:tempdir = l:tempdir[:-2]    " chomp trailing newline
+    if v:shell_error
+        echo 'Problem creating temporary directory'
+        echo 'Command executed was:'
+        echo '  ' . l:tempdir_cmd
+        echo 'Shell feedback:'
+        echo '  ' . l:tempdir
+        return 1
+    endif
+    " get filepath of postscript output file
+    let l:ps_output = l:tempdir . '/texput.ps'
+    let l:source = expand('%')
+    " generate postscript
+    " - highlight generates highlighted latex output
+    " - latex generates dvi output from latex
+    " - dvips generates postscript output from dvi
+" visually appealing styles:
+"     bright, edit-gedit, edit-msvs2008, edit-vim, nuvola, peaksea
+    let l:postscript_cmd = ''
+                \ . ' ' . 'cp'
+                \ . ' ' . shellescape(l:source)
+                \ . ' ' . shellescape(l:tempdir . '/')
+                \ . ' ' . '&&'
+                \ . ' ' . 'cd ' . shellescape(l:tempdir)
+                \ . ' ' . '&&'
+                \ . ' ' . 'highlight'
+                \ . ' ' . '--input=' . shellescape(l:source)
+    let l:langs = VrcHighlightLanguages()
+    if count(l:langs, &filetype)
+        let l:postscript_cmd .= ''
+                \ . ' ' . '--syntax=' . &filetype
+    endif
+    let l:postscript_cmd .= ''
+                \ . ' ' . '--out-format=latex'
+                \ . ' ' . '--doc-title=' . shellescape(l:source)
+                \ . ' ' . '--line-length=65'
+                \ . ' ' . '--wrap'
+                \ . ' ' . '--style=edit-vim'
+                \ . ' ' . '|'
+                \ . ' ' . 'latex'
+                \ . ' ' . '&&'
+                \ . ' ' . 'dvips texput.dvi'
+    let l:feedback = systemlist(l:postscript_cmd)
+    if v:shell_error
+        echo 'Problem generating postscript'
+        echo 'Command executed was:'
+        echo '  ' . l:postscript_cmd
+        if len(l:feedback)
+            echo 'Shell feedback:'
+            for l:line in l:feedback
+                echo '  ' . l:line
+            endfor
+        endif
+        return 1
+    endif
+    " print postscript file
+    let l:print_cmd = 'kprinter4' . ' ' . shellescape(l:ps_output)
+    let l:feedback = systemlist(l:print_cmd)
+    if v:shell_error
+        echo 'Problem with printing'
+        echo 'Command executed was:'
+        echo '  ' . l:print_cmd
+        if len(l:feedback)
+            echo 'Shell feedback:'
             for l:line in l:feedback
                 echo '  ' . l:line
             endfor
@@ -939,40 +1078,99 @@ endfunction                                                     " }}}3
 " prints: user question and feedback
 " return: nil
 function! DnPostScriptSource()
-    if executable('kprinter4')
-        if executable('iconv') && executable('enscript')
-            echo ' '
-            echo 'There are two possible sources of postscript for printing:'
-            echo '- vim''s default postscript output'
-            echo '  . has colour syntax'
-            echo '  . has no word wrapping'
-            echo '- enscript'
-            echo '  . has word wrap'
-            echo '  . has colour syntax if filetype is supported by enscript'
-            echo ' '
-            echo 'Current postscript source: ' . g:dn_ps_source
-            echo ' '
-            let l:prompt = 'Select postscript source:'
-            let l:options = "&Vim\n&Enscript\n&Cancel"
-            let l:choice = confirm(l:prompt, l:options, 0, 'Question')
-            if l:choice == 1
+    let l:map_choices = {}
+    let l:choices_index = 1
+    let l:has_choice = 0    " false
+    let l:choices = ''
+    let l:msg = []
+    call add(l:msg, ' ')
+    call add(l:msg, 'Checking for methods of generating '
+                \ . 'postscript for printing:')
+    " vim- and kprinter4-based method
+    let l:exes = ['kprinter4']
+    if VrcHasExecutables(l:exes)
+        call add(l:msg, ' ')
+        call add(l:msg, '- avilable: vim and kprinter4')
+        call add(l:msg, '  . has colour syntax')
+        call add(l:msg, '  . no word wrapping')
+        let l:choices .= "\n&Vim"
+        let l:map_choices[l:choices_index] = 'vim'
+        let l:choices_index += 1
+        let l:has_choice = 1    " true
+    else
+        call add(l:msg, ' ')
+        call add(l:msg, '- NOT available: vim- and kprinter4-based method')
+        call add(l:msg, '  . the following tools are all required:')
+        call add(l:msg, '    ' . join(l:exes, ', '))
+    endif
+    " enscript- and kprinter4-based method
+    let l:exes = ['enscript', 'kprinter4', 'iconv']
+    if VrcHasExecutables(l:exes)
+        call add(l:msg, ' ')
+        call add(l:msg, '- avilable: enscript and kprinter4')
+        call add(l:msg, '  . has word wrap')
+        call add(l:msg, '  . has colour syntax if enscript'
+                    \     . 'supports filetype')
+        let l:choices .= "\n&Enscript"
+        let l:map_choices[l:choices_index] = 'enscript'
+        let l:choices_index += 1
+        let l:has_choice = 1    " true
+    else
+        call add(l:msg, ' ')
+        call add(l:msg, '- NOT available: enscript- and kprinter4-based method')
+        call add(l:msg, '  . the following tools are all required:')
+        call add(l:msg, '    ' . join(l:exes, ', '))
+    endif
+    " highlight- and kprinter4-based method
+    let l:exes = ['highlight', 'kprinter4', 'latex', 'dvips']
+    call extend(l:exes, ['sed', 'grep', 'cut', 'mktemp'])
+    if VrcHasExecutables(l:exes)
+        call add(l:msg, ' ')
+        call add(l:msg, '- avilable: highlight and kprinter4')
+        call add(l:msg, '  . has word wrap')
+        call add(l:msg, '  . has colour syntax if highlight '
+                    \     . 'supports filetype')
+        let l:choices .= "\n&Highlight"
+        let l:map_choices[l:choices_index] = 'highlight'
+        let l:choices_index += 1
+        let l:has_choice = 1    " true
+    else
+        call add(l:msg, ' ')
+        call add(l:msg, '- NOT available: highlight- and kprinter4-based method')
+        call add(l:msg, '  . the following tools are all required:')
+        call add(l:msg, '    ' . join(l:exes, ', '))
+    endif
+    call add(l:msg, ' ')
+    call add(l:msg, 'Postscript generation currently based on: ' 
+                    \ . g:dn_ps_source)
+    call add(l:msg, ' ')
+    for l:line in l:msg
+        echo l:line
+    endfor
+    " choose if choices available
+    if l:has_choice
+        let l:prompt = 'Select postscript method:'
+        let l:choices .= "\n&Cancel"
+        let l:choices = strpart(l:choices, 1)
+        let l:choice = confirm(l:prompt, l:choices, 0, 'Question')
+        if has_key(l:map_choices, l:choice)
+            let g:dn_ps_source = l:map_choices[l:choice]
+            if     g:dn_ps_source == 'vim'
                 set printexpr=VrcUseVimPostScript(v:fname_in)
-                let g:dn_ps_source = 'vim'
-                echo 'Current postscript source: ' . g:dn_ps_source
-            elseif l:choice == 2
+            elseif g:dn_ps_source == 'enscript'
                 set printexpr=VrcEnscriptPostScript(v:fname_in)
-                let g:dn_ps_source = 'enscript'
-                echo 'Current postscript source: ' . g:dn_ps_source
+            elseif g:dn_ps_source == 'highlight'
+                set printexpr=VrcHighlightPostScript(v:fname_in)
+            else
+                echoerr "Unexpected value of '" . g:dn_ps_source 
+                            \ . "' for g:dn_ps_source"
             endif
-        else    " kprinter4 present but missing iconv and/or enscript
-            echo 'The only postscript output available is vim''s postscript'
-            echo 'output (has colour syntax but not word wrapping)'
-            set printexpr=VrcUseVimPostScript(v:fname_in)
-            let g:dn_ps_source = 'vim'
-            echo 'Current postscript source: ' . g:dn_ps_source
+            call VrcMsg('Current postscript source: ' . g:dn_ps_source, 1)
+            execute 'redraw!'
         endif
     else
-        echo 'Using default printer settings'
+        echo 'There are no alternative methods currently available'
+        echo 'for generating postscript'
     endif
 endfunction                                                     " }}}4
 command! PostScriptSource call DnPostScriptSource()             " }}}3
