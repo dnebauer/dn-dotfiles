@@ -811,20 +811,6 @@ augroup END
 " windows                                                         {{{2
 "   use default print system                                      }}}2
 " unix                                                            {{{2
-"   pseudocode                                                    {{{3
-"   if kprinter4 available
-"     if iconv and enscript also available
-"       - use iconv to convert encoding to latin1
-"       - use enscript to wrap text, add header/footer
-"         and create postscript file
-"       - use kprinter4 to print postscript
-"     else
-"       - use vim's default postscript output
-"       - use kprinter4 to print postscript
-"     endif
-"   else
-"     fall back to vim default
-"   endif                                                         }}}3
 " function VrcUseVimPostScript(fname)                             {{{3
 " intent: print vim's postscript output
 " params: 1 - filepath to vim's postscript output
