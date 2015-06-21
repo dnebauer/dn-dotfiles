@@ -836,15 +836,32 @@ function! VrcUseVimPostScript(fname)
     call delete(a:fname)
     return v:shell_error
 endfunction                                                     " }}}3
-" function VrcCreatePostScript(fname)                             {{{3
-" intent: create own postscript and print it
-" params: 1 - filepath to vim's postscript output
+" function VrcEnscriptLanguages()                                 {{{3
+" intent: get list of supported enscript highlight languages
+" params: nil
+" prints: nil
+" return: nil
+" depend: assumes enscript is available
+function! VrcEnscriptLanguages()
+    let l:output = systemlist('enscript --help-highlight')
+    let l:langs = []
+    for l:line in l:output
+        if l:line =~ '^Name: [A-Za-z]\+$'
+            let l:lang = tolower(strpart(l:line, 6))
+            call add(l:langs, l:lang)
+        endif
+    endfor
+    return l:langs
+endfunction                                                     " }}}3
+" function VrcEnscriptPostScript(fname)                           {{{3
+" intent: create postscript from enscript and print it
+" params: 1 - filepath to vim's default postscript output
 " prints: feedback
 " return: nil
 " depend: assumes kprinter4, iconv and enscript are available
 " note:   vim handles return values from printing as per v:shell_error
 "         that is, boolean values are reversed (1=failure, 0=success)
-function! VrcCreatePostScript(fname)
+function! VrcEnscriptPostScript(fname)
     " in this function return boolean values are reversed
     " - vim clearly expects return values as per v:shell_error logic
     " ignoring vim's postscript output and creating our own
@@ -868,6 +885,13 @@ function! VrcCreatePostScript(fname)
                 \ . ' ' . shellescape(l:source)
                 \ . ' ' . '|'
                 \ . ' ' . 'enscript'
+    let l:langs = VrcEnscriptLanguages()
+    if count(l:langs, &filetype)
+        let l:postscript_cmd .= ''
+                \ . ' ' . '--color=1'
+                \ . ' ' . '--highlight=' . &filetype
+    endif
+    let l:postscript_cmd .= ''
                 \ . ' ' . '--word-wrap'
                 \ . ' ' . '--mark-wrapped-lines=arrow'
     if filereadable(resolve($HOME . '/.enscript/simple2.hdr'))
@@ -906,40 +930,60 @@ function! VrcCreatePostScript(fname)
     endif
     return v:shell_error
 endfunction                                                     " }}}3
-" command PrintFeature                                            {{{3
-" function DnPrintFeature()                                       {{{4
-" intent: set to print using vim's postscript output (has colour syntax)
-"         or using enscript-generated postscript (has word wrap)
+" command PostScriptSource                                        {{{3
+" function DnPostScriptSource()                                   {{{4
+" intent: select source of postscript: vim's postscript output (has
+"         colour syntax) or enscript-generated postscript (has word
+"         wrap and colour syntax if language supported by enscript)
 " params: nil
 " prints: user question and feedback
 " return: nil
-function! DnPrintFeature()
+function! DnPostScriptSource()
     if executable('kprinter4')
         if executable('iconv') && executable('enscript')
-            echo 'Can print with colour syntax or wrapping (but not both!)'
-            let l:prompt = 'Use which feature?'
-            let l:options = "Colour &syntax\n&Word wrap\n&Cancel"
+            echo ' '
+            echo 'There are two possible sources of postscript for printing:'
+            echo '- vim''s default postscript output'
+            echo '  . has colour syntax'
+            echo '  . has no word wrapping'
+            echo '- enscript'
+            echo '  . has word wrap'
+            echo '  . has colour syntax if filetype is supported by enscript'
+            echo ' '
+            echo 'Current postscript source: ' . g:dn_ps_source
+            echo ' '
+            let l:prompt = 'Select postscript source:'
+            let l:options = "&Vim\n&Enscript\n&Cancel"
             let l:choice = confirm(l:prompt, l:options, 0, 'Question')
             if l:choice == 1
                 set printexpr=VrcUseVimPostScript(v:fname_in)
-                echo 'Set to print with colour syntax'
+                let g:dn_ps_source = 'vim'
+                echo 'Current postscript source: ' . g:dn_ps_source
             elseif l:choice == 2
-                set printexpr=VrcCreatePostScript(v:fname_in)
-                echo 'Set to print with word wrap'
+                set printexpr=VrcEnscriptPostScript(v:fname_in)
+                let g:dn_ps_source = 'enscript'
+                echo 'Current postscript source: ' . g:dn_ps_source
             endif
         else    " kprinter4 present but missing iconv and/or enscript
+            echo 'The only postscript output available is vim''s postscript'
+            echo 'output (has colour syntax but not word wrapping)'
             set printexpr=VrcUseVimPostScript(v:fname_in)
-            echo 'Not possible to print using word wrap'
-            echo 'Set to print using colour syntax'
+            let g:dn_ps_source = 'vim'
+            echo 'Current postscript source: ' . g:dn_ps_source
         endif
     else
         echo 'Using default printer settings'
     endif
 endfunction                                                     " }}}4
-command! PrintFeature call DnPrintFeature()                     " }}}3
+command! PostScriptSource call DnPostScriptSource()             " }}}3
 " default setting                                                 {{{3
-if $VIM_OS == 'unix' && executable('kprinter4')
-    set printexpr=VrcUseVimPostScript(v:fname_in)
+if $VIM_OS == 'unix'
+    if executable('kprinter4')
+        set printexpr=VrcUseVimPostScript(v:fname_in)
+        let g:dn_ps_source = 'vim'
+    endif
+else
+    let g:dn_ps_source = 'default'
 endif                                                           " }}}3
                                                                 " }}}2
 
