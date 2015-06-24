@@ -168,7 +168,7 @@ NeoBundle 'mbadran/headlights'                                  " }}}3
 " info (gnu info documentation viewer)                            {{{3
 NeoBundle 'info.vim'                                            " }}}3
 " latex                                                           {{{3
-NeoBundle 'coot/atp_vim'
+NeoBundle 'coot/atp_vim'    " Automatic LaTeX Plugin for Vim
 NeoBundle 'dnebauer/vim-dn-latex'                               " }}}3
 " markdown support                                                {{{3
 NeoBundle 'dnebauer/vim-dn-markdown'                            " }}}3
@@ -209,7 +209,8 @@ NeoBundle 'majutsushi/tagbar'
         " configured later under TagBar configuration             }}}3
 " thesaurus (online, mapped to <Leader>K)                         {{{3
 NeoBundle 'beloglazov/vim-online-thesaurus'                     " }}}3
-" tmux navigator (navigation within vim and tmux splits)          {{{3
+" tmux                                                            {{{3
+NeoBundle 'tmux-plugins/vim-tmux'    " tmux.conf ftplugin
 NeoBundle 'christoomey/vim-tmux-navigator'                      " }}}3
 " vcscommand (CVS, SVN, SVK, git, bzr, and hg integration)        {{{3
 NeoBundle 'vcscommand.vim'                                      " }}}3
@@ -583,17 +584,18 @@ let g:neosnippet#snippets_directory =
                                                                 " }}}3
                                                                 " }}}2
 " NAVIGATION AND EDITING KEYS:                                  " {{{1
-" unite.vim                                                       {{{3
-" - buffers
-nnoremap <silent> <leader>b :<C-u>Unite buffer<CR>
-" - most recently used files
-nnoremap <silent> <leader>r :<C-u>Unite file_mru<CR>
-" - recursive file search
+" navigate buffers, MRU, yank history (unite plugin)              {{{2
+" \<Space>b [N]: list buffers                                     {{{3
+nnoremap <silent> <Leader><Space>b :<C-u>Unite buffer<CR>
+" \<Space>r [N]: list most recently used files                    {{{3
+nnoremap <silent> <Leader><Space>r :<C-u>Unite file_mru<CR>
+" \<Space>f [N]: recursive fuzzy file search                      {{{3
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>f :<C-u>Unite -start-insert file_rec/async:!<CR>
-" - yank
+nnoremap <Leader><Space>f :<C-u>Unite -start-insert file_rec/async:!<CR>
+" \<Space>y [N]: list yank history                                {{{3
 let g:unite_source_history_yank_enable = 1
-nnoremap <leader>y :<C-u>Unite history/yank<CR>
+nnoremap <Leader><Space>y :<C-u>Unite history/yank<CR>
+                                                                " }}}3
 " backspace behaviour in insert mode                              {{{2
 set backspace=indent,eol,start
 " move a line of text up or down: <M-j>,<M-k> [N,V]               {{{2
@@ -674,8 +676,8 @@ vnoremap <silent> # :call VrcVisual('b')<CR>
 vnoremap <silent> gv :call VrcVisual('gv')<CR>
 " make selected text target of a substitution command: \r [V]
 vnoremap <silent> <Leader>r :call VrcVisual('replace')<CR>
-" turn off match highlighing: <Space> [N]
-nnoremap <silent> <Leader><Space> :nohlsearch<CR>
+" turn off match highlighing: <Space><Space> [N]
+nnoremap <silent> <Leader><Space><Space> :nohlsearch<CR>
 
 " SPELLING AND THESAURUS:                                         {{{1
 " using combined AU/GB spell file in $VIM_HOME/spell/
@@ -1219,6 +1221,20 @@ set pastetoggle=<F2>
 "                                                                 }}}2
 
 " FILETYPE SPECIFIC:                                              {{{1
+" vimrc                                                           {{{2
+" - reload after changing
+" - use vim ':help' for 'K' help
+augroup vimrc_files
+    au!
+    au BufWritePost .vimrc source %
+    au BufReadPost .vimrc setlocal keywordprg=''
+augroup END                                                     " }}}2
+" vim                                                             {{{2
+" - use vim ':help' for 'K' help
+augroup vim_files
+    au!
+    au BufReadPost .vim setlocal keywordprg=''
+augroup END                                                     " }}}2
 " c                                                               {{{2
 " - map make command to '<Leader>m'
 augroup c_files
@@ -1231,14 +1247,6 @@ augroup c_files
                 \ echo '-----------------------------------------' |
                 \ inoremap <Leader>m <Esc>:make %<<CR>|
                 \ nnoremap <Leader>m :make %<<CR>
-augroup END                                                     " }}}2
-" vimrc                                                           {{{2
-" - reload after changing
-augroup vimrc_files
-    au!
-    if $VIM_OS == 'unix'
-        au BufWritePost .vimrc source %
-    endif
 augroup END                                                     " }}}2
 " txt2tags                                                        {{{2
 " - use syntax highlighting
@@ -1277,16 +1285,10 @@ function! VrcMarkdownSetup(action)
             call DNU_Error('Invalid VrcMyTagContext parameter: '. a:action)
         endif
     endif
-    if VrcHasFunction('DNM_SetHtmlTemplate', 'vim-dn-markdown')
-        call DNM_SetHtmlTemplate('tehs')
-    endif
-    if VrcHasFunction('DNM_SetLatexTemplate', 'vim-dn-markdown')
-        call DNM_SetLatexTemplate('tehs')
-    endif
 endfunction
 augroup markdown_files
     au!
-    au BufRead *.md call VrcMarkdownSetup('insert')
+    au BufReadPost *.md call VrcMarkdownSetup('insert')
     au BufNewFile *.md call VrcMarkdownSetup('load')
 augroup END                                                     " }}}2
 " shellscript                                                     {{{2
