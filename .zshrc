@@ -161,6 +161,9 @@ setopt correct
 # - allow comments in interactive shells
 setopt interactive_comments
 
+# Prevent OMZ from overriding tmux's automatic rename setting
+export DISABLE_AUTO_TITLE='true'
+
 
 # Variables
 # =========
