@@ -168,8 +168,23 @@ export DISABLE_AUTO_TITLE='true'
 # Variables
 # =========
 
-# Path
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/games"
+# Paths
+# - base
+PATH="/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/games"
+# - perl local::lib
+PATH="${HOME}/perl5/bin${PATH+:}${PATH}";
+PERL5LIB="${HOME}/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"
+PERL_LOCAL_LIB_ROOT="${HOME}/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"
+PERL_MB_OPT="--install_base \"${HOME}/perl5\""
+PERL_MM_OPT="INSTALL_BASE=${HOME}/perl5"
+manpath="${HOME}/perl5/man${manpath+:}${manpath}"
+# - export
+export PATH
+export PERL5LIB
+export PERL_LOCAL_LIB_ROOT
+export PERL_MB_OPT
+export PERL_MM_OPT
+export manpath
 
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
