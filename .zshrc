@@ -32,7 +32,18 @@ plugins=(
 )
 
 # Initialise completion
-autoload -U compinit && compinit -u
+autoload -U +X compinit && compinit -u
+# - use bash completion scripts
+autoload -U +X bashcompinit && bashcompinit
+if [ -f /etc/bash_completion ] ; then
+    source /etc/bash_completion
+fi
+if [ -d /etc/bash_completion.d ] ; then
+    for file in /etc/bash_completion.d/* ; do
+        source $file
+    done
+fi
+
 
 # Vi keymap support
 # - help
@@ -206,6 +217,9 @@ alias ls='ls -l --almost-all --color=auto'
 
 # mp3info2 must use only tags, no deducing from file name
 alias mp3info2='mp3info2 -C autoinfo=ID3v2,ID3v1'
+
+# reload zshrc
+alias reload=". ~/.zshrc && echo 'ZSH config reloaded from ~/.zshrc'"
 
 
 # File navigation
