@@ -36,11 +36,11 @@ autoload -U +X compinit && compinit -u
 # - use bash completion scripts
 autoload -U +X bashcompinit && bashcompinit
 if [ -f /etc/bash_completion ] ; then
-    source /etc/bash_completion
+    source /etc/bash_completion 2>/dev/null
 fi
 if [ -d /etc/bash_completion.d ] ; then
     for file in /etc/bash_completion.d/* ; do
-        source $file
+        source $file 2>/dev/null
     done
 fi
 
