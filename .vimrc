@@ -1345,6 +1345,13 @@ augroup config_conf_files
     au!
     au BufRead,BufNewFile *.conf set ft=dosini
 augroup END                                                     " }}}2
+" desktop                                                         {{{2
+" - use template file
+augroup desktop_files
+    au!
+    au BufRead *.desktop call DNU_InsertTemplate('desktop')
+    au BufNewFile *.desktop call DNU_LoadTemplate('desktop')
+augroup END                                                     " }}}2
 " makefiles                                                       {{{2
 " - use template file
 augroup make_files
