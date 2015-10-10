@@ -81,11 +81,12 @@ endfunction                                                     " }}}3
 
 " VARIABLES:                                                    " {{{1
 " set os-dependent variables                                      {{{2
-if has('win32') || has ('win64')
+" - win32unix is cygwin/babun
+if has('win32') || has ('win64') || has('win95')
     let $VIM_HOME = $HOME . '/vimfiles'
     let $VIM_RC = '_vimrc'
     let $VIM_OS = 'windows'
-elseif has('unix')
+elseif has('unix') || has('win32unix')
     let $VIM_HOME = $HOME . '/.vim'
     let $VIM_RC = '.vimrc'
     let $VIM_OS = 'unix'
@@ -1078,7 +1079,7 @@ function! DnPostScriptSource()
     let l:exes = ['kprinter4']
     if VrcHasExecutables(l:exes)
         call add(l:msg, ' ')
-        call add(l:msg, '- avilable: vim and kprinter4')
+        call add(l:msg, '- available: vim and kprinter4')
         call add(l:msg, '  . has colour syntax')
         call add(l:msg, '  . no word wrapping')
         let l:choices .= "\n&Vim"
@@ -1190,11 +1191,11 @@ endif                                                           " }}}3
 "   mousewheel click or a vim paste, and vice versa
 "   ('autoselect')
 set clipboard=unnamed,autoselect                                " }}}2
-" files to files when file-matching                               {{{2
+" files to deprioritise when file-matching                        {{{2
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,
             \.ind,.idx,.ilg,.inx,.out,.toc                      " }}}2
 " dictionaries                                                    {{{2
-if $VIM_OS == 'unix'
+if $VIM_OS == 'unix' && filereadable('/usr/share/dict/words')
     set dictionary-=/usr/share/dict/words
     set dictionary+=/usr/share/dict/words
 endif                                                           " }}}2
