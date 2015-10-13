@@ -54,15 +54,13 @@ function! VrcAddThesaurus(thesaurus)
     if strlen(a:thesaurus) == 0
         return
     endif
-    if !filereadable(resolve(expand(a:thesaurus)))
-        echoerr "Cannot find thesaurus file '" . a:thesaurus . "'"
-        return
+    if filereadable(resolve(expand(a:thesaurus)))
+        " add to thesaurus file variable (string, comma-delimited)
+        if strlen(a:thesaurus) > 0
+            let &thesaurus .= ','
+        endif
+        let &thesaurus .= a:thesaurus
     endif
-    " add to thesaurus file variable (string, comma-delimited)
-    if strlen(a:thesaurus) > 0
-        let &thesaurus .= ','
-    endif
-    let &thesaurus .= a:thesaurus
 endfunction                                                     " }}}2
 " function VrcHasExecutables(executables)                         {{{3
 " intent: ensure all executables are available
@@ -108,7 +106,7 @@ set nocompatible
 filetype off
 " may need make to build bundle
 let g:make = 'gmake'
-if system('uname -o') =~ '^GNU/'
+if system('uname -o') =~ '^GNU/\|^Cygwin'
     let g:make = 'make'
 endif
 " load neobundle
@@ -192,11 +190,14 @@ NeoBundle 'majutsushi/tagbar'
         " requires misc
         NeoBundle 'xolox/vim-misc'
     " javascript support
+        " not available in cygwin as nodejs no longer supported in cygwin
         " install jcstags using command:
         "   su -c "npm install -g git://github.com/ramitos/jsctags.git"
         " configured later under TagList configuration
         " jcstags requires tern_for_vim
-    NeoBundle 'marijnh/tern_for_vim'
+    if system('uname -o') !~ '^Cygwin'
+        NeoBundle 'marijnh/tern_for_vim'
+    endif
         " requires node.js (deb 'nodejs') and npm (deb 'npm')
         " must install tern server in bundle directory with command:
         "   npm install
@@ -204,7 +205,10 @@ NeoBundle 'majutsushi/tagbar'
     NeoBundle 'jszakmeister/markdown2ctags'
         " configured later under TagList configuration
     " php support
-    NeoBundle 'vim-php/tagbar-phpctags.vim'
+        " not available in cygwin as build fails
+    if system('uname -o') !~ '^Cygwin'
+        NeoBundle 'vim-php/tagbar-phpctags.vim'
+    endif
         " must build 'phpctags' executable in bundle dir with command:
         "   make
         " configured later under TagBar configuration             }}}3
@@ -316,7 +320,7 @@ if has('gui_running')
                     \\ Monospace\ 18
     endif
     if $VIM_OS == 'windows'
-        set gfn=Bitstream\ Vera\ Sans\ Mono:h10
+        set guifont=Bitstream\ Vera\ Sans\ Mono:h10
     endif
 else  " no gui
     set guifont=-unknown-freesans-medium-r-normal--0-0-0-0-p-0-iso10646-1
@@ -332,37 +336,39 @@ nnoremap <Leader>ct :silent! UpdateTags<CR>:redraw!<CR>
 " - unless otherwise noted these are taken from
 "   https://github.com/majutsushi/tagbar/wiki
 " haskell support                                               " {{{3
-let g:tagbar_type_haskell = {
-    \ 'ctagsbin'  : 'hasktags',
-    \ 'ctagsargs' : '-x -c -o-',
-    \ 'kinds'     : [
-        \  'm:modules:0:1',
-        \  'd:data: 0:1',
-        \  'd_gadt: data gadt:0:1',
-        \  't:type names:0:1',
-        \  'nt:new types:0:1',
-        \  'c:classes:0:1',
-        \  'cons:constructors:1:1',
-        \  'c_gadt:constructor gadt:1:1',
-        \  'c_a:constructor accessors:1:1',
-        \  'ft:function types:1:1',
-        \  'fi:function implementations:0:1',
-        \  'o:others:0:1'
-    \ ],
-    \ 'sro'        : '.',
-    \ 'kind2scope' : {
-        \ 'm' : 'module',
-        \ 'c' : 'class',
-        \ 'd' : 'data',
-        \ 't' : 'type'
-    \ },
-    \ 'scope2kind' : {
-        \ 'module' : 'm',
-        \ 'class'  : 'c',
-        \ 'data'   : 'd',
-        \ 'type'   : 't'
+if executable('hasktags')
+    let g:tagbar_type_haskell = {
+        \ 'ctagsbin'  : 'hasktags',
+        \ 'ctagsargs' : '-x -c -o-',
+        \ 'kinds'     : [
+            \  'm:modules:0:1',
+            \  'd:data: 0:1',
+            \  'd_gadt: data gadt:0:1',
+            \  't:type names:0:1',
+            \  'nt:new types:0:1',
+            \  'c:classes:0:1',
+            \  'cons:constructors:1:1',
+            \  'c_gadt:constructor gadt:1:1',
+            \  'c_a:constructor accessors:1:1',
+            \  'ft:function types:1:1',
+            \  'fi:function implementations:0:1',
+            \  'o:others:0:1'
+        \ ],
+        \ 'sro'        : '.',
+        \ 'kind2scope' : {
+            \ 'm' : 'module',
+            \ 'c' : 'class',
+            \ 'd' : 'data',
+            \ 't' : 'type'
+        \ },
+        \ 'scope2kind' : {
+            \ 'module' : 'm',
+            \ 'class'  : 'c',
+            \ 'data'   : 'd',
+            \ 'type'   : 't'
+        \ }
     \ }
-\ }                                                             " }}}3
+endif                                                           " }}}3
 " javascript support                                            " {{{3
 " - installed jcstags as node.js app (see plugin commands above)
 " makefile support
@@ -407,7 +413,10 @@ let g:tagbar_type_perl = {
 \ }                                                             " }}}3
 " php support                                                   " {{{3
 " - from https://github.com/vim-php/tagbar-phpctags.vim
-let g:tagbar_phpctags_bin='/home/david/.vim/bundle/tagbar-phpctags.vim/bin/phpctags'
+if filereadable('/home/david/.vim/bundle/tagbar-phpctags.vim/bin/phpctags')
+    let g:tagbar_phpctags_bin = 
+                \ '/home/david/.vim/bundle/tagbar-phpctags.vim/bin/phpctags'
+endif
 " colour scheme                                                 " {{{2
 " function VrcSetColorScheme()                                  " {{{3
 " intent: set colour scheme
