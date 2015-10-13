@@ -34,16 +34,18 @@ plugins=(
 # Initialise completion
 autoload -U +X compinit && compinit -u
 # - use bash completion scripts
-autoload -U +X bashcompinit && bashcompinit
-if [ -f /etc/bash_completion ] ; then
-    source /etc/bash_completion 2>/dev/null
+#   (but they don't work in babun/cygwin)
+if [ "${OSTYPE}" != 'cygwin' ] ; then
+    autoload -U +X bashcompinit && bashcompinit
+    if [ -f /etc/bash_completion ] ; then
+        source /etc/bash_completion 2>/dev/null
+    fi
+    if [ -d /etc/bash_completion.d ] ; then
+        for file in /etc/bash_completion.d/* ; do
+            source $file 2>/dev/null
+        done
+    fi
 fi
-if [ -d /etc/bash_completion.d ] ; then
-    for file in /etc/bash_completion.d/* ; do
-        source $file 2>/dev/null
-    done
-fi
-
 
 # Vi keymap support
 # - help
@@ -90,28 +92,49 @@ stty stop  undef
 stty start undef
 
 # Functions
-fpath=(~/.zsh/functions $fpath)
+my_fpath=$HOME/.zsh/functions
+fpath=($my_fpath $fpath)
+function autoload_my_fns {
+    local fn
+    while (($#)) ; do
+        fn="$1"
+        if [ -f "$my_fpath/$fn" ] ; then
+            autoload "$fn"
+        else
+            echo "Error: could not find function '$my_fpath/$fn'"
+        fi
+        shift
+    done
+}
 # - weather three day forecasts
-autoload weatherdarwin weathersydney weathermelbourne weatherbrisbane
+autoload_my_fns weatherdarwin weathersydney weathermelbourne weatherbrisbane
 # - extract any archive ('ex <archive>')
-autoload extract_archive
-alias ex=extract_archive
-compdef '_files -g "*.gz *.tgz *.bz2 *.tbz *.zip *.rar *.tar *.lha"' extract_archive
+autoload_my_fns extract_archive
+if type -f extract_archive &>/dev/null ; then
+    alias ex=extract_archive
+    compdef '_files -g "*.gz *.tgz *.bz2 *.tbz *.zip *.rar *.tar *.lha"' \
+        extract_archive
+fi
 # - execute 'git status' if do empty enter in git-managed directory
-autoload magic-enter
-zle -N magic-enter
-bindkey -M viins   '^M'  magic-enter
+autoload_my_fns magic-enter
+if type -f magic-enter &>/dev/null ; then
+    zle -N magic-enter
+    bindkey -M viins   '^M'  magic-enter
+fi
 # - tmux help
-autoload helptmux
+autoload_my_fns helptmux
 # - git aliases
-autoload git-add-all
-alias gaa=git-add-all
+autoload_my_fns git-add-all
+if type -f git-add-all &>/dev/null ; then
+    alias gaa=git-add-all
+fi
+
 
 # Oh My Zsh configuration
 # =======================
  
 # Path to oh-my-zsh installation
-export ZSH=/home/david/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Theme to load (see ~/.oh-my-zsh/themes/)
 #ZSH_THEME="robbyrussell"
@@ -189,6 +212,15 @@ PERL_LOCAL_LIB_ROOT="${HOME}/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}
 PERL_MB_OPT="--install_base \"${HOME}/perl5\""
 PERL_MM_OPT="INSTALL_BASE=${HOME}/perl5"
 manpath="${HOME}/perl5/man${manpath+:}${manpath}"
+# - npm
+if [ -d /cygdrive/c/Program\ Files/nodejs ] ; then
+    PATH="${PATH}:/cygdrive/c/Program Files/nodejs"
+fi
+# - hasktags
+if [ -d /cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe ] ; then
+    PATH="${PATH}:/cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe"
+fi
+
 # - export
 export PATH
 export PERL5LIB
@@ -202,12 +234,6 @@ export EDITOR='vim'
 export USE_EDITOR=$EDITOR
 export VISUAL=$EDITOR
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
 
 # Aliases
 # =======
@@ -220,6 +246,9 @@ alias mp3info2='mp3info2 -C autoinfo=ID3v2,ID3v1'
 
 # reload zshrc
 alias reload=". ~/.zshrc && echo 'ZSH config reloaded from ~/.zshrc'"
+
+# dictionary and thesaurus
+alias thes="dict -h localhost -d moby-thesaurus"
 
 
 # File navigation
