@@ -12,6 +12,7 @@ zmodload zsh/files zsh/zutil
 # Plugins
 plugins=( 
     adb             \
+    chucknorris     \
     fasd            \
     git             \
     colored-man     \
@@ -80,6 +81,10 @@ bindkey -M viins   '^[[H' vi-beginning-of-line
 # - end key
 #   . default: after pressing <home>, <end> stops working
 bindkey -M viins   '^[[F' end-of-line
+# - delete key
+#   . default: change case of next three characters
+#              and enter normal mode
+bindkey -M viins   '^[[3~' vi-delete-char
 
 # Set up mimetype support
 autoload -Uz zsh-mime-setup
@@ -127,6 +132,20 @@ autoload_my_fns helptmux
 autoload_my_fns git-add-all
 if type -f git-add-all &>/dev/null ; then
     alias gaa=git-add-all
+fi
+# - ansi colours
+#   . provides variables: RED, GREEN, YELLOW, BLUE, MAGENTA,
+#     CYAN, BLACK, WHITE, the same colours as BOLD_*, and RESET
+autoload colors && colors
+for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN BLACK WHITE; do
+    eval export $COLOR='$fg_no_bold[${(L)COLOR}]'
+    eval export BOLD_$COLOR='$fg_bold[${(L)COLOR}]'
+done
+eval RESET='$reset_color'
+
+# - dictionary and thesaurus (uses WordNet v3.0)
+if [ "${OSTYPE}" = 'cygwin' -a -f /usr/local/WordNet-3.0/bin/wn.exe ] ; then
+    autoload_my_fns dict
 fi
 
 
@@ -220,6 +239,9 @@ fi
 if [ -d /cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe ] ; then
     PATH="${PATH}:/cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe"
 fi
+# - wordnet
+PATH="${PATH}:/usr/local/WordNet-3.0/bin"
+WNHOME="/usr/local/WordNet-3.0"
 
 # - export
 export PATH
@@ -228,6 +250,7 @@ export PERL_LOCAL_LIB_ROOT
 export PERL_MB_OPT
 export PERL_MM_OPT
 export manpath
+export WNHOME
 
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
@@ -292,3 +315,18 @@ function google {    # look up search terms in google
     local ARGS="$(url_encode "${(j: :)@}")"
     /usr/bin/links2 "http://www.google.com/search?q=$ARGS"
 }
+
+
+# Greetings
+# =========
+if which fortune &>/dev/null ; then
+    echo "${RED}Fortune for today:${RESET}"
+    echo
+    fortune
+    echo
+fi
+if which chuck_cow &>/dev/null ; then
+    echo "${RED}Cow has a Chuck Norris fact:${RESET}"
+    chuck_cow
+    echo
+fi
