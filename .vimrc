@@ -219,6 +219,11 @@ NeoBundle 'tmux-plugins/vim-tmux'    " tmux.conf ftplugin
 NeoBundle 'christoomey/vim-tmux-navigator'                      " }}}3
 " vcscommand (CVS, SVN, SVK, git, bzr, and hg integration)        {{{3
 NeoBundle 'vcscommand.vim'                                      " }}}3
+" xml/docbook                                                     {{{3
+NeoBundle 'xml.vim'
+NeoBundle 'jhradilek/vim-docbk'
+NeoBundle 'jhradilek/vim-rng'
+NeoBundle 'jhradilek/vim-snippets'                              " }}}3
 " close down neobundle                                            {{{2
 call neobundle#end()
 " check for uninstalled bundles
