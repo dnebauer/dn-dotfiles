@@ -183,6 +183,8 @@ NeoBundle 'dnebauer/vim-dn-perl'                                " }}}3
 NeoBundle 'rstacruz/sparkup'                                    " }}}3
 " status line modification                                        {{{3
 NeoBundle 'bling/vim-airline'                                   " }}}3
+" syntax checker                                                  {{{3
+NeoBundle 'scrooloose/syntastic'                                " }}}3
 " tagbar (class outline viewer)                                   {{{3
 NeoBundle 'majutsushi/tagbar'
     " requires easytags
@@ -219,7 +221,8 @@ NeoBundle 'tmux-plugins/vim-tmux'    " tmux.conf ftplugin
 NeoBundle 'christoomey/vim-tmux-navigator'                      " }}}3
 " vcscommand (CVS, SVN, SVK, git, bzr, and hg integration)        {{{3
 NeoBundle 'vcscommand.vim'                                      " }}}3
-" xml/docbook                                                     {{{3
+" html/xml/docbook                                                {{{3
+NeoBundle 'othree/html5.vim'
 NeoBundle 'xml.vim'
 NeoBundle 'jhradilek/vim-docbk'
 NeoBundle 'jhradilek/vim-rng'
