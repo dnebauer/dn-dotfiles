@@ -671,8 +671,9 @@ function! VrcSetupCompletion()
     " <C-h>, <BS>: close popup and delete backword char
     inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
     inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+    " superseded                                                  {{{4
     "inoremap <expr><C-y>  neocomplete#close_popup()
-    "inoremap <expr><C-e>  neocomplete#cancel_popup()
+    "inoremap <expr><C-e>  neocomplete#cancel_popup()             }}}4
     " enable omni completion
     autocmd FileType css setlocal
                 \ omnifunc=csscomplete#CompleteCSS
@@ -1568,6 +1569,13 @@ augroup xhtml_files
     au!
     au BufRead *.xhtml call DNU_InsertTemplate('xhtml')
     au BufNewFile *.xhtml call DNU_LoadTemplate('xhtml')
+augroup END                                                     " }}}2
+" docbk                                                           {{{2
+" - set filetype
+augroup docbk_files
+    au!
+    au BufRead *.docbk set filetype=docbk
+    au BufNewFile *.docbk set filetype=docbk
 augroup END                                                     " }}}2
 " nsis script headers                                             {{{2
 " - script files ('*.nsi') are automatically detected by vim
