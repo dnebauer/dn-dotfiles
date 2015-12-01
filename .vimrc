@@ -62,7 +62,7 @@ function! VrcAddThesaurus(thesaurus)
         let &thesaurus .= a:thesaurus
     endif
 endfunction                                                     " }}}2
-" function VrcHasExecutables(executables)                         {{{3
+" function VrcHasExecutables(executables)                         {{{2
 " intent: ensure all executables are available
 " params: 1 - list of executables
 " prints: nil - fails silently if executables missing
@@ -75,6 +75,101 @@ function! VrcHasExecutables(executables)
         endif
     endfor
     return l:result
+endfunction                                                     " }}}2
+" function VrcLocalRepoUpdatedRecently(dir, time)                 {{{2
+" intent: check that a local repository has been updated
+"         within a given time period
+" params: dir  - directory containing local repository
+"         time - time in seconds
+" prints: error messages if setup fails
+" return: boolean
+" note:   determines time of last 'fetch' operation
+"         (so also 'pull' operations)
+" note:   uses python and python modules 'os' and 'time'
+" note:   designed to determine whether repo needs to be
+"         updated, so if it fails it returns false,
+"         presumably triggering an update
+" note:   a week is 604800 seconds
+" note:   will display error message if:
+"         - cannot find '.git/FETCH_HEAD' file in directory
+"         - time value is invalid
+" note:   will fail silently if:
+"         - python is absent
+function! VrcLocalRepoUpdatedRecently(dir, time)
+    " need python
+    if ! executable('python') | return | endif
+    " check parameters
+    let l:dir = resolve(expand(a:dir))
+    if ! isdirectory(l:dir)
+        echoerr "Not a valid directory ('" . l:dir . "')"
+        return
+    endif
+    let l:fetch = l:dir . '/.git/FETCH_HEAD'
+    if ! filereadable(l:fetch)
+        echoerr "Not a valid git repository ('" . l:dir . "')"
+        return
+    endif
+    if a:time !~ '^0$\|^[1-9][0-9]*$'
+        echoerr "Not a valid time ('" . a:time . "')"
+    endif
+    " get time of last fetch (in seconds since epoch)
+    let l:cmd = "python -c \"import os;print os.stat('"
+                \ . l:fetch . "').st_mtime\""
+    let l:last_fetch_list = systemlist(l:cmd)
+    if v:shell_error | return | endif
+    if type(l:last_fetch_list) != type([]) || len(l:last_fetch_list) != 1
+                \ || len(l:last_fetch_list[0]) == 0
+        return  " expected single-item list
+    endif
+    let l:last_fetch = l:last_fetch_list[0]
+    " get current time (in seconds since epoch)
+    let l:cmd = "python -c \"import time;print int(time.time())\""
+    let l:now_list = systemlist(l:cmd)
+    if v:shell_error | return | endif
+    if type(l:now_list) != type([]) || len(l:now_list) != 1
+                \ || len(l:now_list[0]) == 0
+        return  " expected single-item list
+    endif
+    let l:now = l:now_list[0]
+    " have both time values
+    " - check whether less than the supplied time
+    let l:diff = l:now - l:last_fetch
+    if l:diff < a:time
+        return 1  " return true
+    endif
+    return  " return false
+endfunction                                                     " }}}2
+" function VrcLocalRepoFetch(dir)                                 {{{3
+" intent: perform a fetch on a local git repository
+" params: path to '.git' subdirectory in repository
+" prints: error messages if fails
+" return: boolean, whether fetch successful
+function! VrcLocalRepoFetch(dir)
+    " check directory
+    let l:dir = resolve(expand(a:dir))
+    if ! isdirectory(l:dir)
+        echoerr "Invalid repository '.git' directory ('" . a:dir . "')"
+        return
+    endif
+    " need git
+    if ! executable('git')  " need git to update
+        echoerr 'Cannot find git - unable to perform fetch operation'
+        return
+    endif
+    " do fetch
+    let l:cmd = "git --git-dir='" . l:dir . "' fetch"
+    if exists('l:err') | unlet l:err | endif
+    let l:err = systemlist(l:cmd)
+    if v:shell_error
+        echoerr "Unable to perform fetch operation on '" . a:dir . "'"
+        if len(l:err) > 0
+            echoerr 'Error message:'
+            for l:line in l:err | echoerr '  ' . l:line | endfor
+        endif
+        return 0  " failed
+    endif  " v:shell_error
+    " success if still here
+    return 1
 endfunction                                                     " }}}3
 
 " VARIABLES:                                                    " {{{1
@@ -642,23 +737,26 @@ function! VrcAddDocbkSnippetsDir()
     " try to add repo if not found
     let l:repo = 'https://github.com/jhradilek/vim-snippets.git'
     if ! isdirectory(l:git)
-        if executable('git')
-            let l:cmd = 'git clone ' . l:repo . ' ' . l:dir
-            let l:err = systemlist(l:cmd)
-            if v:shell_error
-                echoerr 'Cannot find docbook snippets'
-                echoerr 'Unable to install docbook snippets'
-                if len(l:err) > 0
-                    echoerr 'Error message:'
-                    for l:line in l:err | echoerr '  ' . l:line | endfor
-                endif
-                return 0  " failed
-            endif  " v:shell_error
-        else
+        if ! executable('git')
             echoerr 'Cannot find docbook snippets'
             echoerr 'Cannot find git - unable to install them'
             return 0  " failed
-        endif  " executable('git')
+        endif
+        echo 'Installing docbook and rng snippets...'
+        let l:cmd = 'git clone ' . l:repo . ' ' . l:dir
+        let l:err = systemlist(l:cmd)
+        if v:shell_error
+            echoerr 'Cannot find docbook snippets'
+            echoerr 'Unable to install docbook snippets'
+            if len(l:err) > 0
+                echoerr 'Error message:'
+                for l:line in l:err | echoerr '  ' . l:line | endfor
+            endif
+            return 0  " failed
+        endif  " v:shell_error
+        " perform initial fetch operation to ensure existence
+        " of '.git/FETCH_HEAD'
+        if VrcLocalRepoFetch(l:git) | echo 'Done' | endif
     endif  " ! isdirectory(l:git)
     " directory is present so add as snippets directory
     call add(g:neosnippet#snippets_directory, l:dir)
@@ -666,52 +764,13 @@ function! VrcAddDocbkSnippetsDir()
     "  - must have been error message generated above
     if ! isdirectory(l:git) | return 0 | endif
     " decide whether need to update
-    " - default to yes
-    " - only set to no if determine fetch performed in last week
-    let l:do_fetch = 1
-    let l:fetch_head = l:git . '/FETCH_HEAD'
-    if executable('python') && filereadable(l:fetch_head)
-        let l:cmd = "python -c \"import os;print os.stat('"
-                    \ . l:fetch_head . "').st_mtime\""
-        let l:last_fetch_list = systemlist(l:cmd)
-        if ! v:shell_error
-            let l:cmd = "python -c \"import time;print int(time.time())\""
-            let l:now_list = systemlist(l:cmd)
-            if ! v:shell_error
-                " check for valid lists and extract time values from them
-                if type(l:now_list) == type([])
-                            \ && len(l:now_list) == 1
-                            \ && len(l:now_list[0]) > 0
-                            \ && type(l:last_fetch_list) == type([])
-                            \ && len(l:last_fetch_list) == 1
-                            \ && len(l:last_fetch_list[0]) > 0
-                    let l:now = l:now_list[0]
-                    let l:last_fetch = l:last_fetch_list[0]
-                    " have both time values
-                    " - check whether less than a week (in seconds)
-                    let l:diff = l:now - l:last_fetch
-                    if l:diff < 604800 | let l:do_fetch = 0 | endif
-                endif  " type(l:now_list) == type([]) && ...
-            endif  " ! v:shell_error
-        endif  " ! v:shell_error
-    endif  " executable('python') && filereadable(l:fetch_head)
-    if l:do_fetch == 1 && ! executable('git')  " need git to update
-        echoerr 'Cannot find git - unable to ensure'
-        echoerr 'docbook snippets are up to date'
-        return 0
-    endif
-    if l:do_fetch  " try to update local repo
-        let l:cmd = "git --git-dir='" . l:git . "' fetch"
-        if exists('l:err') | unlet l:err | endif
-        let l:err = systemlist(l:cmd)
-        if v:shell_error
-            echoerr 'Unable to update docbook snippets'
-            if len(l:err) > 0
-                echoerr 'Error message:'
-                for l:line in l:err | echoerr '  ' . l:line | endfor
-            endif
-            return 0  " failed
-        endif  " v:shell_error
+    if VrcLocalRepoUpdatedRecently(l:dir, 604800)  " try to update
+        if ! executable('git')  " need git to update
+            echoerr 'Cannot find git - unable to ensure'
+            echoerr 'docbook snippets are up to date'
+            return 0
+        endif
+        if ! VrcLocalRepoFetch(l:git) | return | endif
     endif  " l:do_fetch
     return 1  " presume success if haven't exited yet
 endfunction                                                     " }}}3
