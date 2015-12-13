@@ -244,6 +244,9 @@ NeoBundle 'mattn/calendar-vim'                                  " }}}3
 NeoBundle 'Shougo/neocomplete'                 " completion engine
     NeoBundle 'Shougo/neomru.vim'              " most recently used
     NeoBundle 'Shougo/context_filetype.vim'    " contextual filetype
+    NeoBundle 'Shougo/neoinclude.vim'          " use include files
+    NeoBundle 'Shougo/neco-syntax'             " use syntax files
+    NeoBundle 'Shougo/neopairs.vim'            " insert () pairs
     NeoBundle 'c9s/perlomni.vim'               " perl completion
     NeoBundle 'Shougo/neco-vim'                " vimscript completion
 NeoBundle 'Shougo/neosnippet'                  " snippets engine
@@ -324,6 +327,8 @@ NeoBundle 'christoomey/vim-tmux-navigator'                      " }}}3
 NeoBundle 'vcscommand.vim'                                      " }}}3
 " xml                                                             {{{3
 NeoBundle 'xml.vim'
+" xquery                                                          {{{3
+NeoBundle 'XQuery-indentomnicompleteftplugin'
 " close down neobundle                                            {{{2
 call neobundle#end()
 " check for uninstalled bundles
@@ -655,8 +660,8 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <silent> <CR> <C-r>=<SID>VrcCrFunction()<CR>
 function! s:VrcCrFunction()
     "return neocomplete#close_popup() . "\<CR>"
-    "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-    return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+    "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+    return pumvisible() ? neocomplete#close_popup() : "\<CR>"
 endfunction
 " <C-l>: complete common mapping                                  {{{4
 inoremap <expr><C-l> neocomplete#complete_common_string()
@@ -684,17 +689,26 @@ autocmd FileType xml setlocal
 " recording keyword patterns used in omni completion              {{{3
 " - hard to understand from help files
 " - using examples from help page 'neocomplete.txt'
+" ensure required variables exist                                 {{{4
 if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
 endif
 if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
 endif
-" perl (perlomni.vim)                                             {{{4
+if !exists('g:neocomplete#sources#omni#functions')
+    let g:neocomplete#sources#omni#functions = {}
+endif
+" perl (plugin: perlomni.vim)                                     {{{4
 "let g:neocomplete#sources#omni#input_patterns.perl =
 "            \ '\h\w*->\h\w*\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.perl =
             \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+" xquery (plugin: XQuery-indentomnicomplete)                      {{{4
+let g:neocomplete#sources#omni#input_patterns.xquery =
+            \ '\k\|:\|\-\|&'
+let g:neocomplete#sources#omni#functions.xquery =
+            \ 'xquerycomplete#CompleteXQuery'
                                                                 " }}}4
 " neosnippet setup                                                {{{2
 " do not use default snippets                                     {{{3
