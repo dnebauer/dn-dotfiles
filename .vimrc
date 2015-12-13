@@ -132,12 +132,9 @@ function! VrcLocalRepoUpdatedRecently(dir, time)
     endif
     let l:now = l:now_list[0]
     " have both time values
-    " - check whether less than the supplied time
+    " - if less than the supplied time then return true
     let l:diff = l:now - l:last_fetch
-    if l:diff < a:time
-        return 1  " return true
-    endif
-    return  " return false
+    if l:diff < a:time | return 1 | else | return | endif
 endfunction                                                     " }}}2
 " function VrcLocalRepoFetch(dir)                                 {{{3
 " intent: perform a fetch on a local git repository
@@ -166,7 +163,7 @@ function! VrcLocalRepoFetch(dir)
             echoerr 'Error message:'
             for l:line in l:err | echoerr '  ' . l:line | endfor
         endif
-        return 0  " failed
+        return  " failed
     endif  " v:shell_error
     " success if still here
     return 1
@@ -248,12 +245,18 @@ NeoBundle 'Shougo/neocomplete'                 " completion engine
     NeoBundle 'Shougo/neomru.vim'              " most recently used
     NeoBundle 'Shougo/context_filetype.vim'    " contextual filetype
     NeoBundle 'c9s/perlomni.vim'               " perl completion
+    NeoBundle 'Shougo/neco-vim'                " vimscript completion
 NeoBundle 'Shougo/neosnippet'                  " snippets engine
     NeoBundle 'honza/vim-snippets'             " snippets collection
+    " Bundle 'jhradilek/vim-docbk'                                {{{4
+    " - docbook and relax ng snippets
+    " - installed to custom directory and accessed using
+    "   neosnippet variable g:neosnippet#snippets_directory
+    " - see 'COMPLETION AND SNIPPETS' section below for details   }}}4
 " delimitate (autocomplete parens, quotes, brackets, etc.)        {{{3
 NeoBundle 'raimondi/delimitmate'                                " }}}3
-" docbook
-NeoBundle 'jhradilek/vim-docbk'
+" docbook                                                         {{{3
+NeoBundle 'jhradilek/vim-docbk'                                 " }}}3
 " domains (find meaning of internet domain)                       {{{3
 NeoBundle 'whatdomain.vim'                                      " }}}3
 " hardmode (disable character-wise navigation)                    {{{3
@@ -626,122 +629,120 @@ set smartindent
 set shiftwidth=4
 
 " COMPLETION AND SNIPPETS:                                      " {{{1
-" neocomplete functions (used in VimEnter autocmd)                {{{2
-" function VrcCrFunction()                                        {{{3
-" intent: configure Enter to close completion popup
-" params: nil
-" prints: nil
-" return: n/a
+" neocomplete setup                                               {{{2
+" disable AutoComplPop to prevent interference                    {{{3
+let g:acp_enableAtStartup = 0
+" enable automatically                                            {{{3
+let g:neocomplete#enable_at_startup = 1
+" use smartcase                                                   {{{3
+let g:neocomplete#enable_smart_case = 1
+" set minimum syntax keyword length                               {{{3
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+" buffers in which to deactivate completion                       {{{3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+" define dictionaries                                             {{{3
+let g:neocomplete#sources#dictionary#dictionaries = {
+            \   'default' : '',
+            \   'vimshell' : $HOME.'/.vimshell_hist',
+            \ }
+" define non-default keyword patterns                             {{{3
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+" recommended key mappings                                        {{{3
+" <CR>: close popup and save indent                               {{{4
+inoremap <silent> <CR> <C-r>=<SID>VrcCrFunction()<CR>
 function! s:VrcCrFunction()
-  "return neocomplete#close_popup() . "\<CR>"
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " for no inserting <CR> key
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction                                                     " }}}3
-" function VrcSetupCompletion()                                   {{{3
-" intent: set up completion
-" params: nil
-" prints: error message if setup fails
-" return: boolean
-function! VrcSetupCompletion()
-    let g:acp_enableAtStartup = 0    " disable AutoComplPop
-    let g:neocomplete#enable_at_startup = 1    " use neocomplete
-    let g:neocomplete#enable_smart_case = 1    " use smartcase
-    let g:neocomplete#sources#syntax#min_keyword_length = 3
-    " set minimum syntax keyword length
-    let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-    " define dictionary
-    let g:neocomplete#sources#dictionary#dictionaries = {
-                \   'default' : '',
-                \   'vimshell' : $HOME.'/.vimshell_hist',
-                \ }
-    " define keyword
-    if !exists('g:neocomplete#keyword_patterns')
-        let g:neocomplete#keyword_patterns = {}
-    endif
-    let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-    " plugin key-mappings
-    inoremap <expr><C-g> neocomplete#undo_completion()
-    inoremap <expr><C-l> neocomplete#complete_common_string()
-    " recommended key-mappings
-    " <CR>: close popup and save indent
-    inoremap <silent> <CR> <C-r>=<SID>VrcCrFunction()<CR>
-    " <Tab>: completion
-    inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-    " <C-h>, <BS>: close popup and delete backword char
-    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-    " superseded                                                  {{{4
-    "inoremap <expr><C-y>  neocomplete#close_popup()
-    "inoremap <expr><C-e>  neocomplete#cancel_popup()             }}}4
-    " enable omni completion
-    autocmd FileType css setlocal
-                \ omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal
-                \ omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType javascript setlocal
-                \ omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType python setlocal
-                \ omnifunc=pythoncomplete#Complete
-    autocmd FileType xml setlocal
-                \ omnifunc=xmlcomplete#CompleteTags
-    " enable heavy omni completion
-    if !exists('g:neocomplete#sources#omni#input_patterns')
-      let g:neocomplete#sources#omni#input_patterns = {}
-    endif
-    " for perlomni.vim setting
-    let g:neocomplete#sources#omni#input_patterns.perl
-                \ = '\h\w*->\h\w*\|\h\w*::'
-endfunction                                                     " }}}3
-                                                                " }}}2
-" snippets mappings                                               {{{2
-" - expand or jump to next placeholder: C-k [ISX]
+    "return neocomplete#close_popup() . "\<CR>"
+    "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+    return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+endfunction
+" <C-l>: complete common mapping                                  {{{4
+inoremap <expr><C-l> neocomplete#complete_common_string()
+" <Tab>: completion                                               {{{4
+inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" <C-h>, <BS>: close popup and delete backword char               {{{4
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" <C-g>: undo completion                                          {{{4
+inoremap <expr><C-g> neocomplete#undo_completion()
+" superseded mappings                                             {{{4
+"inoremap <expr><C-y>  neocomplete#close_popup()
+"inoremap <expr><C-e>  neocomplete#cancel_popup()                 }}}4
+" enable omni completion for some file types                      {{{3
+autocmd FileType css setlocal
+            \ omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal
+            \ omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal
+            \ omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal
+            \ omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal
+            \ omnifunc=xmlcomplete#CompleteTags
+" recording keyword patterns used in omni completion              {{{3
+" - hard to understand from help files
+" - using examples from help page 'neocomplete.txt'
+if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+endif
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+" perl (perlomni.vim)                                             {{{4
+"let g:neocomplete#sources#omni#input_patterns.perl =
+"            \ '\h\w*->\h\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.perl =
+            \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+                                                                " }}}4
+" neosnippet setup                                                {{{2
+" do not use default snippets                                     {{{3
+let g:neosnippet#disable_runtime_snippets = { '_' : 1 }         " }}}3
+" recommended key mappings                                        {{{3
+" <C-k>: expand or jump to next placeholder                       {{{4
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_target)
-" - intelligent Tab (like SuperTab)
-" superseded                                                      {{{3
+" <Tab>: intelligent behaviour (like SuperTab)                    {{{4
+" superseded                                                      {{{5
 "imap <expr><Tab> neosnippet#expandable_or_jumpable() ?
 "            \ "\<Plug>(neosnippet_expand_or_jump)"
 "            \ : pumvisible() ? "\<C-n>" : "\<Tab>"
-"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"            \ "\<Plug>(neosnippet_expand_or_jump)"
-"            \ : "\<Tab>"                                         }}}3
+"smap <expr><Tab> neosnippet#expandable_or_jumpable() ?
+"            \ "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"    }}}5
 smap <expr><Tab> neosnippet#expandable_or_jumpable() ?
             \ "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
-                                                                " }}}2
-" snippets marker concealment                                     {{{2
+" snippets marker concealment                                     {{{3
 if has('conceal')
     set conceallevel=2 concealcursor=niv
-endif                                                           " }}}2
-" snippets directories                                            {{{2
+endif                                                           " }}}3
+" snippets directories                                            {{{3
+" reset directories variable                                      {{{4
 if exists('g:neosnippet#snippets_directory')
     unlet g:neosnippet#snippets_directory
 endif
 let g:neosnippet#snippets_directory = []
-" - general: honza/vim-snippets
+" add honza/vim-snippets (all languages)                          {{{4
 call add(g:neosnippet#snippets_directory, 
             \ $VIM_HOME . '/bundle/vim-snippets/snippets')
-" - docbook, relax ng: jhradilek/vim-snippets
-"   . install to ~/.vim/repos/jhradilek/vim-snippets
-" function VrcAddDocbkSnippetsDir()                               {{{3
-" intent: ensure up to date snippet files from jhradilek/vim-docbk
-"         are available in ~/.vim/repos/jhradilek/vim-snippets
-" params: nil
-" prints: error messages if setup fails
-" return: boolean, whether can add directory
-function! VrcAddDocbkSnippetsDir()
+" add jhradilek/vim-snippets (docbook, relax ng)                  {{{4
+" - install to custom directory (~/.vim/repos/jhradilek/vim-snippets)
+function! VrcAddDocbkSnippetsDir()                              " {{{5
+    " ensure up to date snippet files from jhradilek/vim-docbk
+    " are available in ~/.vim/repos/jhradilek/vim-snippets
     " check for repo directory
     let l:root = $VIM_HOME . '/repos/jhradilek'
     let l:dir = l:root . '/vim-snippets'
     let l:git = l:dir . '/.git'
+    let l:snippets = l:dir . '/snippets'
     " try to add repo if not found
     let l:repo = 'https://github.com/jhradilek/vim-snippets.git'
     if ! isdirectory(l:git)
         if ! executable('git')
             echoerr 'Cannot find docbook snippets'
             echoerr 'Cannot find git - unable to install them'
-            return 0  " failed
+            return  " failed
         endif
         echo 'Installing docbook and rng snippets...'
         let l:cmd = 'git clone ' . l:repo . ' ' . l:dir
@@ -753,29 +754,34 @@ function! VrcAddDocbkSnippetsDir()
                 echoerr 'Error message:'
                 for l:line in l:err | echoerr '  ' . l:line | endfor
             endif
-            return 0  " failed
+            return  " failed
         endif  " v:shell_error
         " perform initial fetch operation to ensure existence
         " of '.git/FETCH_HEAD'
         if VrcLocalRepoFetch(l:git) | echo 'Done' | endif
     endif  " ! isdirectory(l:git)
-    " directory is present so add as snippets directory
-    call add(g:neosnippet#snippets_directory, l:dir)
+    " add snippets directory
+    if isdirectory(l:snippets)
+        call add(g:neosnippet#snippets_directory, l:snippets)
+    else
+        echoerr 'Unable to find docbook snippets directory'
+    endif
     " exit if can't find local repo
     "  - must have been error message generated above
-    if ! isdirectory(l:git) | return 0 | endif
+    if ! isdirectory(l:git) | return | endif
     " decide whether need to update
     if VrcLocalRepoUpdatedRecently(l:dir, 604800)  " try to update
         if ! executable('git')  " need git to update
             echoerr 'Cannot find git - unable to ensure'
             echoerr 'docbook snippets are up to date'
-            return 0
+            return
         endif
         if ! VrcLocalRepoFetch(l:git) | return | endif
     endif  " l:do_fetch
     return 1  " presume success if haven't exited yet
-endfunction                                                     " }}}3
-call VrcAddDocbkSnippetsDir()
+endfunction                                                     " }}}5
+call VrcAddDocbkSnippetsDir()                                   " }}}4
+
 " NAVIGATION AND EDITING KEYS:                                  " {{{1
 " navigate buffers, MRU, yank history (unite plugin)              {{{2
 " \<Space>b [N]: list buffers                                     {{{3
@@ -959,21 +965,23 @@ vnoremap ZQ <Esc>ZQ
 " update and switch windows: <C-w><C-w> [N,I]
 inoremap <C-w><C-w> <Esc>:update<CR><C-w><C-w>
 nnoremap <C-w><C-w> :update<CR><C-w><C-w>
+" actions taken for all files in response to vim events           {{{2
 augroup all_files
 "   delete all existing autocmds for augroup
     au!
 "   VimEnter:
-"   if opened with no file then open file (NERD)tree              {{{2
+"   if opened with no file then open file (NERD)tree              {{{3
     if exists(':NERDTree')
         au VimEnter *
                     \ if !argc() | 
                     \     NERDTree | 
                     \ endif
-    endif                                                       " }}}2
-"   configure and initialise neocomplete plugin                   {{{2
-    au VimEnter * call VrcSetupCompletion()                     " }}}2
+    endif                                                       " }}}3
+"   configure and initialise neocomplete plugin                   {{{3
+    au VimEnter * call neocomplete#initialize()
+                                                                " }}}3
 "   BufEnter:
-"   exit if only window left open is a NERDTree                   {{{2
+"   exit if only window left open is a NERDTree                   {{{3
     if exists(':NERDTree')
         au BufEnter *
                     \ if ( 
@@ -983,28 +991,28 @@ augroup all_files
                     \    ) |
                     \     quit |
                     \ endif
-    endif                                                       " }}}2
-"   cd to document directory                                      {{{2
+    endif                                                       " }}}3
+"   cd to document directory                                      {{{3
     au BufEnter *
                 \ if expand('%:p') !~ '://' |
                 \     lcd %:p:h |
-                \ endif                                         " }}}2
+                \ endif                                         " }}}3
 "   BufReadPost:
-"   open with cursor at position of last file exit                {{{2
+"   open with cursor at position of last file exit                {{{3
 "   - see ':h last-position-jumo' for details
     au BufReadPost * 
                 \ if line("'\"") > 0 && line("'\"") <= line('$') | 
                 \     exe "normal g`\"" | 
-                \ endif                                         " }}}2
+                \ endif                                         " }}}3
 "   FocusLost:
-"   save on losing focus                                          {{{2
+"   save on losing focus                                          {{{3
 "   E141 = no file name for buffer
     au FocusLost *
                 \ try |
                 \     :wa |
                 \ catch /^Vim\((\a\+)\)\=:E141:/ |
-                \ endtry                                        " }}}2
-augroup END
+                \ endtry                                        " }}}3
+augroup END                                                     " }}}2
 
 " PRINTING:                                                       {{{1
 " windows                                                         {{{2
@@ -1163,7 +1171,7 @@ function! VrcHighlightLanguages()
                 echo '  ' . l:line
             endfor
         endif
-        return 0    " failure
+        return  " failure
     endif
     return l:langs
 endfunction                                                     " }}}3
@@ -1460,7 +1468,7 @@ augroup manpage_files
 augroup END                                                     " }}}2
 " markdown                                                        {{{2
 " - use template file and set pandoc templates
-" function VrcMarkdownSetup(action)                               {{{2
+" function VrcMarkdownSetup(action)                               {{{3
 " intent: setup for markdown file editing
 " params: 1 - action ('insert'|'load')
 " prints: error message if function not found
@@ -1482,7 +1490,7 @@ function! VrcMarkdownSetup(action)
             call DNU_Error('Invalid VrcMyTagContext parameter: '. a:action)
         endif
     endif
-endfunction
+endfunction                                                     " }}}3
 augroup markdown_files
     au!
     au BufReadPost *.md call VrcMarkdownSetup('insert')
