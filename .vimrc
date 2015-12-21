@@ -259,7 +259,8 @@ NeoBundle 'Shougo/neosnippet'                  " snippets engine
 " delimitate (autocomplete parens, quotes, brackets, etc.)        {{{3
 NeoBundle 'raimondi/delimitmate'                                " }}}3
 " docbook                                                         {{{3
-NeoBundle 'jhradilek/vim-docbk'                                 " }}}3
+NeoBundle 'jhradilek/vim-docbk'
+NeoBundle 'dnebauer/vim-dn-docbk'                               " }}}3
 " domains (find meaning of internet domain)                       {{{3
 NeoBundle 'whatdomain.vim'                                      " }}}3
 " hardmode (disable character-wise navigation)                    {{{3
@@ -1591,13 +1592,6 @@ augroup xhtml_files
     au!
     au BufRead *.xhtml call DNU_InsertTemplate('xhtml')
     au BufNewFile *.xhtml call DNU_LoadTemplate('xhtml')
-augroup END                                                     " }}}2
-" docbk                                                           {{{2
-" - set filetype
-augroup docbk_files
-    au!
-    au BufRead *.docbk set filetype=docbk
-    au BufNewFile *.docbk set filetype=docbk
 augroup END                                                     " }}}2
 " nsis script headers                                             {{{2
 " - script files ('*.nsi') are automatically detected by vim
