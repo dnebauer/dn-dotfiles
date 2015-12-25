@@ -357,6 +357,7 @@ try | lang en_AU | catch /^Vim\((\a\+)\)\=:E197:/
 endtry  " en_AU                                                   }}}2
 
 " SCREEN LAYOUT AND APPEARANCE:                                 " {{{1
+" basic settings                                                  {{{2
 " minimum number of lines visible above/below cursor
 set scrolloff=3
 " show mode in last line
@@ -389,9 +390,17 @@ set textwidth=0
 set laststatus=2
 " show line numbers relative to cursor line
 set relativenumber
-" toggle line numbering (replaces relative line numbers): <F7> [N]
+" toggle line numbering: <F7> [N]
 nnoremap <silent> <F7> :set nu!<CR>
-" guioptions:                                                   " {{{2
+" when tab-completing command show matches above cmd line...
+set wildmenu
+" ...and list all matches; complete till longest string
+set wildmode=list:longest
+" show (partial) command in status line
+set showcmd
+" show matching brackets
+set showmatch                                                   " }}}2
+" guioptions                                                    " {{{2
 " - a,A = visual selection globally available for pasting,
 " - g = inactive menu items display but greyed out,
 " - i = use vim icon,
@@ -410,14 +419,6 @@ if !has('gui_running')
     set wcm=<C-Z>
     map <F4> :emenu <C-Z>
 endif                                                           " }}}2
-" when tab-completing command show matches above cmd line...
-set wildmenu
-" ...and list all matches; complete till longest string
-set wildmode=list:longest
-" show (partial) command in status line
-set showcmd
-" show matching brackets
-set showmatch
 " fonts                                                         " {{{2
 " useful utilities for determining fonts: xfontsel, xlsfonts
 " guifont: any spaces after commas must be escaped
@@ -619,6 +620,12 @@ call VrcSetColorScheme('peaksea', 'desert')                     " }}}2
 let g:airline#extensions#tabline#enabled = 1
 " - toggle light and dark themes
 call togglebg#map('<F5>')                                       " }}}2
+" folding                                                         {{{2
+" xml/docbook
+let g:xml_syntax_folding=1
+au FileType xml setlocal foldmethod=syntax
+let g:docbk_syntax_folding=1
+au FileType docbk setlocal foldmethod=syntax                    " }}}2
 
 " TABS AND INDENTING:                                           " {{{1
 " set tab = 4 spaces
