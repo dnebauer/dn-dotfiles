@@ -1448,20 +1448,6 @@ set pastetoggle=<F2>
 "                                                                 }}}2
 
 " FILETYPE SPECIFIC:                                              {{{1
-" vimrc                                                           {{{2
-" - reload after changing
-" - use vim ':help' for 'K' help
-augroup vimrc_files
-    au!
-    au BufWritePost .vimrc source %
-    au BufReadPost .vimrc setlocal keywordprg=''
-augroup END                                                     " }}}2
-" vim                                                             {{{2
-" - use vim ':help' for 'K' help
-augroup vim_files
-    au!
-    au BufReadPost .vim setlocal keywordprg=''
-augroup END                                                     " }}}2
 " c                                                               {{{2
 " - map make command to '<Leader>m'
 augroup c_files
@@ -1475,11 +1461,45 @@ augroup c_files
                 \ inoremap <Leader>m <Esc>:make %<<CR>|
                 \ nnoremap <Leader>m :make %<<CR>
 augroup END                                                     " }}}2
-" txt2tags                                                        {{{2
-" - use syntax highlighting
-augroup txt2tag_files
+" configuration files (*.rc)                                      {{{2
+" - use template file
+augroup config_rc_files
     au!
-    au BufRead,BufNewFile *.t2t set ft=txt2tags
+    au BufRead *.rc call DNU_InsertTemplate('configfile')
+    au BufNewFile *.rc call DNU_LoadTemplate('configfile')
+augroup END                                                     " }}}2
+" configuration files (*.conf)                                    {{{2
+" - force file type to 'dosini'
+augroup config_conf_files
+    au!
+    au BufRead,BufNewFile *.conf set ft=dosini
+augroup END                                                     " }}}2
+" desktop                                                         {{{2
+" - use template file
+augroup desktop_files
+    au!
+    au BufRead *.desktop call DNU_InsertTemplate('desktop')
+    au BufNewFile *.desktop call DNU_LoadTemplate('desktop')
+augroup END                                                     " }}}2
+" gnuplot                                                         {{{2
+" - force file type to 'gnuplot'
+augroup gnuplot_files
+    au!
+    au BufRead,BufNewFile *.plt set ft=gnuplot
+augroup END                                                     " }}}2
+" html                                                            {{{2
+" - use template file
+augroup html_files
+    au!
+    au BufRead *.html call DNU_InsertTemplate('html')
+    au BufNewFile *.html call DNU_LoadTemplate('html')
+augroup END                                                     " }}}2
+" makefiles                                                       {{{2
+" - use template file
+augroup make_files
+    au!
+    au BufRead Makefile.am call DNU_InsertTemplate('makefile.am')
+    au BufNewFile Makefile.am call DNU_LoadTemplate('makefile.am')
 augroup END                                                     " }}}2
 " manpages                                                        {{{2
 " - use template file
@@ -1518,6 +1538,36 @@ augroup markdown_files
     au BufReadPost *.md call VrcMarkdownSetup('insert')
     au BufNewFile *.md call VrcMarkdownSetup('load')
 augroup END                                                     " }}}2
+" perl module                                                     {{{2
+" - use template file
+augroup perl_module_files
+    au!
+    au BufRead *.pm call DNU_InsertTemplate('perlmod')
+    au BufNewFile *.pm call DNU_LoadTemplate('perlmod')
+augroup END                                                     " }}}2
+" perl script                                                     {{{2
+" - use template file
+augroup perl_script_files
+    au!
+    au BufRead *.pl call DNU_InsertTemplate('perlscript')
+    au BufNewFile *.pl call DNU_LoadTemplate('perlscript')
+augroup END                                                     " }}}2
+" nsis script headers                                             {{{2
+" - script files ('*.nsi') are automatically detected by vim
+"   as filetype 'nsis'
+" - script headers ('*.nsh') are not, hence this autocommand group
+augroup nsis_script_header_files
+    au!
+    au BufRead,BufNewFile *.nsh set filetype=nsis
+augroup END                                                     " }}}2
+" reportbug                                                       {{{2
+" - debian bug reporting mechanism
+" - force file type to 'mail'
+augroup reportbug_files
+    au!
+    au BufRead reportbug.* set ft=mail
+    au BufRead reportbug-* set ft=mail
+augroup END                                                     " }}}2
 " shellscript                                                     {{{2
 " - use template file
 augroup shellscript_files
@@ -1545,53 +1595,25 @@ augroup tex_files
     au BufRead *.tex call VrcTexSetup()
     au BufNewFile *.tex call VrcTexSetup('insert_template')
 augroup END                                                     " }}}2
-" perl script                                                     {{{2
-" - use template file
-augroup perl_script_files
+" txt2tags                                                        {{{2
+" - use syntax highlighting
+augroup txt2tag_files
     au!
-    au BufRead *.pl call DNU_InsertTemplate('perlscript')
-    au BufNewFile *.pl call DNU_LoadTemplate('perlscript')
+    au BufRead,BufNewFile *.t2t set ft=txt2tags
 augroup END                                                     " }}}2
-" perl module                                                     {{{2
-" - use template file
-augroup perl_module_files
+" vim                                                             {{{2
+" - use vim ':help' for 'K' help
+augroup vim_files
     au!
-    au BufRead *.pm call DNU_InsertTemplate('perlmod')
-    au BufNewFile *.pm call DNU_LoadTemplate('perlmod')
+    au BufReadPost .vim setlocal keywordprg=''
 augroup END                                                     " }}}2
-" configuration files (*.rc)                                      {{{2
-" - use template file
-augroup config_rc_files
+" vimrc                                                           {{{2
+" - reload after changing
+" - use vim ':help' for 'K' help
+augroup vimrc_files
     au!
-    au BufRead *.rc call DNU_InsertTemplate('configfile')
-    au BufNewFile *.rc call DNU_LoadTemplate('configfile')
-augroup END                                                     " }}}2
-" configuration files (*.conf)                                    {{{2
-" - force file type to 'dosini'
-augroup config_conf_files
-    au!
-    au BufRead,BufNewFile *.conf set ft=dosini
-augroup END                                                     " }}}2
-" desktop                                                         {{{2
-" - use template file
-augroup desktop_files
-    au!
-    au BufRead *.desktop call DNU_InsertTemplate('desktop')
-    au BufNewFile *.desktop call DNU_LoadTemplate('desktop')
-augroup END                                                     " }}}2
-" makefiles                                                       {{{2
-" - use template file
-augroup make_files
-    au!
-    au BufRead Makefile.am call DNU_InsertTemplate('makefile.am')
-    au BufNewFile Makefile.am call DNU_LoadTemplate('makefile.am')
-augroup END                                                     " }}}2
-" html                                                            {{{2
-" - use template file
-augroup html_files
-    au!
-    au BufRead *.html call DNU_InsertTemplate('html')
-    au BufNewFile *.html call DNU_LoadTemplate('html')
+    au BufWritePost .vimrc source %
+    au BufReadPost .vimrc setlocal keywordprg=''
 augroup END                                                     " }}}2
 " xhtml                                                           {{{2
 " - use template file
@@ -1599,28 +1621,6 @@ augroup xhtml_files
     au!
     au BufRead *.xhtml call DNU_InsertTemplate('xhtml')
     au BufNewFile *.xhtml call DNU_LoadTemplate('xhtml')
-augroup END                                                     " }}}2
-" nsis script headers                                             {{{2
-" - script files ('*.nsi') are automatically detected by vim
-"   as filetype 'nsis'
-" - script headers ('*.nsh') are not, hence this autocommand group
-augroup nsis_script_header_files
-    au!
-    au BufRead,BufNewFile *.nsh set filetype=nsis
-augroup END                                                     " }}}2
-" reportbug                                                       {{{2
-" - debian bug reporting mechanism
-" - force file type to 'mail'
-augroup reportbug_files
-    au!
-    au BufRead reportbug.* set ft=mail
-    au BufRead reportbug-* set ft=mail
-augroup END                                                     " }}}2
-" gnuplot                                                         {{{2
-" - force file type to 'gnuplot'
-augroup gnuplot_files
-    au!
-    au BufRead,BufNewFile *.plt set ft=gnuplot
 augroup END                                                     " }}}2
                                                                 " }}}1
 " vim: set foldmethod=marker :
