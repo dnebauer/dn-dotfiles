@@ -119,7 +119,8 @@ function! VrcLocalRepoUpdatedRecently(dir, time)
     if v:shell_error | return | endif
     if type(l:last_fetch_list) != type([]) || len(l:last_fetch_list) != 1
                 \ || len(l:last_fetch_list[0]) == 0
-        return  " expected single-item list
+        " expected single-item list
+        return
     endif
     let l:last_fetch = l:last_fetch_list[0]
     " get current time (in seconds since epoch)
@@ -128,7 +129,8 @@ function! VrcLocalRepoUpdatedRecently(dir, time)
     if v:shell_error | return | endif
     if type(l:now_list) != type([]) || len(l:now_list) != 1
                 \ || len(l:now_list[0]) == 0
-        return  " expected single-item list
+        " expected single-item list
+        return
     endif
     let l:now = l:now_list[0]
     " have both time values
@@ -163,7 +165,7 @@ function! VrcLocalRepoFetch(dir)
             echoerr 'Error message:'
             for l:line in l:err | echoerr '  ' . l:line | endfor
         endif
-        return  " failed
+        return
     endif  " v:shell_error
     " success if still here
     return 1
@@ -764,7 +766,7 @@ function! VrcAddDocbkSnippetsDir()                              " {{{5
         if ! executable('git')
             echoerr 'Cannot find docbook snippets'
             echoerr 'Cannot find git - unable to install them'
-            return  " failed
+            return
         endif
         echo 'Installing docbook and rng snippets...'
         let l:cmd = 'git clone ' . l:repo . ' ' . l:dir
@@ -776,7 +778,7 @@ function! VrcAddDocbkSnippetsDir()                              " {{{5
                 echoerr 'Error message:'
                 for l:line in l:err | echoerr '  ' . l:line | endfor
             endif
-            return  " failed
+            return
         endif  " v:shell_error
         " perform initial fetch operation to ensure existence
         " of '.git/FETCH_HEAD'
@@ -800,7 +802,8 @@ function! VrcAddDocbkSnippetsDir()                              " {{{5
         endif
         if ! VrcLocalRepoFetch(l:git) | return | endif
     endif  " l:do_fetch
-    return 1  " presume success if haven't exited yet
+    " presume success if haven't exited yet
+    return 1
 endfunction                                                     " }}}5
 call VrcAddDocbkSnippetsDir()                                   " }}}4
 
@@ -840,6 +843,29 @@ vnoremap <BS> <PageUp>
 nnoremap <Space> <PageDown>
 vnoremap <Space> <PageDown>
                                                                 " }}}2
+
+" SYNTAX CHECKING:                                              " {{{1
+" use status line                                                 {{{2
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*                                              " }}}2
+" always fill location list with found errors                     {{{2
+let g:syntastic_always_populate_loc_list = 1                    " }}}2
+" always display error window when errors are detected            {{{2
+let g:syntastic_auto_loc_list = 1                               " }}}2
+" check for errors on opening, closing and quitting               {{{2
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0                                 " }}}2
+" docbook settings                                                {{{2
+let g:dn_docbk_relaxng_schema =
+            \ '/usr/share/xml/docbook/schema/rng/5.0/docbook.rng'
+let g:dn_docbk_schematron_schema =
+            \ '/usr/share/xml/docbook/schema/schematron/'
+            \ . '5.0/docbook.sch'
+if $VIM_OS == 'unix'
+    let g:dn_docbook_xml_catalog 
+                \ = $HOME . '/.config/docbk/catalog.xml'
+endif
 
 " SEARCHING:                                                    " {{{1
 " initially last search match ('l') is not highlighted ('n')
@@ -1193,7 +1219,7 @@ function! VrcHighlightLanguages()
                 echo '  ' . l:line
             endfor
         endif
-        return  " failure
+        return
     endif
     return l:langs
 endfunction                                                     " }}}3
