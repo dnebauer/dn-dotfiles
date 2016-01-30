@@ -1601,26 +1601,6 @@ augroup shellscript_files
     au BufRead *.sh call DNU_InsertTemplate('shellscript')
     au BufNewFile *.sh call DNU_LoadTemplate('shellscript')
 augroup END                                                     " }}}2
-" tex                                                             {{{2
-" - get consistent filetype for tex files
-"   . default is empty = plaintex, non-empty = tex
-"   . use vim's g:tex_flavor to set to latex
-let g:tex_flavor = 'latex'
-"   . even setting g:tex_flavor does not always ensure
-"     the right filetype, so manually set filetype during
-"     startup configuration
-" - additional configuration
-function! VrcTexSetup(...)                                      " {{{3
-    set filetype=latex
-    if a:0 > 0 && a:1 =~? 'insert_template'
-        call DNL_InsertTemplate()
-    endif
-endfunction                                                     " }}}3
-augroup tex_files
-    au!
-    au BufRead *.tex call VrcTexSetup()
-    au BufNewFile *.tex call VrcTexSetup('insert_template')
-augroup END                                                     " }}}2
 " txt2tags                                                        {{{2
 " - use syntax highlighting
 augroup txt2tag_files
