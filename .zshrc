@@ -232,16 +232,18 @@ PERL_MB_OPT="--install_base \"${HOME}/perl5\""
 PERL_MM_OPT="INSTALL_BASE=${HOME}/perl5"
 manpath="${HOME}/perl5/man${manpath+:}${manpath}"
 # - npm
-if [ -d /cygdrive/c/Program\ Files/nodejs ] ; then
-    PATH="${PATH}:/cygdrive/c/Program Files/nodejs"
-fi
+NPM="/cygdrive/c/Program\ Files/nodejs"
+[[ -d "${NPM}" ]] && PATH="${PATH}:${NPM}"
 # - hasktags
-if [ -d /cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe ] ; then
-    PATH="${PATH}:/cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe"
-fi
+HASKTAGS="/cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe"
+[[ -d ${HASKTAGS} ]] && PATH="${PATH}:${HASKTAGS}"
 # - wordnet
-PATH="${PATH}:/usr/local/WordNet-3.0/bin"
-WNHOME="/usr/local/WordNet-3.0"
+WORDNET="/usr/local/WordNet-3.0"
+PATH="${PATH}:${WORDNET}/bin"
+WNHOME="${WORDNET}"
+# - rakudobrew/perl6
+RAKUDOBIN="${HOME}/.rakudobrew/bin"
+[[ -d ${RAKUDOBIN} ]] && PATH="${RAKUDOBIN}:${PATH}"
 
 # - export
 export PATH
