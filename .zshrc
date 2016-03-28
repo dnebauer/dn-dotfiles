@@ -144,7 +144,8 @@ done
 eval RESET='$reset_color'
 
 # - dictionary and thesaurus (uses WordNet v3.0)
-if [ "${OSTYPE}" = 'cygwin' -a -f /usr/local/WordNet-3.0/bin/wn.exe ] ; then
+wordnet="/usr/local/WordNet-3.0"
+if [ "${OSTYPE}" = 'cygwin' -a -f "${wordnet}/bin/wn.exe" ] ; then
     autoload_my_fns dict
 fi
 
@@ -225,25 +226,37 @@ export DISABLE_AUTO_TITLE='true'
 # - base
 PATH="/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/games"
 # - perl local::lib
+#   . 2016-03-13: discovered that PERL5LIB and PERL_LOCAL_LIB_ROOT
+#     are set to their desired values before reaching this point,
+#     so check value of vars before adding to them
 PATH="${HOME}/perl5/bin${PATH+:}${PATH}";
-PERL5LIB="${HOME}/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"
-PERL_LOCAL_LIB_ROOT="${HOME}/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"
-PERL_MB_OPT="--install_base \"${HOME}/perl5\""
-PERL_MM_OPT="INSTALL_BASE=${HOME}/perl5"
+perl5_lib="${HOME}/perl5/lib/perl5"
+[[ "${PERL5LIB}" != "${perl5_lib}" ]] && \
+    PERL5LIB="${perl5_lib}${PERL5LIB+:}${PERL5LIB}"
+unset perl5_lib
+perl5_root="${HOME}/perl5"
+[[ "${PERL_LOCAL_LIB_ROOT}" != "${perl5_root}" ]] && \
+    PERL_LOCAL_LIB_ROOT="${perl5_root}${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"
+PERL_MB_OPT="--install_base \"${perl5_root}\""
+PERL_MM_OPT="INSTALL_BASE=${perl5_root}"
+unset perl5_root
 manpath="${HOME}/perl5/man${manpath+:}${manpath}"
 # - npm
-NPM="/cygdrive/c/Program\ Files/nodejs"
-[[ -d "${NPM}" ]] && PATH="${PATH}:${NPM}"
+npm="/cygdrive/c/Program\ Files/nodejs"
+[[ -d "${npm}" ]] && PATH="${PATH}:${npm}"
+unset npm
 # - hasktags
-HASKTAGS="/cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe"
-[[ -d ${HASKTAGS} ]] && PATH="${PATH}:${HASKTAGS}"
+hasktags="/cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe"
+[[ -d ${hasktags} ]] && PATH="${PATH}:${hasktags}"
+unset hasktags
 # - wordnet
-WORDNET="/usr/local/WordNet-3.0"
-PATH="${PATH}:${WORDNET}/bin"
-WNHOME="${WORDNET}"
+PATH="${PATH}:${wordnet}/bin"
+WNHOME="${wordnet}"
+unset wordnet
 # - rakudobrew/perl6
-RAKUDOBIN="${HOME}/.rakudobrew/bin"
-[[ -d ${RAKUDOBIN} ]] && PATH="${RAKUDOBIN}:${PATH}"
+rakudobin="${HOME}/.rakudobrew/bin"
+[[ -d ${rakudobin} ]] && PATH="${rakudobin}:${PATH}"
+unset rakudobin
 
 # - export
 export PATH
