@@ -76,100 +76,6 @@ function! VrcHasExecutables(executables)
     endfor
     return l:result
 endfunction                                                     " }}}2
-" function VrcLocalRepoUpdatedRecently(dir, time)                 {{{2
-" intent: check that a local repository has been updated
-"         within a given time period
-" params: dir  - directory containing local repository
-"         time - time in seconds
-" prints: error messages if setup fails
-" return: boolean
-" note:   determines time of last 'fetch' operation
-"         (so also 'pull' operations)
-" note:   uses python and python modules 'os' and 'time'
-" note:   designed to determine whether repo needs to be
-"         updated, so if it fails it returns false,
-"         presumably triggering an update
-" note:   a week is 604800 seconds
-" note:   will display error message if:
-"         - cannot find '.git/FETCH_HEAD' file in directory
-"         - time value is invalid
-" note:   will fail silently if:
-"         - python is absent
-function! VrcLocalRepoUpdatedRecently(dir, time)
-    " need python
-    if ! executable('python') | return | endif
-    " check parameters
-    let l:dir = resolve(expand(a:dir))
-    if ! isdirectory(l:dir)
-        echoerr "Not a valid directory ('" . l:dir . "')"
-        return
-    endif
-    let l:fetch = l:dir . '/.git/FETCH_HEAD'
-    if ! filereadable(l:fetch)
-        echoerr "Not a valid git repository ('" . l:dir . "')"
-        return
-    endif
-    if a:time !~ '^0$\|^[1-9][0-9]*$'
-        echoerr "Not a valid time ('" . a:time . "')"
-    endif
-    " get time of last fetch (in seconds since epoch)
-    let l:cmd = "python -c \"import os;print os.stat('"
-                \ . l:fetch . "').st_mtime\""
-    let l:last_fetch_list = systemlist(l:cmd)
-    if v:shell_error | return | endif
-    if type(l:last_fetch_list) != type([]) || len(l:last_fetch_list) != 1
-                \ || len(l:last_fetch_list[0]) == 0
-        " expected single-item list
-        return
-    endif
-    let l:last_fetch = l:last_fetch_list[0]
-    " get current time (in seconds since epoch)
-    let l:cmd = "python -c \"import time;print int(time.time())\""
-    let l:now_list = systemlist(l:cmd)
-    if v:shell_error | return | endif
-    if type(l:now_list) != type([]) || len(l:now_list) != 1
-                \ || len(l:now_list[0]) == 0
-        " expected single-item list
-        return
-    endif
-    let l:now = l:now_list[0]
-    " have both time values
-    " - if less than the supplied time then return true
-    let l:diff = l:now - l:last_fetch
-    if l:diff < a:time | return 1 | else | return | endif
-endfunction                                                     " }}}2
-" function VrcLocalRepoFetch(dir)                                 {{{3
-" intent: perform a fetch on a local git repository
-" params: path to '.git' subdirectory in repository
-" prints: error messages if fails
-" return: boolean, whether fetch successful
-function! VrcLocalRepoFetch(dir)
-    " check directory
-    let l:dir = resolve(expand(a:dir))
-    if ! isdirectory(l:dir)
-        echoerr "Invalid repository '.git' directory ('" . a:dir . "')"
-        return
-    endif
-    " need git
-    if ! executable('git')  " need git to update
-        echoerr 'Cannot find git - unable to perform fetch operation'
-        return
-    endif
-    " do fetch
-    let l:cmd = "git --git-dir='" . l:dir . "' fetch"
-    if exists('l:err') | unlet l:err | endif
-    let l:err = systemlist(l:cmd)
-    if v:shell_error
-        echoerr "Unable to perform fetch operation on '" . a:dir . "'"
-        if len(l:err) > 0
-            echoerr 'Error message:'
-            for l:line in l:err | echoerr '  ' . l:line | endfor
-        endif
-        return
-    endif  " v:shell_error
-    " success if still here
-    return 1
-endfunction                                                     " }}}3
 
 " VARIABLES:                                                    " {{{1
 " set os-dependent variables                                      {{{2
@@ -253,11 +159,9 @@ NeoBundle 'Shougo/neocomplete'                 " completion engine
     NeoBundle 'Shougo/neco-vim'                " vimscript completion
 NeoBundle 'Shougo/neosnippet'                  " snippets engine
     NeoBundle 'honza/vim-snippets'             " snippets collection
-    " Bundle 'jhradilek/vim-docbk'                                {{{4
-    " - docbook and relax ng snippets
-    " - installed to custom directory and accessed using
-    "   neosnippet variable g:neosnippet#snippets_directory
-    " - see 'COMPLETION AND SNIPPETS' section below for details   }}}4
+    " Bundle 'jhradilek/vim-snippets'                             {{{4
+    " - default location causes clash with honza/vim-snippets
+    " - installed to custom location by ftplugin vim-dn-docbk     }}}4
 " delimitate (autocomplete parens, quotes, brackets, etc.)        {{{3
 NeoBundle 'raimondi/delimitmate'                                " }}}3
 " docbook                                                         {{{3
@@ -750,62 +654,6 @@ let g:neosnippet#snippets_directory = []
 " add honza/vim-snippets (all languages)                          {{{4
 call add(g:neosnippet#snippets_directory, 
             \ $VIM_HOME . '/bundle/vim-snippets/snippets')
-" add jhradilek/vim-snippets (docbook, relax ng)                  {{{4
-" - install to custom directory (~/.vim/repos/jhradilek/vim-snippets)
-function! VrcAddDocbkSnippetsDir()                              " {{{5
-    " ensure up to date snippet files from jhradilek/vim-docbk
-    " are available in ~/.vim/repos/jhradilek/vim-snippets
-    " check for repo directory
-    let l:root = $VIM_HOME . '/repos/jhradilek'
-    let l:dir = l:root . '/vim-snippets'
-    let l:git = l:dir . '/.git'
-    let l:snippets = l:dir . '/snippets'
-    " try to add repo if not found
-    let l:repo = 'https://github.com/jhradilek/vim-snippets.git'
-    if ! isdirectory(l:git)
-        if ! executable('git')
-            echoerr 'Cannot find docbook snippets'
-            echoerr 'Cannot find git - unable to install them'
-            return
-        endif
-        echo 'Installing docbook and rng snippets...'
-        let l:cmd = 'git clone ' . l:repo . ' ' . l:dir
-        let l:err = systemlist(l:cmd)
-        if v:shell_error
-            echoerr 'Cannot find docbook snippets'
-            echoerr 'Unable to install docbook snippets'
-            if len(l:err) > 0
-                echoerr 'Error message:'
-                for l:line in l:err | echoerr '  ' . l:line | endfor
-            endif
-            return
-        endif  " v:shell_error
-        " perform initial fetch operation to ensure existence
-        " of '.git/FETCH_HEAD'
-        if VrcLocalRepoFetch(l:git) | echo 'Done' | endif
-    endif  " ! isdirectory(l:git)
-    " add snippets directory
-    if isdirectory(l:snippets)
-        call add(g:neosnippet#snippets_directory, l:snippets)
-    else
-        echoerr 'Unable to find docbook snippets directory'
-    endif
-    " exit if can't find local repo
-    "  - must have been error message generated above
-    if ! isdirectory(l:git) | return | endif
-    " decide whether need to update
-    if VrcLocalRepoUpdatedRecently(l:dir, 604800)  " try to update
-        if ! executable('git')  " need git to update
-            echoerr 'Cannot find git - unable to ensure'
-            echoerr 'docbook snippets are up to date'
-            return
-        endif
-        if ! VrcLocalRepoFetch(l:git) | return | endif
-    endif  " l:do_fetch
-    " presume success if haven't exited yet
-    return 1
-endfunction                                                     " }}}5
-call VrcAddDocbkSnippetsDir()                                   " }}}4
 
 " NAVIGATION AND EDITING KEYS:                                  " {{{1
 " navigate buffers, MRU, yank history (unite plugin)              {{{2
@@ -857,6 +705,7 @@ let g:syntastic_auto_loc_list = 1                               " }}}2
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0                                 " }}}2
 " docbook settings                                                {{{2
+" - used by vim-dn-docbk ftplugin
 let g:dn_docbk_relaxng_schema =
             \ '/usr/share/xml/docbook/schema/rng/5.0/docbook.rng'
 let g:dn_docbk_schematron_schema =
