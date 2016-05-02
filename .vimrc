@@ -102,7 +102,9 @@ endif                                                           " }}}2
 "       NeoBundleInstall! [within vim], or
 "       vim +NeoBundleInstall! +qall [command line]               }}}2
 " setup neobundle                                               " {{{2
-set nocompatible
+if !has('nvim')
+    set nocompatible
+endif
 filetype off
 " may need make to build bundle
 let g:make = 'gmake'
@@ -250,7 +252,9 @@ syntax enable                                                   " }}}2
 " dispense with outdated vi compatibility                         {{{2
 " - nocompatible was set at beginning of plugin handling          }}}2
 " use utf-8 encoding                                              {{{2
-set encoding=utf-8
+if !has('nvim')
+    set encoding=utf-8
+endif
 " try Australian, UK, US and generic English language settings in turn
 " E197 error means could not set language
 try | lang en_AU | catch /^Vim\((\a\+)\)\=:E197:/
@@ -275,7 +279,9 @@ set t_vb="<Esc>|1000f"
 " highlight line cursor is on
 set cursorline
 " assume terminal is fast
-set ttyfast
+if !has('nvim')
+    set ttyfast
+endif
 " no redraw executing macros, etc.
 set lazyredraw
 " show the cursor position all the time
@@ -293,13 +299,17 @@ set linebreak
 " don't wrap words by default
 set textwidth=0
 " status line always displayed
-set laststatus=2
+if !has('nvim')
+    set laststatus=2
+endif
 " show line numbers relative to cursor line
 set relativenumber
 " toggle line numbering: <F7> [N]
 nnoremap <silent> <F7> :set nu!<CR>
 " when tab-completing command show matches above cmd line...
-set wildmenu
+if !has('nvim')
+    set wildmenu
+endif
 " ...and list all matches; complete till longest string
 set wildmode=list:longest
 " show (partial) command in status line
@@ -541,7 +551,9 @@ set softtabstop=4
 " force spaces for tabs
 set expandtab
 " copy indent from current line to new
-set autoindent
+if !has('nvim')
+    set autoindent
+endif
 " attempt intelligent indenting
 set smartindent
 " number of spaces to use for autoindent
@@ -669,7 +681,9 @@ let g:unite_source_history_yank_enable = 1
 nnoremap <Leader><Space>y :<C-u>Unite history/yank<CR>
                                                                 " }}}3
 " backspace behaviour in insert mode                              {{{2
-set backspace=indent,eol,start
+if !has('nvim')
+    set backspace=indent,eol,start
+endif
 " move a line of text up or down: <M-j>,<M-k> [N,V]               {{{2
 nnoremap <M-j> mz:m+<cr>`z
 vnoremap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
@@ -726,9 +740,13 @@ set smartcase
 " default to change all matches; 'g' now toggles to first only
 set gdefault
 " incremental search; display progressive match
-set incsearch
+if !has('nvim')
+    set incsearch
+endif
 " highlight search terms
-set hlsearch
+if !has('nvim')
+    set hlsearch
+endif
 " force normal regex during search: /,? [N]
 nnoremap / /\v
 nnoremap ? ?\v
@@ -823,14 +841,18 @@ call VrcAddThesaurus($VIM_HOME . '/thes/moby.thes')
 
 " SAVING AND BUFFER BEHAVIOUR:                                    {{{1
 " auto re-read of file if changed outside vim
-set autoread
+if !has('nvim')
+    set autoread
+endif
 " don't keep a backup file
 set nobackup
 " remember marks for 20 previous files
 " keep 50 lines of registers
 set viminfo='20,<50
-" keep 50 lines of command line history
-set history=50
+" keep maximum command line history
+if !has('nvim')
+    set history=1000
+endif
 " undo history persists in a file
 set undofile
 " avoid clutter of backup|swap|undo files in local dir
@@ -1277,21 +1299,10 @@ endif                                                           " }}}3
 
 " MISCELLANEOUS:                                                  {{{1
 " use of clipboard with copying                                   {{{2
-" - all yanked, deleted, changed and pasted text is
-"   put into the system clipboard and can be pasted
-"   into another vim instance using a vim paste
-"   ('unnamed')
-" - any visually selected text in vim, or globally-
-"   selected text in the windowing system, can be
-"   pasted in any vim instance using the windowing
-"   system's mechanism; and vice versa in that
-"   visually selected text in vim can be pasted into
-"   any other application in the windowing system;
-"   in X that means any mouse-selected text in any
-"   application can be pasted into vim using a
-"   mousewheel click or a vim paste, and vice versa
-"   ('autoselect')
-set clipboard=unnamed,autoselect                                " }}}2
+if has('unnamedplus')
+    set clipboard+=unnamedplus
+endif
+set clipboard+=unnamed                                          " }}}2
 " files to deprioritise when file-matching                        {{{2
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,
             \.ind,.idx,.ilg,.inx,.out,.toc                      " }}}2
