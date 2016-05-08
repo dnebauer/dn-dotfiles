@@ -192,6 +192,8 @@ if executable('perldoc')
     NeoBundle 'perlhelp.vim'
 endif
 NeoBundle 'dnebauer/vim-dn-perl'                                " }}}3
+" search                                                          {{{3
+NeoBundle 'haya14busa/incsearch.vim'                            " }}}3
 " sparkup (write faster html)                                     {{{3
 NeoBundle 'rstacruz/sparkup'                                    " }}}3
 " status line modification                                        {{{3
@@ -747,51 +749,31 @@ endif
 if !has('nvim')
     set hlsearch
 endif
-" force normal regex during search: /,? [N]
-nnoremap / /\v
-nnoremap ? ?\v
-" search for selected text: /,? [V]
-vnoremap / y/\v<C-R>"<CR>
-vnoremap ? y?\v<C-R>"<CR>
-" function VrcVisual(direction)                                   {{{2
-" visual selection is used for various searches
-" params: 1 - direction/type ['f'|'b'|'gv'|replace']
-" return: nil
-function! VrcVisual(direction) range
-    " store away contents of unnamed register and save selection to it
-    let l:saved_reg = @"
-    execute "normal! vgvy"
-    " tidy up selection by escaping control characters and removing newlines
-    let l:pattern = escape(@", '\\/.*$^~[]')
-    let l:pattern = substitute(l:pattern, "\n$", '', '')
-    " extend selection forwards to next match on current selection
-    if     a:direction == 'f'
-        execute "normal /" . l:pattern . "<CR>"
-    " extend selection backwards to next match on current selection
-    elseif a:direction == 'b'
-        execute "normal 2?" . l:pattern . "<CR>"
-    " search current directory recursively for selection
-    elseif a:direction == 'gv'
-        call VrcCmd("vimgrep " . '/' . l:pattern . '/' . ' **/*')
-    " make selection target for substitution
-    elseif a:direction == 'replace'
-        call VrcCmd('%s' . '/'. l:pattern . '/')
-    endif
-    " save selection to last search pattern register
-    let @/ = l:pattern
-    " restore unnamed register contents
-    let @" = l:saved_reg
-endfunction                                                     " }}}2
-" extend selection to next match for initial selection: *,# [V]
-" note that '#' does not currently work
-vnoremap <silent> * :call VrcVisual('f')<CR>
-vnoremap <silent> # :call VrcVisual('b')<CR>
-" search current directory recursively for selected text (vimgrep): gv [V]
-vnoremap <silent> gv :call VrcVisual('gv')<CR>
-" make selected text target of a substitution command: \r [V]
-vnoremap <silent> <Leader>r :call VrcVisual('replace')<CR>
-" turn off match highlighing: <Space><Space> [N]
-nnoremap <silent> <Leader><Space><Space> :nohlsearch<CR>
+" incsearch.vim configuration for advanced searching
+" regular forward and back searching [/,?]                      " {{{2
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+" forward search without moving cursor [g/]                     " {{{2
+map g/ <Plug>(incsearch-stay)
+" automatically turn off highlighting after search              " {{{2
+let g:incsearch#auto_nohlsearch = 1
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+" jump between matches while searching [Left,Right,Up,Down]     " {{{2
+augroup incsearch-keymap
+    autocmd!
+    autocmd VimEnter * call s:incsearch_keymap()
+augroup END
+function! s:incsearch_keymap()
+    IncSearchNoreMap <Right> <Over>(incsearch-next)
+    IncSearchNoreMap <Left>  <Over>(incsearch-prev)
+    IncSearchNoreMap <Down>  <Over>(incsearch-scroll-f)
+    IncSearchNoreMap <Up>    <Over>(incsearch-scroll-b)
+endfunction
 
 " SPELLING AND THESAURUS:                                         {{{1
 " using combined AU/GB spell file in $VIM_HOME/spell/
@@ -934,9 +916,8 @@ augroup all_files
 augroup END                                                     " }}}2
 
 " PRINTING:                                                       {{{1
-" windows                                                         {{{2
-"   use default print system                                      }}}2
-" unix                                                            {{{2
+" windows: use default print system
+" unix: use highlighted postscript if possible                    {{{2
 " function VrcUseVimPostScript(fname)                             {{{3
 " intent: print vim's postscript output
 " params: 1 - filepath to vim's postscript output
