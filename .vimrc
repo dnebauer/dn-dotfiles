@@ -80,11 +80,11 @@ endfunction                                                     " }}}2
 " VARIABLES:                                                    " {{{1
 " set os-dependent variables                                      {{{2
 " - win32unix is cygwin/babun
-if has('win32') || has ('win64') || has('win95')
+if has('win32') || has ('win64') || has('win95') || has('win32unix')
     let $VIM_HOME = $HOME . '/vimfiles'
     let $VIM_RC = '_vimrc'
     let $VIM_OS = 'windows'
-elseif has('unix') || has('win32unix')
+elseif has('unix')
     let $VIM_HOME = $HOME . '/.vim'
     let $VIM_RC = '.vimrc'
     let $VIM_OS = 'unix'
@@ -174,7 +174,10 @@ NeoBundle 'whatdomain.vim'                                      " }}}3
 " hardmode (disable character-wise navigation)                    {{{3
 NeoBundle 'wikitopian/hardmode'                                 " }}}3
 " headlights (add bundles menu)                                   {{{3
-NeoBundle 'mbadran/headlights'                                  " }}}3
+" - the vim installed with git-bash/MinTTY does not support python2.6+
+if has('win32unix') && has('python')
+    NeoBundle 'mbadran/headlights'
+endif                                                           " }}}3
 " html5                                                           {{{3
 NeoBundle 'othree/html5.vim'
 " info (gnu info documentation viewer)                            {{{3
@@ -201,34 +204,39 @@ NeoBundle 'bling/vim-airline'                                   " }}}3
 " syntax checker                                                  {{{3
 NeoBundle 'scrooloose/syntastic'                                " }}}3
 " tagbar (class outline viewer)                                   {{{3
-NeoBundle 'majutsushi/tagbar'
-    " requires easytags
-    NeoBundle 'xolox/vim-easytags'
-        " requires misc
-        NeoBundle 'xolox/vim-misc'
-    " javascript support
-        " not available in cygwin as nodejs no longer supported in cygwin
-        " install jcstags using command:
-        "   su -c "npm install -g git://github.com/ramitos/jsctags.git"
-        " configured later under TagList configuration
-        " jcstags requires tern_for_vim
-    if system('uname -o') !~ '^Cygwin'
-        NeoBundle 'marijnh/tern_for_vim'
-    endif
-        " requires node.js (deb 'nodejs') and npm (deb 'npm')
-        " must install tern server in bundle directory with command:
-        "   npm install
-    " markdown support
-    NeoBundle 'jszakmeister/markdown2ctags'
-        " configured later under TagList configuration
-    " php support
-        " not available in cygwin as build fails
-    if system('uname -o') !~ '^Cygwin'
-        NeoBundle 'vim-php/tagbar-phpctags.vim'
-    endif
-        " must build 'phpctags' executable in bundle dir with command:
-        "   make
-        " configured later under TagBar configuration             }}}3
+" - in git-bash/MinTTY easytags and misc fail with errors:
+"   . vim-misc - 'Failed to read temporary file...'
+"   . easytags - '...Exuberant ctags isn't installed...'
+if ! has('win32unix')
+    NeoBundle 'majutsushi/tagbar'
+        " requires easytags
+        NeoBundle 'xolox/vim-easytags'
+            " requires misc
+            NeoBundle 'xolox/vim-misc'
+        " javascript support
+            " not available in cygwin as nodejs no longer supported in cygwin
+            " install jcstags using command:
+            "   su -c "npm install -g git://github.com/ramitos/jsctags.git"
+            " configured later under TagList configuration
+            " jcstags requires tern_for_vim
+        if system('uname -o') !~ '^Cygwin'
+            NeoBundle 'marijnh/tern_for_vim'
+        endif
+            " requires node.js (deb 'nodejs') and npm (deb 'npm')
+            " must install tern server in bundle directory with command:
+            "   npm install
+        " markdown support
+        NeoBundle 'jszakmeister/markdown2ctags'
+            " configured later under TagList configuration
+        " php support
+            " not available in cygwin as build fails
+        if system('uname -o') !~ '^Cygwin'
+            NeoBundle 'vim-php/tagbar-phpctags.vim'
+        endif
+            " must build 'phpctags' executable in bundle dir with command:
+            "   make
+            " configured later under TagBar configuration
+endif                                                           " }}}3
 " thesaurus (online, mapped to <Leader>K)                         {{{3
 NeoBundle 'beloglazov/vim-online-thesaurus'                     " }}}3
 " tmux                                                            {{{3
