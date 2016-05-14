@@ -1386,8 +1386,8 @@ augroup manpage_files
     au BufNewFile *.[0-9] call DNU_LoadTemplate('manpage')
 augroup END                                                     " }}}2
 " markdown                                                        {{{2
-" - use template file and set pandoc templates
-" function VrcMarkdownSetup(action)                               {{{3
+" - use template file and set pandoc templates                    {{{3
+" function VrcMarkdownSetup(action)                               {{{4
 " intent: setup for markdown file editing
 " params: 1 - action ('insert'|'load')
 " prints: error message if function not found
@@ -1409,12 +1409,14 @@ function! VrcMarkdownSetup(action)
             call DNU_Error('Invalid VrcMyTagContext parameter: '. a:action)
         endif
     endif
-endfunction                                                     " }}}3
+endfunction                                                     " }}}4
 augroup markdown_files
     au!
     au BufReadPost *.md call VrcMarkdownSetup('insert')
     au BufNewFile *.md call VrcMarkdownSetup('load')
-augroup END                                                     " }}}2
+augroup END
+" - add system dictionary to word completions                     {{{3
+au FileType text setlocal complete+=k
 " perl module                                                     {{{2
 " - use template file
 augroup perl_module_files
@@ -1452,6 +1454,9 @@ augroup shellscript_files
     au BufRead *.sh call DNU_InsertTemplate('shellscript')
     au BufNewFile *.sh call DNU_LoadTemplate('shellscript')
 augroup END                                                     " }}}2
+" text                                                            {{{2
+" - add system dictionary to word completions
+au FileType markdown setlocal complete+=k                       " }}}2
 " txt2tags                                                        {{{2
 " - use syntax highlighting
 augroup txt2tag_files
