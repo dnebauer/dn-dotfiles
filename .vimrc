@@ -166,6 +166,8 @@ NeoBundle 'Shougo/neosnippet'                  " snippets engine
     " - installed to custom location by ftplugin vim-dn-docbk     }}}4
 " delimitate (autocomplete parens, quotes, brackets, etc.)        {{{3
 NeoBundle 'raimondi/delimitmate'                                " }}}3
+" dictionary                                                      {{{3
+NeoBundle 'inkarkat/vim-dict'                                   " }}}3
 " docbook                                                         {{{3
 NeoBundle 'jhradilek/vim-docbk'
 NeoBundle 'dnebauer/vim-dn-docbk'                               " }}}3
