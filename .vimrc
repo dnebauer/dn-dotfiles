@@ -1290,10 +1290,21 @@ endif                                                           " }}}3
 
 " MISCELLANEOUS:                                                  {{{1
 " use of clipboard with copying                                   {{{2
-if has('unnamedplus')
-    set clipboard+=unnamedplus
-endif
-set clipboard+=unnamed                                          " }}}2
+" - all yanked, deleted, changed and pasted text is
+"   put into the system clipboard and can be pasted
+"   into another vim instance using a vim paste
+"   ('unnamed')
+" - any visually selected text in vim, or globally-
+"   selected text in the windowing system, can be
+"   pasted in any vim instance using the windowing
+"   system's mechanism; and vice versa in that
+"   visually selected text in vim can be pasted into
+"   any other application in the windowing system;
+"   in X that means any mouse-selected text in any
+"   application can be pasted into vim using a
+"   mousewheel click or a vim paste, and vice versa
+"   ('autoselect')
+set clipboard=unnamed,autoselect                                " }}}2
 " files to deprioritise when file-matching                        {{{2
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,
             \.ind,.idx,.ilg,.inx,.out,.toc                      " }}}2
