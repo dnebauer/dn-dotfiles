@@ -934,6 +934,10 @@ augroup END                                                     " }}}2
 " prints: feedback
 " return: nil
 " depend: assumes kprinter4 is available
+"         requires debian packages kprinter4, libkutils4 (library has
+"         been split into libkcmutils4, libkprintutils4, libkidletime4
+"         and libkemoticons4, and kprinter4 will eventually compile
+"         against those libraries)
 " note:   vim handles return values from printing as per v:shell_error
 "         that is, boolean values are reversed (1=failure, 0=success)
 function! VrcUseVimPostScript(fname)
