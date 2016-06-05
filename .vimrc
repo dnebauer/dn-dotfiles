@@ -73,11 +73,9 @@ endfunction                                                     " }}}2
 " - win32unix is cygwin/babun
 if has('win32') || has ('win64') || has('win95') || has('win32unix')
     let $VIM_HOME = $HOME . '/vimfiles'
-    let $VIM_RC = '_vimrc'
     let $VIM_OS = 'windows'
 elseif has('unix')
     let $VIM_HOME = $HOME . '/.vim'
-    let $VIM_RC = '.vimrc'
     let $VIM_OS = 'unix'
 endif                                                           " }}}2
 
