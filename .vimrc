@@ -165,8 +165,8 @@ NeoBundle 'whatdomain.vim'                                      " }}}3
 " hardmode (disable character-wise navigation)                    {{{3
 NeoBundle 'wikitopian/hardmode'                                 " }}}3
 " headlights (add bundles menu)                                   {{{3
-" - the vim installed with git-bash/MinTTY does not support python2.6+
-if has('win32unix') && has('python')
+" - requires vim 7+ compiled with python 2.6+ support
+if v:version >= 700 && has('python')
     NeoBundle 'mbadran/headlights'
 endif                                                           " }}}3
 " html5                                                           {{{3
