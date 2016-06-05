@@ -5,15 +5,6 @@
 "   - version 3.6 - 25/08/10 14:40:30
 
 " UTILITY FUNCTIONS:                                            " {{{1
-" function VrcCmd(cmd)                                            {{{2
-" intent: execute command line command
-" params: 1 - command
-" return: nil
-function! VrcCmd(cmd)
-    execute 'menu Foo.Bar :' . a:cmd
-    emenu Foo.Bar
-    unmenu Foo
-endfunction                                                     " }}}2
 " function VrcMsg(msg, [clear])                                   {{{2
 " intent: display message in command line
 " params: 1 - message
@@ -808,8 +799,8 @@ endfunction                                                     " }}}2
 " params: nil
 " return: nil
 function! VrcSpellToggle()
-    call VrcCmd('setlocal spell!<CR>')
-    call VrcCmd('redraw<CR>')
+    setlocal spell!
+    redraw
     call VrcSpellStatus()
 endfunction                                                     " }}}2
 " toggle spelling: \st [N,I]
