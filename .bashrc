@@ -95,63 +95,64 @@ fi
 #export JAVA_HOME=/usr/local/java/j2re
 #export JAVA_HOME="/usr/lib/jvm/java-1.5.0-sun/jre/"
 #export JAVA_HOME="/usr/lib/jvm/java-6-sun"
-if [ -d /usr/lib/jvm/java-7-openjdk-amd64 ] ; then
-    export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
-fi
+dir="/usr/lib/jvm/java-7-openjdk-amd64"
+[ -d "${dir}" ] && export JAVA_HOME="${dir}"
 # - catalog file (XML/DocBook URL resolution)
-if [ -f /etc/xml/catalog ] ; then
-    export XML_CATALOG_FILES="/etc/xml/catalog"
-fi
-if [ -f /etc/sgml/catalog ] ; then
-    export SGML_CATALOG_FILES="/etc/sgml/catalog"
-fi
+file="/etc/xml/catalog"
+[ -f "${file}" ] && export XML_CATALOG_FILES="${file}"
+file="/etc/sgml/catalog"
+[ -f "${file}" ] && export SGML_CATALOG_FILES="${file}"
 # - locale
 export LANG="en_AU.UTF-8"
 # - pstill
-if [ -d /usr/local/pstill_dist ] ; then
-    export PSTILL_PATH="/usr/local/pstill_dist"
+dir="/usr/local/pstill_dist"
+if [ -d "${dir}" ] ; then
+    export PSTILL_PATH="${dir}"
     export PSTILL_LICENSE="DavidNebauer=4721e23f1ffed02d\!FSNIGSRJ"
 fi
 # - docbook/xml configuration
-if [ -d "{HOME}/conf/xml" ] ; then
-    export DBN_ROOT="${HOME}/conf/xml"
-fi
+dir="${HOME}/conf/xml"
+[ -d "${dir}" ] && export DBN_ROOT="${dir}"
 # - shellscript libraries
-if [ -f /usr/share/libdncommon-bash/liball ] ; then
-    export DN_BASH_FNS="/usr/share/libdncommon-bash/liball"
-fi
+file="/usr/share/libdncommon-bash/liball"
+[ -f "${file}" ] && export DN_BASH_FNS="${file}"
 # - path
 #   + cask
-if [ -d "${HOME}/.cask/bin" ] ; then
-    PATH="${PATH}:${HOME}/.cask/bin"
-fi
+dir="${HOME}/.cask.bin"
+[ -d "${dir}" ] && PATH="${PATH}:${dir}"
 #   + android sdk
-if [ -d "${HOME}/data/computing/projects/android/sdk/platform-tools" ] ; then
-    PATH="${PATH}:${HOME}/data/computing/projects/android/sdk/platform-tools"
-fi
+dir="${HOME}/data/computing/projects/android/sdk/platform-tools"
+[ -d "${dir}" ] && PATH="${PATH}:${dir}"
 #   + docbook/xml configure
-if [ -z "${DBN_ROOT}" -a -d "${DBN_ROOT}/bin" ] ; then
-    PATH="${PATH}:${DBN_ROOT}/bin"
-fi
+dir="${DBN_ROOT}/bin"
+[ -z "${DBN_ROOT}" -a -d "${dir}" ] && PATH="${PATH}:${dir}"
 #   + games
-if [ -d /usr/games ] ; then
-    PATH="${PATH}:/usr/games/"
-fi
-if [ -d /usr/local/games ] ; then
-    PATH="${PATH}:/usr/local/games"
-fi
+dir="/usr/games"
+[ -d "${dir}" ] && PATH="${PATH}:${dir}"
+dir="/usr/local/games"
+[ -d "${dir}" ] && PATH="${PATH}:${dir}"
 #   + pstill_dist
-if [ -d /usr/local/pstill_dist ] ; then
-    PATH="${PATH}:/usr/local/pstill_dist"
-fi
-#   + npm/nodejs
-if [ -d /cygdrive/c/Program\ Files/nodejs ] ; then
-    PATH="${PATH}:/cygdrive/c/Program Files/nodejs"
-fi
+[ -d "${PSTILL_PATH}" ] && PATH="${PATH}:${PSTILL_PATH}"
+#   + npm on cygwin
+dir_find=/cygdrive/c/Program\ Files/nodejs
+dir_add='/cygdrive/c/Program\ Files/nodejs'
+[ -d "${dir_find}" ] && PATH="${PATH}:${dir_add}"
+unset dir_find dir_add
 #   + hasktags
-if [ -d /cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe ] ; then
-    PATH="${PATH}:/cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe"
-fi
+dir="/cygdrive/c/dtn/AppData/Roaming/cabal/bin/"
+[ -d "${dir}" ] && PATH="${PATH}:${dir}"
+#   + local executables
+dir="${HOME}/.local/bin"
+[ -d "${dir}" ] && PATH="${dir}:${PATH}"
+export PATH
+# - npm (in ~/.npmrc configured with prefix of ${HOME}/.local)
+dir="${HOME}/.local/lib/node_modules"
+export NODE_PATH="${NODE_PATH}:${dir}"
+# - manpath
+#   + local executables
+dir="${HOME}/.local/share/man"
+export manpath="${manpath}${manpath:+:}${dir}"
+unset dir file dir_find dir_add
 
 # cdargs (cv) support
 if [ -f /usr/share/doc/cdargs/examples/cdargs-bash.sh ] ; then

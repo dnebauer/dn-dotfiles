@@ -240,24 +240,37 @@ perl5_root="${HOME}/perl5"
 PERL_MB_OPT="--install_base \"${perl5_root}\""
 PERL_MM_OPT="INSTALL_BASE=${perl5_root}"
 unset perl5_root
-manpath="${HOME}/perl5/man${manpath+:}${manpath}"
-# - npm
-npm="/cygdrive/c/Program\ Files/nodejs"
-[[ -d "${npm}" ]] && PATH="${PATH}:${npm}"
-unset npm
-# - hasktags
-hasktags="/cygdrive/c/dtn/AppData/Roaming/cabal/bin/hasktags.exe"
-[[ -d ${hasktags} ]] && PATH="${PATH}:${hasktags}"
-unset hasktags
+perl5_man="${HOME}/perl5/man"
+manpath="${perl5_man}${manpath+:}${manpath}"
+unset perl5_man
+# - node.js-installed binaries on cygwin
+node_js="/cygdrive/c/Program\ Files/nodejs"
+[[ -d "${node_js}" ]] && PATH="${PATH}:${node_js}"
+unset node_js
+# - haskell-installed binaries on cygwin
+hask_bin="/cygdrive/c/dtn/AppData/Roaming/cabal/bin"
+[[ -d "${hask_bin}" ]] && PATH="${PATH}:${hask_bin}"
+unset hask_bin
 # - wordnet
 PATH="${PATH}:${wordnet}/bin"
 WNHOME="${wordnet}"
 unset wordnet
 # - rakudobrew/perl6
-rakudobin="${HOME}/.rakudobrew/bin"
-[[ -d ${rakudobin} ]] && PATH="${rakudobin}:${PATH}"
-unset rakudobin
-
+rakudo_bin="${HOME}/.rakudobrew/bin"
+[[ -d "${rakudo_bin}" ]] && PATH="${rakudo_bin}:${PATH}"
+unset rakudo_bin
+# - local executables
+local_bin="${HOME}/.local/bin"
+[[ -d "${local_bin}" ]] && PATH="${local_bin}:${PATH}"
+unset local_bin
+# - npm-installed apps
+#   . in ~/.npmrc is configured with prefix of ~/.local
+npm_mod="${HOME}/.local/lib/node_modules"
+NODE_PATH="${NODE_PATH}${NODE_PATH+:}${npm_mod}"
+unset npm_mod
+npm_man="${HOME}/.local/share/man"
+manpath="${manpath}${manpath+:}${npm_man}"
+unset npm_man
 # - export
 export PATH
 export PERL5LIB
@@ -266,6 +279,7 @@ export PERL_MB_OPT
 export PERL_MM_OPT
 export manpath
 export WNHOME
+export NODE_PATH
 
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
