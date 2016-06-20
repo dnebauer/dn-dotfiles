@@ -1477,7 +1477,7 @@ augroup shellscript_files
 augroup END                                                     " }}}2
 " text                                                            {{{2
 " - add system dictionary to word completions
-au FileType markdown setlocal complete+=k                       " }}}2
+au FileType text setlocal complete+=k                           " }}}2
 " txt2tags                                                        {{{2
 " - use syntax highlighting
 augroup txt2tag_files
