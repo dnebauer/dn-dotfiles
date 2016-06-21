@@ -39,7 +39,7 @@ augroup vrc_vim_files
     autocmd FileType vim call VrcVimSupport()
                                                                      " }}}1
     " reload after changing                                            {{{1
-    autocmd BufWritePost .vimrc source $HOME.'/.vimrc'
+    autocmd BufWritePost .vimrc source $HOME/.vimrc
                                                                      " }}}1
 augroup END
 
