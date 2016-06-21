@@ -79,7 +79,15 @@ call dein#add('shougo/dein.vim')
 call dein#add('shougo/vimproc.vim', {
             \ 'build' : 'make',
             \ })
-call dein#add('shougo/vimshell.vim', { 'depends' : 'vimproc.vim', 'on_cmd' : ['VimShell', 'VimShellCreate', 'VimShellTab', 'VimShellPop', 'VimShellCurrentDir', 'VimShellBufferDir', 'VimShellExecute', 'VimShellInteractive', 'VimShellSendString', 'VimShellSendBuffer', 'VimShellClose'], })
+call dein#add('shougo/vimshell.vim', {
+            \ 'depends' : 'vimproc.vim',
+            \ 'on_cmd'  : ['VimShell',           'VimShellCreate',
+            \              'VimShellTab',        'VimShellPop',
+            \              'VimShellCurrentDir', 'VimShellBufferDir',
+            \              'VimShellExecute',    'VimShellInteractive',
+            \              'VimShellSendString', 'VimShellSendBuffer',
+            \              'VimShellClose'],
+            \ })
 call dein#add('dnebauer/vim-dn-utils')
 call dein#add('tpope/vim-unimpaired', {
             \ 'depends' : ['vim-repeat'],
