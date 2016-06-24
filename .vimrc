@@ -98,6 +98,10 @@ call dein#add('tpope/vim-repeat', {
 " bundles: file explorer                                               {{{2
 call dein#add('scrooloose/nerdtree')
 call dein#add('xuyuanp/nerdtree-git-plugin')
+" bundles: printing                                                    {{{2
+call dein#add('dnebauer/vim-dn-print', {
+            \ 'if' : 'has("unix")',
+            \ })
 " bundles: calendar                                                    {{{2
 call dein#add('mattn/calendar-vim', {
             \ 'on_cmd' : ['Calendar', 'CalendarH', 'CalendarT'],
