@@ -226,17 +226,47 @@ call dein#add('majutsushi/tagbar', {
             \             'TagbarDebug',         'TagbarDebugEnd'],
             \ })
 " - colour schemes                                                     {{{3
-call dein#add('atelierbram/vim-colors_atelier-schemes')  " atelier
-call dein#add('sjl/badwolf')                             " bad wolf
-call dein#add('w0ng/vim-hybrid')                         " hybrid
-call dein#add('jonathanfilip/vim-lucius')                " lucius
-call dein#add('nlknguyen/papercolor-theme')              " papercolor
-call dein#add('peaksea')                                 " peaksea
-call dein#add('jpo/vim-railscasts-theme')                " railscast
-call dein#add('altercation/vim-colors-solarized')        " solarized
-call dein#add('jnurmine/zenburn')                        " zenburn
-            \ 'if' : '     v:version >= 704'
-            \      . ' &&  has("patch-7.4.1826")',
+"   . atelier
+call dein#add('atelierbram/vim-colors_atelier-schemes', {
+            \ 'script_type' : 'colors',
+            \ })
+"   . bad wolf
+call dein#add('sjl/badwolf', {
+            \ 'script_type' : 'colors',
+            \ })
+"   . hybrid
+call dein#add('w0ng/vim-hybrid', {
+            \ 'script_type' : 'colors',
+            \ })
+"   . lucius
+call dein#add('jonathanfilip/vim-lucius', {
+            \ 'script_type' : 'colors',
+            \ })
+"   . papercolor
+call dein#add('nlknguyen/papercolor-theme', {
+            \ 'script_type' : 'colors',
+            \ })
+"   . peaksea
+call dein#add('peaksea', {
+            \ 'script_type' : 'colors',
+            \ })
+"   . print_bw
+call dein#add('vim-scripts/print_bw.zip', {
+            \ 'script_type' : 'colors',
+            \ })
+"   . railscast
+call dein#add('jpo/vim-railscasts-theme', {
+            \ 'script_type' : 'colors',
+            \ })
+"   . solarized
+call dein#add('altercation/vim-colors-solarized', {
+            \ 'script_type' : 'colors',
+            \ })
+"   . zenburn
+call dein#add('jnurmine/zenburn', {
+            \ 'if'          : '     v:version >= 704'
+            \               . ' &&  has("patch-7.4.1826")',
+            \ 'script_type' : 'colors',
             \ })
 " bundles: syntax checking                                             {{{2
 call dein#add('scrooloose/syntastic', {
