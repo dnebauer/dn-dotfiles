@@ -22,9 +22,9 @@ endfunction                                                          " }}}2
 function! VrcVimHome()
     let l:os   = VrcOS()
     let l:home = escape($HOME, ' ')
-    if     l:os == 'windows'
+    if     l:os ==# 'windows'
         return l:home . '/vimfiles'
-    elseif l:os == 'unix'
+    elseif l:os ==# 'unix'
         return l:home . '/.vim'
     else
         return l:home . '/.vim'
@@ -43,6 +43,7 @@ for app in ['rsync', 'git']
     endif
 endfor
 " - required settings                                                  {{{3
+"   vint: -ProhibitSetNoCompatible
 set nocompatible
 filetype off
 " - required vim version                                               {{{3
@@ -202,7 +203,16 @@ call dein#add('mbadran/headlights', {
             \ })
 " - status line                                                        {{{3
 call dein#add('vim-airline/vim-airline', {
-            \ 'if' : 'v:version >= 702',
+            \ 'if'          : 'v:version >= 702',
+            \ 'hook_source' : 
+\        join([
+\            'let g:airline#extensions#branch#enabled = 1',
+\            'let g:airline#extensions#branch#empty_message = ""',
+\            'let g:airline#extensions#branch#displayed_head_limit = 10',
+\            'let g:airline#extensions#branch#format = 2',
+\            'let g:airline#extensions#syntastic#enabled = 1',
+\            'let g:airline#extensions#tagbar#enabled = 1',
+\        ], "\n"),
             \ })
 " - outline viewer                                                     {{{3
 call dein#add('majutsushi/tagbar', {
@@ -247,6 +257,22 @@ call dein#add('xolox/vim-misc', {
 "           - fails in git-bash/MinTTY with error:
 "             'Failed to read temporary file...'
 call dein#add('xolox/vim-shell')
+" bundles: version control                                             {{{2
+call dein#add('airblade/vim-gitgutter', {
+            \ 'if' : '    executable("git")'
+            \      . '&&  ('
+            \      . '      ('
+            \      . '            has("vim")'
+            \      . '        &&  v:version > 704'
+            \      . '        &&  has("patch-7.4.1826")'
+            \      . '      )'
+            \      . '      ||'
+            \      . '      has("nvim")'
+            \      . '    )',
+            \ })
+call dein#add('tpope/vim-fugitive', {
+            \ 'if' : 'executable("git")',
+            \ })
 " bundles: docbook support                                             {{{2
 " - jhradilek/vim-snippets is not installed using neobundle            {{{3
 "   . because its default location clashes with honza/vim-snippets
@@ -307,7 +333,7 @@ function! VrcBuildJsctags()                                          " {{{3
     endif
 endfunction                                                          " }}}3
 function! VrcCygwin()                                                " {{{4
-    return system("uname -o") =~# "^Cygwin"
+    return system('uname -o') =~# '^Cygwin'
 endfunction                                                          " }}}4
 " - cannot test for cygwin in dein#add 'if' statement
 " - doing so results in 'E48: Not allowed in sandbox
@@ -389,17 +415,6 @@ call dein#add('hynek/vim-python-pep8-indent', {
 call dein#add('christoomey/vim-tmux-navigator')
 call dein#add('tmux-plugins/vim-tmux', {
             \ 'on_ft' : ['tmux'],
-            \ })
-" bundles: vcs support                                                 {{{2
-call dein#add('inkarkat/vcscommand.vim', {
-            \ 'on_cmd' : ['VCSAdd',      'VCSAnnotate', 'VCSCommit',
-            \             'VCSDelete',   'VCSDiff',     'VCSGotoOriginal',
-            \             'VCSInfo',     'VCSLog',      'VCSLock',
-            \             'VCSReview',   'VCSStatus',   'VCSUpdate',
-            \             'VCSUnlock',   'VCSVimDiff',  'CVSEdit',
-            \             'CVSEditors',  'CVSUnedit',   'CVSWatchers',
-            \             'CVSWatchAdd', 'CVSWatchOn',  'CVSWatchOff',
-            \             'CVSWatchRemove'],
             \ })
 " bundles: xml support                                                 {{{2
 call dein#add('xml.vim', {
