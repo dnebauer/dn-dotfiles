@@ -214,6 +214,9 @@ call dein#add('vim-airline/vim-airline', {
 \            'let g:airline#extensions#tagbar#enabled = 1',
 \        ], "\n"),
             \ })
+call dein#add('vim-airline/vim-airline-themes', {
+            \ 'depends' : 'vim-airline',
+            \ })
 " - outline viewer                                                     {{{3
 call dein#add('majutsushi/tagbar', {
             \ 'if'     : '     v:version >= 701'
