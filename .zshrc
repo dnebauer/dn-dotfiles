@@ -90,6 +90,12 @@ bindkey -M viins   '^[[3~' vi-delete-char
 autoload -Uz zsh-mime-setup
 zsh-mime-setup
 
+# Advanced renaming
+autoload -Uz zmv
+alias zmv='noglob zmv'
+alias zcp='noglob zmv -C'
+alias zln='noglob zmv -Ls'
+
 # Disable flow control (Ctrl-s, Ctrl-q)
 # - tip from http://www.reddit.com/r/commandline/comments/1dhame/\
 #   tmux_and_konsole_have_something_called_flow/
