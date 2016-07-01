@@ -15,8 +15,10 @@ try | lang en_AU | catch /^Vim\((\a\+)\)\=:E197:/
     endtry
 endtry
 
-" Use ; for :                                                          {{{1
+" Use ; for : and vice versa                                           {{{1
+nnoremap : ;
 nnoremap ; :
+vnoremap : ;
 vnoremap ; :
 
 " Disable F1 help key                                                  {{{1
