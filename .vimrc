@@ -97,7 +97,9 @@ call dein#add('tpope/vim-repeat', {
             \ 'lazy' : 1,
             \ })
 " bundles: file explorer                                               {{{2
-call dein#add('scrooloose/nerdtree')
+call dein#add('scrooloose/nerdtree', {
+            \ 'on_cmd' : ['NERDTree', 'NERDTreeToggle'],
+            \ })
 call dein#add('xuyuanp/nerdtree-git-plugin')
 " bundles: printing                                                    {{{2
 call dein#add('dnebauer/vim-dn-print-dialog', {

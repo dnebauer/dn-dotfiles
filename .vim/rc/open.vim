@@ -6,17 +6,13 @@
 "   params: nil
 "   return: nil
 function! VrcNerdtreeOnStartup()
-    " check that nerdtree is running
-    if !exists(':NERDTree')
-        return
-    endif
     if argc() == 0 && !exists("s:std_in")
         NERDTree
     endif
 endfunction                                                          " }}}2
 augroup nerd_open
     autocmd!
-    autocmd StdinReadPre * let s:std_in=1
+    autocmd StdinReadPre * let s:std_in = 1
     autocmd VimEnter * call VrcNerdtreeOnStartup()
 augroup END
 
