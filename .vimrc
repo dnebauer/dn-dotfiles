@@ -100,7 +100,9 @@ call dein#add('tpope/vim-repeat', {
 call dein#add('scrooloose/nerdtree', {
             \ 'on_cmd' : ['NERDTree', 'NERDTreeToggle'],
             \ })
-call dein#add('xuyuanp/nerdtree-git-plugin')
+call dein#add('xuyuanp/nerdtree-git-plugin', {
+            \ 'if' : 'executable("git")',
+            \ })
 " bundles: printing                                                    {{{2
 call dein#add('dnebauer/vim-dn-print-dialog', {
             \ 'if' : 'has("unix")',
