@@ -103,6 +103,18 @@ call dein#add('scrooloose/nerdtree', {
 call dein#add('xuyuanp/nerdtree-git-plugin', {
             \ 'if' : 'executable("git")',
             \ })
+" bundles: internet                                                    {{{2
+call dein#add('szw/vim-g', {
+            \ 'if'     : 'executable("perl")',
+            \ 'on_cmd' : ['Google', 'Googlef'],
+            \ })
+call dein#add('mattn/webapi-vim', {
+            \ 'lazy' : 1,
+            \ })
+call dein#add('christoomey/vim-quicklink', {
+            \ 'on_ft'   : ['markdown', 'markdown.pandoc'],
+            \ 'depends' : ['webapi-vim'],
+            \ })
 " bundles: printing                                                    {{{2
 call dein#add('dnebauer/vim-dn-print-dialog', {
             \ 'if' : 'has("unix")',
