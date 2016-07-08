@@ -308,6 +308,15 @@ alias reload=". ~/.zshrc && echo 'ZSH config reloaded from ~/.zshrc'"
 # dictionary and thesaurus
 alias thes="dict -h localhost -d moby-thesaurus"
 
+# ag alias
+# - set by oh-my-zsh
+# - remove if ag binary exists
+if [ -f "/usr/bin/ag" ] ; then
+    if [ $(alias "ag" >/dev/null ; echo $?) -eq 0 ] ; then
+        unalias "ag"
+    fi
+fi
+
 
 # File navigation
 # ===============
