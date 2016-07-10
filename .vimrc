@@ -299,6 +299,10 @@ call dein#add('jnurmine/zenburn', {
             \ 'if' : '     v:version >= 704'
             \      . ' &&  has("patch-7.4.1826")',
             \ })                                         " zenburn
+" - enhance terminal integration                                     " {{{3
+call dein#add('wincent/terminus', {
+            \ 'if' : '!has("gui")'
+            \ })
 " bundles: syntax checking                                             {{{2
 call dein#add('scrooloose/syntastic', {
             \ 'if' : '!has("nvim")',
