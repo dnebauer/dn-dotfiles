@@ -6,7 +6,7 @@
 "   params: nil
 "   return: nil
 function! VrcNerdtreeOnStartup()
-    if argc() == 0 && !exists("s:std_in")
+    if argc() == 0 && !exists("s:std_in") && line('$') <= 1
         NERDTree
     endif
 endfunction                                                          " }}}2
