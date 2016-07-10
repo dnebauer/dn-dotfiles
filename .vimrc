@@ -106,6 +106,11 @@ call dein#add('tpope/vim-unimpaired', {
 call dein#add('tpope/vim-surround', {
             \ 'depends' : ['vim-repeat'],
             \ })
+call dein#add('tpope/vim-abolish', {
+            \ 'on_cmd' : ['Abolish', 'Subvert'],
+            \ 'on_map' : {'n': ['crc', 'crm', 'cr_', 'crs', 'cru',
+            \                   'crU', 'cr-', 'crk', 'cr.']},
+            \ })
 call dein#add('scrooloose/nerdcommenter')
 call dein#add('easymotion/vim-easymotion', {
             \ 'on_plug' : {'i': ['<Plug>(easymotion-']},
