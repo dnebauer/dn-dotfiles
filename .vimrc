@@ -406,6 +406,11 @@ call dein#add('jszakmeister/markdown2ctags', {
 call dein#add('dnebauer/vim-dn-markdown', {
             \ 'on_ft' : ['markdown','markdown.pandoc'],
             \ })
+call dein#add('kannokanno/previm', {
+            \ 'on_ft'   : ['markdown','markdown.pandoc'],
+            \ 'depends' : ['open-browser.vim'],
+            \ 'on_cmd'  : ['PrevimOpen'],
+            \ })
 " bundles: perl support                                                {{{2
 call dein#add('vim-perl/vim-perl', {
             \ 'on_ft' : ['perl'],
