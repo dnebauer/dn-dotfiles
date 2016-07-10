@@ -204,11 +204,14 @@ call dein#add('godlygeek/tabular', {
             \ 'on_cmd' : ['Tabularize', 'AddTabularPattern',
             \             'AddTabularPipeline'],
             \ })
-" bundles: dictionary                                                  {{{2
+" bundles: spelling, grammar, word choice                              {{{2
 call dein#add('szw/vim-dict', {
             \ 'on_cmd' : ['Dict'],
             \ })
-" bundles: thesaurus                                                   {{{2
+call dein#add('rhysd/vim-grammarous', {
+            \ 'on_cmd' : ['GrammarousCheck', 'GrammarousReset',
+            \             'Unite grammarous'],
+            \ })
 call dein#add('beloglazov/vim-online-thesaurus', {
             \ 'on_cmd' : ['Thesaurus', 'OnlineThesaurusCurrentWord'],
             \ })
