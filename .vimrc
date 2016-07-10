@@ -97,6 +97,7 @@ call dein#add('dnebauer/vim-dn-utils')
 call dein#add('tpope/vim-repeat', {
             \ 'lazy' : 1,
             \ })
+call dein#add('bogado/file-line')
 " bundles: editing                                                     {{{2
 call dein#add('tpope/vim-unimpaired', {
             \ 'depends' : ['vim-repeat'],
