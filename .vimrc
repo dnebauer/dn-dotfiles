@@ -111,12 +111,20 @@ call dein#add('tpope/vim-endwise')
 call dein#add('sjl/gundo.vim', {
             \ 'on_cmd' : ['GundoToggle'],
             \ })
-" bundles: file explorer                                               {{{2
+" bundles: file exploring                                              {{{2
 call dein#add('scrooloose/nerdtree', {
             \ 'on_cmd' : ['NERDTree', 'NERDTreeToggle'],
             \ })
 call dein#add('xuyuanp/nerdtree-git-plugin', {
             \ 'if' : 'executable("git")',
+            \ })
+call dein#add('mileszs/ack.vim', {
+            \ 'if'     : 'executable("ack")',
+            \ 'on_cmd' : ['Ack', 'AckAdd', 'LAck', 'LAckAdd'],
+            \ })
+call dein#add('ervandew/ag', {
+            \ 'if'     : 'executable("Ag")',
+            \ 'on_cmd' : ['Ag'],
             \ })
 " bundles: internet                                                    {{{2
 call dein#add('szw/vim-g', {
