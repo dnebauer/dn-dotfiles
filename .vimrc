@@ -417,11 +417,7 @@ if VrcCygwin()
                 \ })
 endif
 " bundles: latex support                                               {{{2
-call dein#add('coot/atp_vim', {
-            \ 'if'    : '     executable("wdiff")'
-            \         . ' &&  v:version >=703'
-            \         . ' &&  has("python")'
-            \         . ' &&  executable("python")',
+call dein#add('lervag/vimtex', {
             \ 'on_ft' : ['tex','latex'],
             \ })
 call dein#add('dnebauer/vim-dn-latex', {
