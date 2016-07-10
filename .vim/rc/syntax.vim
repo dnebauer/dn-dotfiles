@@ -1,9 +1,12 @@
 " Vim configuration: syntax checking
 
 " Status line                                                          {{{1
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*                                                   " }}}1
+if !exists('s:edited_statusline')
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+endif
+let s:edited_statusline = 1                                          " }}}1
 
 " Location list                                                        {{{1
 " - always fill location list with found errors
