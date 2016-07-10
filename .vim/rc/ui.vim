@@ -61,7 +61,7 @@ if !has('gui_running')
     set wildmenu
     set cpo-=<
     set wcm=<C-Z>
-    map <F4> :emenu <C-Z>
+    nnoremap <F4> :emenu <C-Z>
 endif
 
 " Fonts                                                                {{{1
@@ -84,7 +84,7 @@ else  " no gui
 endif
 
 " Outline viewer (<F8>)                                                {{{1
-nmap <F8> :TagbarToggle<CR>
+nnoremap <F8> :TagbarToggle<CR>
 
 " Colour scheme                                                        {{{1
 " function VrcSetColorScheme(gui, term)                                {{{2
