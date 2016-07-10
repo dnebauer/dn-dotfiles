@@ -98,6 +98,7 @@ call dein#add('tpope/vim-repeat', {
             \ 'lazy' : 1,
             \ })
 call dein#add('bogado/file-line')
+call dein#add('jez/vim-superman')
 " bundles: editing                                                     {{{2
 call dein#add('tpope/vim-unimpaired', {
             \ 'depends' : ['vim-repeat'],

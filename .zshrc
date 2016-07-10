@@ -148,12 +148,17 @@ for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN BLACK WHITE; do
     eval export BOLD_$COLOR='$fg_bold[${(L)COLOR}]'
 done
 eval RESET='$reset_color'
-
 # - dictionary and thesaurus (uses WordNet v3.0)
 wordnet="/usr/local/WordNet-3.0"
 if [ "${OSTYPE}" = 'cygwin' -a -f "${wordnet}/bin/wn.exe" ] ; then
     autoload_my_fns dict
 fi
+# - open man pages in vim
+vman() {
+    vim -c "SuperMan $*"
+    [[ "$?" == "0" ]] || echo "No manual entry for $*"
+}
+compdef vman="man"
 
 
 # Oh My Zsh configuration
