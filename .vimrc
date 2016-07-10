@@ -76,6 +76,10 @@ if &runtimepath !~# '/dein.vim'
 endif
 call dein#begin(s:plugins_dir)
 call dein#add('shougo/dein.vim')
+" dein commands                                                        {{{2
+call dein#add('haya14busa/dein-command.vim', {
+            \ 'on_cmd' : ['Dein'],
+            \ })
 " bundles: utilities                                                   {{{2
 call dein#add('shougo/vimproc.vim', {
             \ 'build' : 'make',
