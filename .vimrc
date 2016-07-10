@@ -126,6 +126,10 @@ call dein#add('tyru/open-browser.vim', {
             \ 'on_map' : {'n': ['<Plug>(openbrowser-smart-search)'],
             \             'v': ['<Plug>(openbrowser-smart-search)']},
             \ })
+call dein#add('whatdomain.vim', {
+            \ 'on_cmd'  : ['WhatDomain'],
+            \ 'on_func' : ['WhatDomain'],
+            \ })
 " bundles: printing                                                    {{{2
 call dein#add('dnebauer/vim-dn-print-dialog', {
             \ 'if' : 'has("unix")',
@@ -207,11 +211,6 @@ call dein#add('szw/vim-dict', {
 " bundles: thesaurus                                                   {{{2
 call dein#add('beloglazov/vim-online-thesaurus', {
             \ 'on_cmd' : ['Thesaurus', 'OnlineThesaurusCurrentWord'],
-            \ })
-" bundles: internet domains                                            {{{2 
-call dein#add('whatdomain.vim', {
-            \ 'on_cmd'  : ['WhatDomain'],
-            \ 'on_func' : ['WhatDomain'],
             \ })
 " bundles: keyboard navigation                                         {{{2
 call dein#add('wikitopian/hardmode', {
