@@ -103,6 +103,9 @@ call dein#add('jez/vim-superman')
 call dein#add('tpope/vim-unimpaired', {
             \ 'depends' : ['vim-repeat'],
             \ })
+call dein#add('tpope/vim-surround', {
+            \ 'depends' : ['vim-repeat'],
+            \ })
 call dein#add('scrooloose/nerdcommenter')
 call dein#add('easymotion/vim-easymotion', {
             \ 'on_plug' : {'i': ['<Plug>(easymotion-']},
@@ -111,6 +114,8 @@ call dein#add('tpope/vim-endwise')
 call dein#add('sjl/gundo.vim', {
             \ 'on_cmd' : ['GundoToggle'],
             \ })
+call dein#add('vim-scripts/SearchComplete')
+call dein#add('vim-scripts/matchit.zip')
 " bundles: file exploring                                              {{{2
 call dein#add('scrooloose/nerdtree', {
             \ 'on_cmd' : ['NERDTree', 'NERDTreeToggle'],
