@@ -108,6 +108,9 @@ call dein#add('easymotion/vim-easymotion', {
             \ 'on_plug' : {'i': ['<Plug>(easymotion-']},
             \ })
 call dein#add('tpope/vim-endwise')
+call dein#add('sjl/gundo.vim', {
+            \ 'on_cmd' : ['GundoToggle'],
+            \ })
 " bundles: file explorer                                               {{{2
 call dein#add('scrooloose/nerdtree', {
             \ 'on_cmd' : ['NERDTree', 'NERDTreeToggle'],

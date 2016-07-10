@@ -28,6 +28,10 @@ let g:NERDSpaceDelims = 1
 " - allow commenting and inverting empty lines
 let g:NERDCommentEmptyLines = 1
 " - enable trimming of trailing whitespace when uncommenting
-let g:NERDTrimTrailingWhitespace = 1                            " }}}1
+let g:NERDTrimTrailingWhitespace = 1
+
+" Undo
+nnoremap <Leader>u :GundoToggle<CR>
+                                                                " }}}1
 
 " vim: set foldmethod=marker :
