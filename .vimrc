@@ -120,6 +120,12 @@ call dein#add('christoomey/vim-quicklink', {
             \ 'on_ft'   : ['markdown', 'markdown.pandoc'],
             \ 'depends' : ['webapi-vim'],
             \ })
+call dein#add('tyru/open-browser.vim', {
+            \ 'on_cmd' : ['OpenBrowser', 'OpenBrowserSearch',
+            \             'OpenBrowserSmartSearch'],
+            \ 'on_map' : {'n': ['<Plug>(openbrowser-smart-search)'],
+            \             'v': ['<Plug>(openbrowser-smart-search)']},
+            \ })
 " bundles: printing                                                    {{{2
 call dein#add('dnebauer/vim-dn-print-dialog', {
             \ 'if' : 'has("unix")',
