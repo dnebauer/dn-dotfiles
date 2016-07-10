@@ -40,6 +40,12 @@ let g:DeleteTrailingWhitespace_Action = 'delete'
 " Move visual block up and down : J,K                             {{{1
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
+
+" Cycle through visual modes : v                                  {{{1
+xnoremap <expr> v mode() ==# 'v' ? "\<C-V>"
+            \                    : mode() ==# 'V'
+            \                        ? 'v'
+            \                        : 'V'
                                                                 " }}}1
 
 " vim: set foldmethod=marker :
