@@ -3,7 +3,7 @@
 " Status line                                                          {{{1
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*                                              " }}}2
+set statusline+=%*                                                   " }}}1
 
 " Location list                                                        {{{1
 " - always fill location list with found errors
