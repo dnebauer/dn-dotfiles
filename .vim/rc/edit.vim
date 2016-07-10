@@ -1,4 +1,4 @@
-" Vim configuration: copy and paste
+" Vim configuration: editing
 
 " Clipboard                                                            {{{1
 " - all yanked, deleted, changed and pasted text is
@@ -21,6 +21,13 @@ endif
 
 " Toggle paste : F2                                               {{{1
 set pastetoggle=<F2>
-                                                                " }}}1
+
+" Commenting                                                      {{{1
+" - add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+" - allow commenting and inverting empty lines
+let g:NERDCommentEmptyLines = 1
+" - enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1                            " }}}1
 
 " vim: set foldmethod=marker :
