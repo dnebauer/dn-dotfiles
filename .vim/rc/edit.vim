@@ -35,6 +35,11 @@ nnoremap <Leader>u :GundoToggle<CR>
 
 " Delete trailing whitespace                                      {{{1
 let g:DeleteTrailingWhitespace        = 1
-let g:DeleteTrailingWhitespace_Action = 'delete'                " }}}1
+let g:DeleteTrailingWhitespace_Action = 'delete'
+
+" Move visual block up and down : J,K                             {{{1
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+                                                                " }}}1
 
 " vim: set foldmethod=marker :
