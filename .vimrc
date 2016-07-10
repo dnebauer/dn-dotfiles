@@ -121,6 +121,7 @@ call dein#add('sjl/gundo.vim', {
             \ })
 call dein#add('vim-scripts/SearchComplete')
 call dein#add('vim-scripts/matchit.zip')
+call dein#add('vim-scripts/DeleteTrailingWhitespace')
 " bundles: file exploring                                              {{{2
 call dein#add('scrooloose/nerdtree', {
             \ 'on_cmd' : ['NERDTree', 'NERDTreeToggle'],

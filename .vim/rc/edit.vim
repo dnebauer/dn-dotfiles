@@ -30,8 +30,11 @@ let g:NERDCommentEmptyLines = 1
 " - enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
 
-" Undo
+" Undo                                                            {{{1
 nnoremap <Leader>u :GundoToggle<CR>
-                                                                " }}}1
+
+" Delete trailing whitespace                                      {{{1
+let g:DeleteTrailingWhitespace        = 1
+let g:DeleteTrailingWhitespace_Action = 'delete'                " }}}1
 
 " vim: set foldmethod=marker :
