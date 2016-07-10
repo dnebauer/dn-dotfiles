@@ -94,11 +94,12 @@ call dein#add('shougo/vimshell.vim', {
             \              'VimShellClose'],
             \ })
 call dein#add('dnebauer/vim-dn-utils')
-call dein#add('tpope/vim-unimpaired', {
-            \ 'depends' : ['vim-repeat'],
-            \ })
 call dein#add('tpope/vim-repeat', {
             \ 'lazy' : 1,
+            \ })
+" bundles: editing                                                     {{{2
+call dein#add('tpope/vim-unimpaired', {
+            \ 'depends' : ['vim-repeat'],
             \ })
 " bundles: file explorer                                               {{{2
 call dein#add('scrooloose/nerdtree', {
