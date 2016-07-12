@@ -309,7 +309,7 @@ call dein#add('jnurmine/zenburn', {
 call dein#add('wincent/terminus', {
             \ 'if' : '!has("gui")'
             \ })
-" - handle lilne number switching automatically                        {{{3
+" - handle line number switching automatically                         {{{3
 call dein#add('myusuf3/numbers.vim')
 " bundles: syntax checking                                             {{{2
 call dein#add('scrooloose/syntastic', {
