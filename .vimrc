@@ -106,7 +106,13 @@ call dein#add('tpope/vim-unimpaired', {
 call dein#add('tpope/vim-surround', {
             \ 'depends' : ['vim-repeat'],
             \ })
-call dein#add('scrooloose/nerdcommenter')
+call dein#add('tpope/vim-commentary', {
+            \ 'on_cmd' : ['Commentary', 'CommentaryLine',
+            \             'ChangeCommentary'],
+            \ 'on_map' : {'x': ['gc'],
+            \             'n': ['gc', 'gcc', 'cgc', 'gcu'],
+            \             'o': ['gc']},
+            \ })
 call dein#add('tpope/vim-endwise')
 call dein#add('sjl/gundo.vim', {
             \ 'on_cmd' : ['GundoToggle'],
