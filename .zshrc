@@ -10,7 +10,7 @@ HIST_STAMPS="yyyy-mm-dd"
 zmodload zsh/files zsh/zutil
 
 # Plugins
-plugins=( 
+plugins=(
     adb             \
     chucknorris     \
     fasd            \
@@ -103,7 +103,7 @@ stty stop  undef
 stty start undef
 
 # Functions
-my_fpath=$HOME/.zsh/functions
+my_fpath="$HOME/.zsh/functions"
 fpath=($my_fpath $fpath)
 function autoload_my_fns {
     local fn
@@ -149,29 +149,29 @@ for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN BLACK WHITE; do
 done
 eval RESET='$reset_color'
 # - dictionary and thesaurus (uses WordNet v3.0)
-wordnet="/usr/local/WordNet-3.0"
+wordnet='/usr/local/WordNet-3.0'
 if [ "${OSTYPE}" = 'cygwin' -a -f "${wordnet}/bin/wn.exe" ] ; then
     autoload_my_fns dict
 fi
 # - open man pages in vim
 vman() {
     vim -c "SuperMan $*"
-    [[ "$?" == "0" ]] || echo "No manual entry for $*"
+    [[ "$?" == '0' ]] || echo "No manual entry for $*"
 }
-compdef vman="man"
+compdef vman='man'
 
 
 # Oh My Zsh configuration
 # =======================
- 
+
 # Path to oh-my-zsh installation
-export ZSH=$HOME/.oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
 
 # Theme to load (see ~/.oh-my-zsh/themes/)
-#ZSH_THEME="robbyrussell"
-#ZSH_THEME="juanghurtado"
-#ZSH_THEME="josh"
-ZSH_THEME="miloshadzic"
+#ZSH_THEME='robbyrussell'
+#ZSH_THEME='juanghurtado'
+#ZSH_THEME='josh'
+ZSH_THEME='miloshadzic'
 
 # Setup oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -235,7 +235,7 @@ export DISABLE_AUTO_TITLE='true'
 
 # Paths
 # - base
-PATH="/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/games"
+PATH='/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/games'
 # - perl local::lib
 #   . 2016-03-13: discovered that PERL5LIB and PERL_LOCAL_LIB_ROOT
 #     are set to their desired values before reaching this point,
@@ -259,7 +259,7 @@ node_js="/cygdrive/c/Program\ Files/nodejs"
 [[ -d "${node_js}" ]] && PATH="${PATH}:${node_js}"
 unset node_js
 # - haskell-installed binaries on cygwin
-hask_bin="/cygdrive/c/dtn/AppData/Roaming/cabal/bin"
+hask_bin='/cygdrive/c/dtn/AppData/Roaming/cabal/bin'
 [[ -d "${hask_bin}" ]] && PATH="${PATH}:${hask_bin}"
 unset hask_bin
 # - wordnet
@@ -294,8 +294,8 @@ export NODE_PATH
 
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
-export USE_EDITOR=$EDITOR
-export VISUAL=$EDITOR
+export USE_EDITOR="$EDITOR"
+export VISUAL="$EDITOR"
 
 
 # Aliases
@@ -311,14 +311,14 @@ alias mp3info2='mp3info2 -C autoinfo=ID3v2,ID3v1'
 alias reload=". ~/.zshrc && echo 'ZSH config reloaded from ~/.zshrc'"
 
 # dictionary and thesaurus
-alias thes="dict -h localhost -d moby-thesaurus"
+alias thes='dict -h localhost -d moby-thesaurus'
 
 # ag alias
 # - set by oh-my-zsh
 # - remove if ag binary exists
-if [ -f "/usr/bin/ag" ] ; then
-    if [ $(alias "ag" >/dev/null ; echo $?) -eq 0 ] ; then
-        unalias "ag"
+if [ -f '/usr/bin/ag' ] ; then
+    if [ $(alias 'ag' >/dev/null ; echo $?) -eq 0 ] ; then
+        unalias 'ag'
     fi
 fi
 
@@ -332,13 +332,13 @@ fi
 
 # - changed terminology to mirror apparix: 'mark' -> 'bm', 'jump' to 'to'
 export MARKPATH=$HOME/.marks
-function to { 
+function to {
     cd -P "$MARKPATH/$1" 2>/dev/null || echo "No such mark: $1"
 }
-function bm { 
+function bm {
     mkdir -p "$MARKPATH"; ln -s "$(pwd)" "$MARKPATH/$1"
 }
-function unbm { 
+function unbm {
     rm -i "$MARKPATH/$1"
 }
 function bms {
