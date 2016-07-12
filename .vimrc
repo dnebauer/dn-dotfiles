@@ -248,6 +248,11 @@ call dein#add('godlygeek/tabular', {
             \ 'on_cmd' : ['Tabularize', 'AddTabularPattern',
             \             'AddTabularPipeline'],
             \ })
+" - converting between single- and multi-line statements               {{{3
+call dein#add('andrewradev/splitjoin.vim', {
+            \ 'on_cmd' : ['SplitjoinSplit', 'SplitjoinJoin'],
+            \ 'on_map' : {'n': ['gS', 'gJ']},
+            \ })
 " bundles: spelling, grammar, word choice                              {{{2
 call dein#add('szw/vim-dict', {
             \ 'on_cmd' : ['Dict'],
