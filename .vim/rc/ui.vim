@@ -29,11 +29,12 @@ set linebreak
 set textwidth=0
 " - status line always displayed
 set laststatus=2
-" - show line numbers relative to cursor line
-set relativenumber
+" - numbers.vim plugin handles relative numbering in normal mode
+"   but requires this setting in configuration
+set number
 " - when tab-completing command show matches above cmd line
 "   . list all matches
-"   . complete to the longest possible string 
+"   . complete to the longest possible string
 set wildmenu
 set wildmode=list:longest
 " - show (partial) command in status line
