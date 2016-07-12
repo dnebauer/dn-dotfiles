@@ -100,6 +100,17 @@ call dein#add('shougo/vimshell.vim', {
             \ })
 call dein#add('bogado/file-line')
 call dein#add('jez/vim-superman')
+" - vim-eunuch sets autocommands in group 'eunuch' which make all new
+"   files executable (not desirable) and insert templates into new
+"   files (conflicts with templates in vim-dn-utils plugin), so
+"   remove them after sourcing the plugin
+call dein#add('tpope/vim-eunuch', {
+            \ 'on_cmd'           : ['Remove',    'Unlink', 'Move',
+            \                       'Rename',    'Chmod',  'Mkdir',
+            \                       'Find',      'Locate', 'Wall',
+            \                       'SudoWrite', 'SudoEdit'],
+            \ 'hook_post_source' :  'augroup! eunuch',
+            \ })
 " bundles: editing                                                     {{{2
 call dein#add('tpope/vim-unimpaired', {
             \ 'depends' : ['vim-repeat'],
@@ -508,6 +519,11 @@ filetype on
 filetype plugin on
 filetype indent on
 syntax enable
+" call post-source hooks                                               {{{2
+augroup dein_config
+    autocmd!
+    autocmd VimEnter * call dein#call_hook('post_source')
+augroup END
 " install new bundles on startup                                       {{{2
 if dein#check_install()
     call dein#install()
