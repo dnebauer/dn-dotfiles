@@ -356,6 +356,9 @@ call dein#add('othree/html5.vim', {
 call dein#add('rstacruz/sparkup', {
             \ 'on_ft' : ['html'],
             \ })
+call dein#add('mattn/emmet-vim', {
+            \ 'on_ft' : ['html', 'css'],
+            \ })
 " bundles: javascript support                                          {{{2
 " - jsctags
 "   . provides tag support for javascript
