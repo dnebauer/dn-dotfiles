@@ -135,7 +135,6 @@ call dein#add('tpope/vim-endwise')
 call dein#add('sjl/gundo.vim', {
             \ 'on_cmd' : ['GundoToggle'],
             \ })
-call dein#add('vim-scripts/SearchComplete')
 call dein#add('vim-scripts/DeleteTrailingWhitespace')
 " bundles: file exploring                                              {{{2
 call dein#add('scrooloose/nerdtree', {
