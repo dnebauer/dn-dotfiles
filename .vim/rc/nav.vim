@@ -36,7 +36,7 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Sneak plugin                                                         {{{1
-nmap <expr> ; sneak#is_sneaking() ? '<Plug>SneakNext' : ':'
+" - see basic.vim for handling of colon in normal mode
 " - emulate easymotion (but better)
 let g:sneak#streak = 1
 " - replace 'f' with sneak

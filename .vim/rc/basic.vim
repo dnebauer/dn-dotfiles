@@ -16,10 +16,11 @@ try | lang en_AU | catch /^Vim\((\a\+)\)\=:E197:/
 endtry
 
 " Use ; for : and vice versa                                           {{{1
-nnoremap : ;
-nnoremap ; :
 vnoremap : ;
 vnoremap ; :
+" - in normal mode must interact with sneak plugin
+" - rest of sneak configuration is in nav.vim
+nmap <expr> ; sneak#is_sneaking() ? '<Plug>SneakNext' : ':'
 
 " Disable F1 help key                                                  {{{1
 nnoremap <F1> <Nop>
