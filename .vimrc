@@ -161,7 +161,7 @@ call dein#add('whatdomain.vim', {
             \ })
 " bundles: printing                                                    {{{2
 call dein#add('dnebauer/vim-dn-print-dialog', {
-            \ 'if' : 'has("unix")',
+            \ 'on_cmd' :  ['PrintDialog'],
             \ })
 " bundles: calendar                                                    {{{2
 call dein#add('mattn/calendar-vim', {
@@ -262,7 +262,7 @@ call dein#add('mbadran/headlights', {
 " - status line                                                        {{{3
 call dein#add('vim-airline/vim-airline', {
             \ 'if'          : 'v:version >= 702',
-            \ 'hook_source' : 
+            \ 'hook_source' :
 \        join([
 \            'let g:airline#extensions#branch#enabled = 1',
 \            'let g:airline#extensions#branch#empty_message = ""',
@@ -387,7 +387,7 @@ function! VrcBuildTern()                                             " {{{3
     endif
 endfunction                                                          " }}}3
 function! VrcBuildJsctags()                                          " {{{3
-    let l:cmd = 'npm install -g ' . 
+    let l:cmd = 'npm install -g ' .
                 \ 'git+https://github.com/ramitos/jsctags.git'
     unlet l:feedback
     let l:feedback = system(l:cmd)
@@ -413,7 +413,7 @@ if VrcCygwin()
                 \ 'if'               : 'has("nvim")',
                 \ 'on_ft'            : ['javascript'],
                 \ 'depends'          : ['deoplete.nvim'],
-                \ 'hook_source'      : 
+                \ 'hook_source'      :
                 \            join([
                 \                'let g:tern_request_timeout       = 1',
                 \                'let g:tern_show_signature_in_pum = 0',
@@ -512,7 +512,7 @@ endfor
 " set filetype to 'text' if not known                                  {{{2
 augroup vrc_unknown_files
     autocmd!
-    autocmd BufEnter * 
+    autocmd BufEnter *
                 \ if &filetype == "" |
                 \   setlocal ft=text |
                 \ endif
