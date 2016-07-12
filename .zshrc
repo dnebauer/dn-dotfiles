@@ -160,6 +160,14 @@ vman() {
 }
 compdef vman='man'
 
+# Use vim as pager
+vimpager="$HOME/.cache/dein/repos/github.com/rkitover/vimpager/vimpager"
+if [ -f "$vimpager" ] ; then
+    export PAGER="$vimpager"
+    alias less=$PAGER
+    alias zless=$PAGER
+fi
+
 
 # Oh My Zsh configuration
 # =======================

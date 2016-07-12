@@ -111,6 +111,12 @@ call dein#add('tpope/vim-eunuch', {
             \                       'SudoWrite', 'SudoEdit'],
             \ 'hook_post_source' :  'augroup! eunuch',
             \ })
+" - use vimpager as shell
+"   . set shell PAGER variable to use it
+"   . then alias 'less' to $PAGER
+cal dein#add('rkitover/vimpager', {
+            \ 'on_cmd' : ['Page'],
+            \ })
 " bundles: editing                                                     {{{2
 call dein#add('tpope/vim-unimpaired', {
             \ 'depends' : ['vim-repeat'],
