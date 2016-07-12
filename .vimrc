@@ -84,6 +84,11 @@ call dein#add('haya14busa/dein-command.vim', {
 call dein#add('shougo/vimproc.vim', {
             \ 'build' : 'make',
             \ })
+call dein#add('dnebauer/vim-dn-utils')
+call dein#add('tpope/vim-repeat', {
+            \ 'lazy' : 1,
+            \ })
+" bundles: shell integration                                           {{{2
 call dein#add('shougo/vimshell.vim', {
             \ 'depends' : 'vimproc.vim',
             \ 'on_cmd'  : ['VimShell',           'VimShellCreate',
@@ -92,10 +97,6 @@ call dein#add('shougo/vimshell.vim', {
             \              'VimShellExecute',    'VimShellInteractive',
             \              'VimShellSendString', 'VimShellSendBuffer',
             \              'VimShellClose'],
-            \ })
-call dein#add('dnebauer/vim-dn-utils')
-call dein#add('tpope/vim-repeat', {
-            \ 'lazy' : 1,
             \ })
 call dein#add('bogado/file-line')
 call dein#add('jez/vim-superman')
@@ -308,7 +309,7 @@ call dein#add('jnurmine/zenburn', {
 call dein#add('wincent/terminus', {
             \ 'if' : '!has("gui")'
             \ })
-" - handle (relative) line numbering automatically                     {{{3
+" - handle lilne number switching automatically                        {{{3
 call dein#add('myusuf3/numbers.vim')
 " bundles: syntax checking                                             {{{2
 call dein#add('scrooloose/syntastic', {
