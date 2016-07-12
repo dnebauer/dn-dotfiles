@@ -34,6 +34,25 @@ nnoremap <LocalLeader>hm <Esc>:call ToggleHardMode()<CR>
 " - repeat visual shift operation [V]: <,>
 vnoremap < <gv
 vnoremap > >gv
+
+" Sneak plugin                                                         {{{1
+nmap <expr> ; sneak#is_sneaking() ? '<Plug>SneakNext' : ':'
+" - emulate easymotion (but better)
+let g:sneak#streak = 1
+" - replace 'f' with sneak
+nmap f <Plug>Sneak_s
+nmap F <Plug>Sneak_S
+xmap f <Plug>Sneak_s
+xmap F <Plug>Sneak_S
+omap f <Plug>Sneak_s
+omap F <Plug>Sneak_S
+" - replace 't' with 1-char sneak
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
                                                                      " }}}1
 
 " vim: set foldmethod=marker :

@@ -255,9 +255,7 @@ call dein#add('shougo/neomru.vim', {
             \ 'on_source' : ['unite.vim'],
             \ })
 call dein#add('vim-scripts/matchit.zip')
-call dein#add('easymotion/vim-easymotion', {
-            \ 'on_plug' : {'i': ['<Plug>(easymotion-']},
-            \ })
+call dein#add('justinmk/vim-sneak')
 " bundles: ui                                                          {{{2
 " - menus                                                              {{{3
 call dein#add('mbadran/headlights', {
@@ -306,7 +304,7 @@ call dein#add('jnurmine/zenburn', {
             \ 'if' : '     v:version >= 704'
             \      . ' &&  has("patch-7.4.1826")',
             \ })                                         " zenburn
-" - enhance terminal integration                                     " {{{3
+" - enhance terminal integration                                       {{{3
 call dein#add('wincent/terminus', {
             \ 'if' : '!has("gui")'
             \ })
