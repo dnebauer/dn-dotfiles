@@ -39,13 +39,13 @@ vnoremap > >gv
 " - see basic.vim for handling of colon in normal mode
 " - emulate easymotion (but better)
 let g:sneak#streak = 1
-" - replace 'f' with sneak
-nmap f <Plug>Sneak_s
-nmap F <Plug>Sneak_S
-xmap f <Plug>Sneak_s
-xmap F <Plug>Sneak_S
-omap f <Plug>Sneak_s
-omap F <Plug>Sneak_S
+" - replace 'f' with 1-char Sneak
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
 " - replace 't' with 1-char sneak
 nmap t <Plug>Sneak_t
 nmap T <Plug>Sneak_T
