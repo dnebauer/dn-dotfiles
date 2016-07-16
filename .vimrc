@@ -99,7 +99,7 @@ call dein#add('shougo/vimshell.vim', {
             \              'VimShellClose'],
             \ })
 call dein#add('bogado/file-line')
-call dein#add('jez/vim-superman')
+call dein#add('dnebauer/vim-superman')
 " - vim-eunuch sets autocommands in group 'eunuch' which make all new
 "   files executable (not desirable) and insert templates into new
 "   files (conflicts with templates in vim-dn-utils plugin), so
