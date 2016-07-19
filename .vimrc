@@ -228,7 +228,6 @@ call dein#add('shougo/neopairs.vim', {
 call dein#add('c9s/perlomni.vim', {
             \ 'if'        : 'v:version >= 702',
             \ 'on_ft'     : ['perl'],
-            \ 'on_source' : ['neocomplete.vim', 'deoplete.nvim'],
             \ })
 call dein#add('raimondi/delimitMate', {
             \ 'on_event' : 'InsertEnter',
