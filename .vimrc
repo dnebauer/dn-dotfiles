@@ -396,11 +396,10 @@ call dein#add('neomake/neomake', {
 " - easytags : automated tag generation                                {{{3
 call dein#add('xolox/vim-easytags', {
             \ 'if'      : 'executable("ctags")',
-            \ 'depends' : ['xolox/vim-shell', 'xolox/vim-misc'],
+            \ 'depends' : ['vim-shell', 'vim-misc'],
             \ })
 " - shell : asynchronous operations in ms windows                      {{{3
 call dein#add('xolox/vim-shell', {
-            \ 'depends' : ['xolox/vim-misc'],
             \ 'lazy' : 1,
             \ })
 " - misc : plugin library used by other scripts                        {{{3
