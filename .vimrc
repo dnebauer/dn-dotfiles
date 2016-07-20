@@ -81,14 +81,22 @@ call dein#add('haya14busa/dein-command.vim', {
             \ 'on_cmd' : ['Dein'],
             \ })
 " bundles: utilities                                                   {{{2
+" - vimproc : asynchronous execution                                   {{{3
 call dein#add('shougo/vimproc.vim', {
             \ 'build' : 'make',
             \ })
+" - dn-utils : general utilities                                       {{{3
 call dein#add('dnebauer/vim-dn-utils')
+" - repeat : plugin helper for repeating commands                      {{{3
 call dein#add('tpope/vim-repeat', {
             \ 'lazy' : 1,
             \ })
+" - context_filetype : plugin helper                                   {{{3
+call dein#add('shougo/context_filetype.vim', {
+            \ 'lazy': 1,
+            \ })
 " bundles: shell integration                                           {{{2
+" - vimshell : shell emulation                                         {{{3
 call dein#add('shougo/vimshell.vim', {
             \ 'depends' : 'vimproc.vim',
             \ 'on_cmd'  : ['VimShell',           'VimShellCreate',
@@ -98,32 +106,42 @@ call dein#add('shougo/vimshell.vim', {
             \              'VimShellSendString', 'VimShellSendBuffer',
             \              'VimShellClose'],
             \ })
+" - file-line : open vim on given line                                 {{{3
 call dein#add('bogado/file-line')
-call dein#add('dnebauer/vim-superman')
-" - vim-eunuch sets autocommands in group 'eunuch' which make all new
-"   files executable (not desirable) and insert templates into new
-"   files (conflicts with templates in vim-dn-utils plugin), so
-"   remove them after sourcing the plugin
+" - superman : shell uses vim as manpage viewer                        {{{3
+call dein#add('dnebauer/vim-superman', {
+            \ 'if' : 'has("unix")',
+            \ })
+" - eunuch : unix shell commands as vim commands                       {{{3
+"   . disable plugin-set autocommands after sourcing because they
+"     a) make all new files executable (not desirable), and
+"     b) insert templates into new files (conflicts with
+"        vim-dn-utils templates)
 call dein#add('tpope/vim-eunuch', {
+            \ 'if'               : 'has("unix")',
             \ 'on_cmd'           : ['Remove',    'Unlink', 'Move',
             \                       'Rename',    'Chmod',  'Mkdir',
             \                       'Find',      'Locate', 'Wall',
             \                       'SudoWrite', 'SudoEdit'],
             \ 'hook_post_source' :  'augroup! eunuch',
             \ })
-" - use vimpager as shell
-"   . set shell PAGER variable to use it
-"   . then alias 'less' to $PAGER
+" - vimpager : unix shell uses vim as pager                            {{{3
+"   . sets shell PAGER variable to use vim
+"   . sets alias 'less' to $PAGER
 cal dein#add('rkitover/vimpager', {
+            \ 'if'     : 'has("unix")',
             \ 'on_cmd' : ['Page'],
             \ })
 " bundles: editing                                                     {{{2
+" - unimpaired : various paired mappings                               {{{3
 call dein#add('tpope/vim-unimpaired', {
             \ 'depends' : ['vim-repeat'],
             \ })
+" - surround : delete/change surrounding parens, etc.                  {{{3
 call dein#add('tpope/vim-surround', {
             \ 'depends' : ['vim-repeat'],
             \ })
+" - commentary : comment and uncomment lines                           {{{3
 call dein#add('tpope/vim-commentary', {
             \ 'on_cmd' : ['Commentary', 'CommentaryLine',
             \             'ChangeCommentary'],
@@ -131,57 +149,78 @@ call dein#add('tpope/vim-commentary', {
             \             'n': ['gc', 'gcc', 'cgc', 'gcu'],
             \             'o': ['gc']},
             \ })
+" - endwise : automatically end structures like if..endif              {{{3
 call dein#add('tpope/vim-endwise')
+" - gundo : undo tree                                                  {{{3
 call dein#add('sjl/gundo.vim', {
             \ 'on_cmd' : ['GundoToggle'],
             \ })
+" - DeleteTrailingWhitespace : delete trailing whitespace              {{{3
 call dein#add('vim-scripts/DeleteTrailingWhitespace')
-" bundles: file exploring                                              {{{2
+" bundles: searching and finding                                       {{{2
+" - nerdtree : tree explorer                                           {{{3
 call dein#add('scrooloose/nerdtree', {
             \ 'on_cmd' : ['NERDTree', 'NERDTreeToggle'],
             \ })
+" - nerdtree-git-plugun : show file git status                         {{{3
 call dein#add('xuyuanp/nerdtree-git-plugin', {
             \ 'if' : 'executable("git")',
             \ })
+" - ack : search tool                                                  {{{3
 call dein#add('mileszs/ack.vim', {
             \ 'if'     : 'executable("ack")',
             \ 'on_cmd' : ['Ack', 'AckAdd', 'LAck', 'LAckAdd'],
             \ })
+" - ag : search tool                                                   {{{3
 call dein#add('ervandew/ag', {
             \ 'if'     : 'executable("Ag")',
             \ 'on_cmd' : ['Ag'],
             \ })
+" - unite : integrated information display                             {{{3
+call dein#add('shougo/unite.vim')
+" - neomru : unite helper - recently used files                        {{{3
+call dein#add('shougo/neomru.vim', {
+            \ 'on_source' : ['unite.vim'],
+            \ })
 " bundles: internet                                                    {{{2
+" - vim-g : google lookup                                              {{{3
 call dein#add('szw/vim-g', {
             \ 'if'     : 'executable("perl")',
             \ 'on_cmd' : ['Google', 'Googlef'],
             \ })
+" - webapi : web browser API                                           {{{3
 call dein#add('mattn/webapi-vim', {
             \ 'lazy' : 1,
             \ })
+" - quicklink : md-specific web lookup and link inserter               {{{3
 call dein#add('christoomey/vim-quicklink', {
             \ 'on_ft'   : ['markdown', 'markdown.pandoc'],
             \ 'depends' : ['webapi-vim'],
             \ })
+" - open-browser : open uri in browser                                 {{{3
 call dein#add('tyru/open-browser.vim', {
             \ 'on_cmd' : ['OpenBrowser', 'OpenBrowserSearch',
             \             'OpenBrowserSmartSearch'],
             \ 'on_map' : {'n': ['<Plug>(openbrowser-smart-search)'],
             \             'v': ['<Plug>(openbrowser-smart-search)']},
             \ })
+" - whatdomain : look up top level domain                              {{{3
 call dein#add('whatdomain.vim', {
             \ 'on_cmd'  : ['WhatDomain'],
             \ 'on_func' : ['WhatDomain'],
             \ })
 " bundles: printing                                                    {{{2
+" - dn-print-dialog : pure vim print dialog                            {{{3
 call dein#add('dnebauer/vim-dn-print-dialog', {
             \ 'on_cmd' :  ['PrintDialog'],
             \ })
 " bundles: calendar                                                    {{{2
+" - calendar : display calendar                                        {{{3
 call dein#add('mattn/calendar-vim', {
             \ 'on_cmd' : ['Calendar', 'CalendarH', 'CalendarT'],
             \ })
 " bundles: completion                                                  {{{2
+" - deoplete : nvim completion engine                                  {{{3
 call dein#add('shougo/deoplete.nvim', {
             \ 'depends'     : ['context_filetype.vim'],
             \ 'if'          : 'has("nvim")',
@@ -191,6 +230,7 @@ call dein#add('shougo/deoplete.nvim', {
             \                 'let g:deoplete#enable_at_startup = 1',
             \                 ], "\n"),
             \ })
+" - neocomplete : vim completion engine                                {{{3
 call dein#add('shougo/neocomplete.vim', {
             \ 'depends'     : ['context_filetype.vim'],
             \ 'if'          : '     v:version >= 704'
@@ -200,18 +240,19 @@ call dein#add('shougo/neocomplete.vim', {
             \                 'let g:neocomplete#enable_at_startup = 1',
             \                 ], "\n"),
             \ })
-call dein#add('shougo/context_filetype.vim', {
-            \ 'lazy': 1,
-            \ })
+" - neoinclude : completion framework helper                           {{{3
 call dein#add('shougo/neoinclude.vim', {
             \ 'on_source' : ['neocomplete.vim', 'deoplete.nvim'],
             \ })
+" - neco-syntax : completion syntax helper                             {{{3
 call dein#add('shougo/neco-syntax', {
             \ 'on_source' : ['neocomplete.vim', 'deoplete.nvim'],
             \ })
+" - neco-vim : completion source helper                                {{{3
 call dein#add('shougo/neco-vim', {
             \ 'on_ft' : ['vim'],
             \ })
+" - echodoc : plugin helper that prints to echo area                   {{{3
 call dein#add('shougo/echodoc.vim', {
             \ 'depends'     : ['context_filetype.vim'],
             \ 'on_event'    : ['CompleteDone'],
@@ -220,71 +261,80 @@ call dein#add('shougo/echodoc.vim', {
             \                 'set cmdheight=2',
             \                 ], "\n"),
             \ })
+" - neopairs : completion helper closes paired structures              {{{3
 call dein#add('shougo/neopairs.vim', {
             \ 'on_source' : ['neocomplete.vim', 'deoplete.nvim'],
             \ 'if'        : '     v:version >= 704'
             \             . ' &&  has("patch-7.4.774")',
             \ })
+" - perlomni : perl completion                                         {{{3
 call dein#add('c9s/perlomni.vim', {
             \ 'if'        : 'v:version >= 702',
             \ 'on_ft'     : ['perl'],
             \ })
+" - delimitMate : completion helper closes paired syntax               {{{3
 call dein#add('raimondi/delimitMate', {
             \ 'on_event' : 'InsertEnter',
             \ })
 " bundles: snippets                                                    {{{2
+" - neonippet : snippet engine                                         {{{3
 call dein#add('shougo/neosnippet.vim', {
             \ 'depends'  : ['context_filetype.vim'],
             \ 'on_event' : 'InsertCharPre',
             \ })
+" - snippets : snippet library                                         {{{3
 call dein#add('honza/vim-snippets', {
             \ 'on_source' : ['neosnippet.vim'],
             \ })
 " bundles: formatting                                                  {{{2
-" - aligning text                                                      {{{3
+" - tabular : align text                                               {{{3
 call dein#add('godlygeek/tabular', {
             \ 'on_cmd' : ['Tabularize', 'AddTabularPattern',
             \             'AddTabularPipeline'],
             \ })
-" - converting between single- and multi-line statements               {{{3
+" - splitjoin : single <-> multi-line statements                       {{{3
 call dein#add('andrewradev/splitjoin.vim', {
             \ 'on_cmd' : ['SplitjoinSplit', 'SplitjoinJoin'],
             \ 'on_map' : {'n': ['gS', 'gJ']},
             \ })
 " bundles: spelling, grammar, word choice                              {{{2
+" - dict : online dictionary (dict client)                             {{{3
 call dein#add('szw/vim-dict', {
             \ 'on_cmd' : ['Dict'],
             \ })
+" - grammarous : grammar checker                                       {{{3
 call dein#add('rhysd/vim-grammarous', {
-            \ 'on_cmd' : ['GrammarousCheck', 'GrammarousReset',
-            \             'Unite grammarous'],
+            \ 'depends' : ['unite.vim'],
+            \ 'on_cmd'  : ['GrammarousCheck', 'GrammarousReset',
+            \              'Unite grammarous'],
             \ })
+" - online-thesaurus : online thesaurus                                {{{3
 call dein#add('beloglazov/vim-online-thesaurus', {
             \ 'on_cmd' : ['Thesaurus', 'OnlineThesaurusCurrentWord'],
             \ })
+" - abolish : word replace and format variable names                   {{{3
 call dein#add('tpope/vim-abolish', {
             \ 'on_cmd' : ['Abolish', 'Subvert'],
             \ 'on_map' : {'n': ['crc', 'crm', 'cr_', 'crs', 'cru',
             \                   'crU', 'cr-', 'crk', 'cr.']},
             \ })
 " bundles: keyboard navigation                                         {{{2
+" - hardmode : restrict navigation keys                                {{{3
 call dein#add('wikitopian/hardmode', {
             \ 'on_func' : ['HardMode', 'EasyMode'],
             \ })
-call dein#add('shougo/unite.vim')
-call dein#add('shougo/neomru.vim', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+" - matchit : jump around matched structures                           {{{3
 call dein#add('vim-scripts/matchit.zip')
+" - sneak : two-character motion plugin                                {{{3
 call dein#add('justinmk/vim-sneak')
 " bundles: ui                                                          {{{2
-" - menus                                                              {{{3
+" - headlights : integrate plugins with vim menus                      {{{3
 call dein#add('mbadran/headlights', {
             \ 'if' : '     v:version >= 700'
             \      . ' &&  has("python")'
             \      . ' &&  executable("python")',
             \ })
-" - status line                                                        {{{3
+" - airline : status line                                              {{{3
 call dein#add('vim-airline/vim-airline', {
             \ 'if'          : 'v:version >= 702',
             \ 'hook_source' :
@@ -297,10 +347,11 @@ call dein#add('vim-airline/vim-airline', {
 \            'let g:airline#extensions#tagbar#enabled = 1',
 \        ], "\n"),
             \ })
+" - airline-themes : airline helper                                    {{{3
 call dein#add('vim-airline/vim-airline-themes', {
             \ 'depends' : 'vim-airline',
             \ })
-" - outline viewer                                                     {{{3
+" - tagbar : outline viewer                                            {{{3
 call dein#add('majutsushi/tagbar', {
             \ 'if'     : '     v:version >= 701'
             \          . ' &&  executable("ctags")',
@@ -311,7 +362,7 @@ call dein#add('majutsushi/tagbar', {
             \             'TagbarCurrentTag',    'TagbarGetTypeConfig',
             \             'TagbarDebug',         'TagbarDebugEnd'],
             \ })
-" - colour schemes                                                     {{{3
+" - [various] : colour schemes                                         {{{3
 call dein#add('atelierbram/vim-colors_atelier-schemes')  " atelier
 call dein#add('sjl/badwolf')                             " bad wolf
 call dein#add('w0ng/vim-hybrid')                         " hybrid
@@ -325,32 +376,41 @@ call dein#add('jnurmine/zenburn', {
             \ 'if' : '     v:version >= 704'
             \      . ' &&  has("patch-7.4.1826")',
             \ })                                         " zenburn
-" - enhance terminal integration                                       {{{3
+" - terminus : enhance terminal integration                            {{{3
 call dein#add('wincent/terminus', {
             \ 'if' : '!has("gui")'
             \ })
-" - handle line number switching automatically                         {{{3
+" - numbers : number <->relativenumber switching                       {{{3
 call dein#add('myusuf3/numbers.vim')
 " bundles: syntax checking                                             {{{2
+" - syntastic : syntax checker for vim                                 {{{3
 call dein#add('scrooloose/syntastic', {
             \ 'if' : '!has("nvim")',
             \ })
+" - neomake : asynchronous syntax checker for nvim                     {{{3
 call dein#add('neomake/neomake', {
             \ 'if'     : 'has("nvim")',
             \ 'on_cmd' : ['Neomake'],
             \ })
 " bundles: tags                                                        {{{2
+" - easytags : automated tag generation                                {{{3
 call dein#add('xolox/vim-easytags', {
             \ 'if'      : 'executable("ctags")',
-            \ 'depends' : ['xolox/vim-misc'],
+            \ 'depends' : ['xolox/vim-shell', 'xolox/vim-misc'],
             \ })
+" - shell : asynchronous operations in ms windows                      {{{3
+call dein#add('xolox/vim-shell', {
+            \ 'depends' : ['xolox/vim-misc'],
+            \ 'lazy' : 1,
+            \ })
+" - misc : plugin library used by other scripts                        {{{3
 call dein#add('xolox/vim-misc', {
-            \ 'depends' : ['xolox/vim-shell'],
+            \ 'lazy'    : 1,
             \ })
 "           - fails in git-bash/MinTTY with error:
 "             'Failed to read temporary file...'
-call dein#add('xolox/vim-shell')
 " bundles: version control                                             {{{2
+" - gitgutter : git giff symbols in gutter                             {{{3
 call dein#add('airblade/vim-gitgutter', {
             \ 'if' : '    executable("git")'
             \      . '&&  ('
@@ -363,31 +423,38 @@ call dein#add('airblade/vim-gitgutter', {
             \      . '      has("nvim")'
             \      . '    )',
             \ })
+" - fugitive : git integration                                         {{{3
 call dein#add('tpope/vim-fugitive', {
             \ 'if' : 'executable("git")',
             \ })
 " bundles: docbook support                                             {{{2
-" - jhradilek/vim-snippets is not installed using neobundle            {{{3
+" - jhradilek/vim-snippets : NOT installed using dein                  {{{3
 "   . because its default location clashes with honza/vim-snippets
-"   . instead installed to custom location by ftplugin vim-dn-docbk    }}}3
+"   . instead installed to custom location by ftplugin vim-dn-docbk
+" - docbk : docbook support                                            {{{3
 call dein#add('jhradilek/vim-docbk', {
             \ 'on_ft' : ['docbk'],
             \ })
+" - dn-docbk : docbook support                                         {{{3
 call dein#add('dnebauer/vim-dn-docbk', {
             \ 'on_ft' : ['docbk'],
             \ })
 " bundles: html support                                                {{{2
+" - html5 : html5 support                                              {{{3
 call dein#add('othree/html5.vim', {
             \ 'on_ft' : ['html'],
             \ })
+" - sparkup : condensed html parser                                    {{{3
 call dein#add('rstacruz/sparkup', {
             \ 'on_ft' : ['html'],
             \ })
+" - emmet : expand abbreviations                                       {{{3
 call dein#add('mattn/emmet-vim', {
             \ 'on_ft' : ['html', 'css'],
             \ })
 " bundles: javascript support                                          {{{2
-" - jsctags
+" - tern + jcstags : javascript tag generator                          {{{3
+" - jsctags install details                                            {{{4
 "   . provides tag support for javascript
 "   . is installed by npm as binaries
 "     - npm requires node.js which is no longer supported on cygwin
@@ -396,18 +463,18 @@ call dein#add('mattn/emmet-vim', {
 "   . is reinstalled whenever tern is updated - see tern install next
 "   . npm install command used below assumes npm is configured to
 "     install in global mode without needing superuser privileges
-" - tern
+" - tern install details                                               {{{4
 "   . is installed by npm
 "     - npm requires node.js which is no longer supported on cygwin
 "     - so cannot install tern on cygwin
 "   . npm install command used below assumes npm is configured to
 "     install in global mode without needing superuser privileges
 "   . update of tern is used as trigger to reinstall jsctags
-function! VrcBuildTernAndJsctags()                                   " {{{3
+function! VrcBuildTernAndJsctags()                                   " {{{4
     call VrcBuildTern()
     call VrcBuildJsctags()
-endfunction                                                          " }}}3
-function! VrcBuildTern()                                             " {{{3
+endfunction
+function! VrcBuildTern()                                             " {{{4
     let l:feedback = system('npm install')
     if v:shell_error
         echoerr 'Unable to build tern-for-vim plugin'
@@ -415,8 +482,8 @@ function! VrcBuildTern()                                             " {{{3
             echoerr 'Error message: ' . l:feedback
         endif
     endif
-endfunction                                                          " }}}3
-function! VrcBuildJsctags()                                          " {{{3
+endfunction
+function! VrcBuildJsctags()                                          " {{{4
     let l:cmd = 'npm install -g ' .
                 \ 'git+https://github.com/ramitos/jsctags.git'
     unlet l:feedback
@@ -427,13 +494,14 @@ function! VrcBuildJsctags()                                          " {{{3
             echoerr 'Error message: ' . l:feedback
         endif
     endif
-endfunction                                                          " }}}3
+endfunction
 function! VrcCygwin()                                                " {{{4
     return system('uname -o') =~# '^Cygwin'
-endfunction                                                          " }}}4
-" - cannot test for cygwin in dein#add 'if' statement
-" - doing so results in 'E48: Not allowed in sandbox
-if VrcCygwin()
+endfunction
+" - install                                                            {{{4
+"   . cannot test for cygwin in dein#add 'if' statement
+"   . doing so results in 'E48: Not allowed in sandbox
+if !VrcCygwin()
     call dein#add('ternjs/tern_for_vim', {
                 \ 'if'               : '!has("nvim")',
                 \ 'on_ft'            : ['javascript'],
@@ -452,39 +520,47 @@ if VrcCygwin()
                 \ })
 endif
 " bundles: latex support                                               {{{2
+" - vimtex : latex support                                             {{{3
 call dein#add('lervag/vimtex', {
             \ 'on_ft' : ['tex','latex'],
             \ })
+" - dn-latex : latex support                                           {{{3
 call dein#add('dnebauer/vim-dn-latex', {
             \ 'on_ft' : ['tex','latex'],
             \ })
 " bundles: markdown support                                            {{{2
+" - markdown2ctags : tag generator                                     {{{3
 call dein#add('jszakmeister/markdown2ctags', {
             \ 'on_ft' : ['markdown','markdown.pandoc'],
             \ })
+" - dn-markdown : md support                                           {{{3
 call dein#add('dnebauer/vim-dn-markdown', {
             \ 'on_ft' : ['markdown','markdown.pandoc'],
             \ })
+" - previm : realtime preview                                          {{{3
 call dein#add('kannokanno/previm', {
             \ 'on_ft'   : ['markdown','markdown.pandoc'],
             \ 'depends' : ['open-browser.vim'],
             \ 'on_cmd'  : ['PrevimOpen'],
             \ })
 " bundles: perl support                                                {{{2
+" - perl : perl support                                                {{{3
 call dein#add('vim-perl/vim-perl', {
             \ 'on_ft' : ['perl'],
             \ })
+" - dn-perl : perl support                                             {{{3
 call dein#add('dnebauer/vim-dn-perl', {
             \ 'on_ft' : ['perl'],
             \ })
-" - perlhelp.vim requires the perldoc command
+" - perlhelp : provide help with perldoc                               {{{3
 call dein#add('perlhelp.vim', {
             \ 'if'    : 'executable("perldoc")',
             \ 'on_ft' : ['perl'],
             \ })
 " bundles: php support                                                 {{{2
-" - cannot test for cygwin in dein#add 'if' statement
-" - doing so results in 'E48: Not allowed in sandbox
+" - phpctags : tag generation                                          {{{3
+"   . cannot test for cygwin in dein#add 'if' statement
+"   . doing so results in 'E48: Not allowed in sandbox
 if !VrcCygwin()
     call dein#add('vim-php/tagbar-phpctags.vim', {
                 \ 'on_ft' : ['php'],
@@ -494,30 +570,37 @@ if !VrcCygwin()
     "           build fails in cygwin
 endif
 " bundles: python support                                              {{{2
+"  - jedi : autocompletion                                             {{{3
 call dein#add('davidhalter/jedi-vim', {
             \ 'if'               : '!has("nvim")',
             \ 'on_ft'            : ['python'],
             \ 'hook_post_update' : 'pip install --upgrade jedi',
             \ })
+" - deoplete-jedi : deoplete helper                                    {{{3
 call dein#add('zchee/deoplete-jedi', {
             \ 'if'               : '!has("nvim")',
             \ 'on_ft'            : ['python'],
             \ 'depends'          : ['deoplete.nvim'],
             \ 'hook_post_update' : 'pip install --upgrade jedi',
             \ })
+" - pep8 : indentation support                                         {{{3
 call dein#add('hynek/vim-python-pep8-indent', {
             \ 'on_ft' : 'python',
             \ })
 " bundles: tmux support                                                {{{2
+" navigator : split navigation                                         {{{3
 call dein#add('christoomey/vim-tmux-navigator')
+" tmux : tmux.conf support                                             {{{3
 call dein#add('tmux-plugins/vim-tmux', {
             \ 'on_ft' : ['tmux'],
             \ })
 " bundles: xml support                                                 {{{2
+" - xml : xml support                                                  {{{3
 call dein#add('xml.vim', {
             \ 'on_ft' : ['xml'],
             \ })
 " bundles: xquery support                                              {{{2
+" indentomnicomplete : autoindent and omnicomplete                     {{{3
 call dein#add('XQuery-indentomnicompleteftplugin', {
             \ 'on_ft' : ['xquery'],
             \ })
