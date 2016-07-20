@@ -1,16 +1,16 @@
 " Vim configuration: navigation
 
 " Unite.vim: navigate buffers, MRU, yank history                       {{{1
-" - buffer list [N]  : \<Space>b
-nnoremap <silent> <LocalLeader><Space>b :<C-u>Unite buffer<CR>
-" - recent files [N] : \<Space>r
-nnoremap <silent> <LocalLeader><Space>r :<C-u>Unite file_mru<CR>
-" - file search [N]  : \<Space>f
+" - buffer list [N]  : ,b
+nnoremap <silent> ,b :<C-u>Unite buffer<CR>
+" - recent files [N] : ,r
+nnoremap <silent> ,r :<C-u>Unite file_mru<CR>
+" - file search [N]  : ,f
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <LocalLeader><Space>f :<C-u>Unite -start-insert file_rec/async:!<CR>
-" - yank history [N] : \<Space>y
+nnoremap ,f :<C-u>Unite -start-insert file_rec/async:!<CR>
+" - yank history [N] : ,y
 let g:unite_source_history_yank_enable = 1
-nnoremap <LocalLeader><Space>y :<C-u>Unite history/yank<CR>
+nnoremap ,y :<C-u>Unite history/yank<CR>
 
 " Backspace                                                            {{{1
 " - set behaviour
