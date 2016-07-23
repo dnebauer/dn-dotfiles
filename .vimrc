@@ -473,15 +473,15 @@ call dein#add('neomake/neomake', {
 " - easytags : automated tag generation                                {{{3
 call dein#add('xolox/vim-easytags', {
             \ 'if'      : 'executable("ctags")',
-            \ 'depends' : ['vim-shell', 'vim-misc'],
             \ })
 " - shell : asynchronous operations in ms windows                      {{{3
 call dein#add('xolox/vim-shell', {
-            \ 'depends': ['vim-misc'],
+            \ 'on_source' : ['vim-easytags'],
             \ 'lazy' : 1,
             \ })
 " - misc : plugin library used by other scripts                        {{{3
 call dein#add('xolox/vim-misc', {
+            \ 'on_source' : ['vim-easytags', 'vim-shell'],
             \ 'lazy'    : 1,
             \ })
 "           - fails in git-bash/MinTTY with error:
