@@ -181,6 +181,16 @@ call dein#add('ervandew/ag', {
 "   . tried loading unite on triggers but failed
 "   . just load all at initialisation
 call dein#add('shougo/unite.vim', {
+            \ 'on_cmd'      : ['Unite',               'UniteBookmarkAdd',
+            \                  'UniteClose',          'UniteDo',
+            \                  'UniteFirst',          'UniteLast',
+            \                  'UniteNext',           'UnitePrevious',
+            \                  'UniteResume',         'UniteSessionLoad',
+            \                  'UniteSessionSave',    'UniteWithBufferDir',
+            \                  'UniteWithCurrentDir',
+            \                  'UniteWithCursorWord', 'UniteWithInput',
+            \                  'UniteWithInputDirectory',
+            \                  'UniteWithProjectDir'],
             \ 'depends'     : ['vimproc.vim'],
             \ 'hook_source' : join([
             \                 'call unite#filters#matcher_default#use('
@@ -197,31 +207,31 @@ call dein#add('shougo/unite.vim', {
             \ })
 " - neomru : unite helper - recently used files                        {{{3
 call dein#add('shougo/neomru.vim', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - help : unite helper - help                                         {{{3
 call dein#add('shougo/unite-help', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - tag : unite helper - tags                                          {{{3
 call dein#add('tsukkee/unite-tag', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - session : unite helper - session support                           {{{3
 call dein#add('shougo/unite-session', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - history : unite helper - command and search history                {{{3
 call dein#add('thinca/vim-unite-history', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - neoyank : unite helper - yank history                              {{{3
 call dein#add('shougo/neoyank.vim', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - outline : unite helper - document outline                          {{{3
 call dein#add('shougo/unite-outline', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source'   : ['unite.vim'],
             \ 'hook_source' : join([
             \                 'call unite#set_buffer_name_option('
             \                 . '"outline", "ignorecase", 1)',
@@ -231,25 +241,25 @@ call dein#add('shougo/unite-outline', {
             \ })
 " - unicode : unite helper - insert unicode                            {{{3
 call dein#add('sanford1/unite-unicode', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - bibtex : unite helper - BibTeX references                          {{{3
 call dein#add('termoshtt/unite-bibtex', {
-            \ 'if'      : 'has ("python") && executable("pybtex")',
-            \ 'depends' : ['unite.vim'],
+            \ 'if'        : 'has ("python") && executable("pybtex")',
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - global : unite helper - global/gtags                               {{{3
 call dein#add('hewes/unite-gtags', {
-            \ 'if'      : 'executable("global")',
-            \ 'depends' : ['unite.vim'],
+            \ 'if'        : 'executable("global")',
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - fonts : unite helper - font selector                               {{{3
 call dein#add('ujihisa/unite-font', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source' : ['unite.vim'],
             \ })
 " - colorscheme : unite helper - colorscheme selector                  {{{3
 call dein#add('ujihisa/unite-colorscheme', {
-            \ 'depends' : ['unite.vim'],
+            \ 'on_source' : ['unite.vim'],
             \ })
 " bundles: internet                                                    {{{2
 " - vim-g : google lookup                                              {{{3
