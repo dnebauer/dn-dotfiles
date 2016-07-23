@@ -85,6 +85,10 @@ call dein#add('haya14busa/dein-command.vim', {
 call dein#add('shougo/vimproc.vim', {
             \ 'build' : 'make',
             \ })
+" - neoinclude : completion framework helper                           {{{3
+"   . unite has trouble locating neoinclude
+"     unless it is predictably loaded first
+call dein#add('shougo/neoinclude.vim')
 " - dn-utils : general utilities                                       {{{3
 call dein#add('dnebauer/vim-dn-utils')
 " - repeat : plugin helper for repeating commands                      {{{3
@@ -177,22 +181,12 @@ call dein#add('ervandew/ag', {
             \ 'on_cmd' : ['Ag'],
             \ })
 " - unite : integrated information display                             {{{3
-"   . tried making unite depend on lazy helpers but failed
-"   . tried loading unite on triggers but failed
-"   . just load all at initialisation
+"   . gave up loading unite on demand as the dependencies are
+"     too fragile; only works dependably if force load at start
+"   . call functions after dein#end [see unite.vim issue #330]
 call dein#add('shougo/unite.vim', {
-            \ 'on_cmd'      : ['Unite',               'UniteBookmarkAdd',
-            \                  'UniteClose',          'UniteDo',
-            \                  'UniteFirst',          'UniteLast',
-            \                  'UniteNext',           'UnitePrevious',
-            \                  'UniteResume',         'UniteSessionLoad',
-            \                  'UniteSessionSave',    'UniteWithBufferDir',
-            \                  'UniteWithCurrentDir',
-            \                  'UniteWithCursorWord', 'UniteWithInput',
-            \                  'UniteWithInputDirectory',
-            \                  'UniteWithProjectDir'],
-            \ 'depends'     : ['vimproc.vim'],
-            \ 'hook_source' : join([
+            \ 'depends'     : ['vimproc.vim', 'neoinclude'],
+            \ 'hook_post_source' : join([
             \                 'call unite#filters#matcher_default#use('
             \                 . '["matcher_fuzzy"])',
             \                 'call unite#custom#profile('
@@ -312,10 +306,6 @@ call dein#add('shougo/neocomplete.vim', {
             \ 'hook_source' : join([
             \                 'let g:neocomplete#enable_at_startup = 1',
             \                 ], "\n"),
-            \ })
-" - neoinclude : completion framework helper                           {{{3
-call dein#add('shougo/neoinclude.vim', {
-            \ 'on_source' : ['neocomplete.vim', 'deoplete.nvim'],
             \ })
 " - neco-syntax : completion syntax helper                             {{{3
 call dein#add('shougo/neco-syntax', {
