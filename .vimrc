@@ -177,10 +177,71 @@ call dein#add('ervandew/ag', {
             \ 'on_cmd' : ['Ag'],
             \ })
 " - unite : integrated information display                             {{{3
-call dein#add('shougo/unite.vim')
+"   . tried making unite depend on lazy helpers but failed
+"   . tried loading unite on triggers but failed
+"   . just load all at initialisation
+call dein#add('shougo/unite.vim', {
+            \ 'depends'     : ['vimproc.vim'],
+            \ 'hook_source' : join([
+            \                 'call unite#filters#matcher_default#use('
+            \                 . '["matcher_fuzzy"])',
+            \                 'call unite#custom#profile('
+            \                 . '"default", "context", {'
+            \                 . '"start_insert" : 1})',
+            \                 'call unite#custom#source('
+            \                 . '"grep", "matchers", "matcher_fuzzy")',
+            \                 'call unite#custom#source('
+            \                 . '"buffer,file,file_rec", "sorters", '
+            \                 . '"sorter_selecta")',
+            \                 ], "\n"),
+            \ })
 " - neomru : unite helper - recently used files                        {{{3
 call dein#add('shougo/neomru.vim', {
-            \ 'on_source' : ['unite.vim'],
+            \ 'depends' : ['unite.vim'],
+            \ })
+" - help : unite helper - help                                         {{{3
+call dein#add('shougo/unite-help', {
+            \ 'depends' : ['unite.vim'],
+            \ })
+" - tag : unite helper - tags                                          {{{3
+call dein#add('tsukkee/unite-tag', {
+            \ 'depends' : ['unite.vim'],
+            \ })
+" - session : unite helper - session support                           {{{3
+call dein#add('shougo/unite-session', {
+            \ 'depends' : ['unite.vim'],
+            \ })
+" - history : unite helper - command and search history                {{{3
+call dein#add('thinca/vim-unite-history', {
+            \ 'depends' : ['unite.vim'],
+            \ })
+" - neoyank : unite helper - yank history                              {{{3
+call dein#add('shougo/neoyank.vim', {
+            \ 'depends' : ['unite.vim'],
+            \ })
+" - outline : unite helper - document outline                          {{{3
+call dein#add('shougo/unite-outline', {
+            \ 'depends' : ['unite.vim'],
+            \ 'hook_source' : join([
+            \                 'call unite#set_buffer_name_option('
+            \                 . '"outline", "ignorecase", 1)',
+            \                 'call unite#set_buffer_name_option('
+            \                 . '"outline", "smartcase",  1)',
+            \                 ], "\n"),
+            \ })
+" - unicode : unite helper - insert unicode                            {{{3
+call dein#add('sanford1/unite-unicode', {
+            \ 'depends' : ['unite.vim'],
+            \ })
+" - bibtex : unite helper - BibTeX references                          {{{3
+call dein#add('termoshtt/unite-bibtex', {
+            \ 'if'      : 'has ("python") && executable("pybtex")',
+            \ 'depends' : ['unite.vim'],
+            \ })
+" - global : unite helper - global/gtags                               {{{3
+call dein#add('hewes/unite-gtags', {
+            \ 'if'      : 'executable("global")',
+            \ 'depends' : ['unite.vim'],
             \ })
 " bundles: internet                                                    {{{2
 " - vim-g : google lookup                                              {{{3
@@ -337,15 +398,20 @@ call dein#add('mbadran/headlights', {
 " - airline : status line                                              {{{3
 call dein#add('vim-airline/vim-airline', {
             \ 'if'          : 'v:version >= 702',
-            \ 'hook_source' :
-\        join([
-\            'let g:airline#extensions#branch#enabled = 1',
-\            'let g:airline#extensions#branch#empty_message = ""',
-\            'let g:airline#extensions#branch#displayed_head_limit = 10',
-\            'let g:airline#extensions#branch#format = 2',
-\            'let g:airline#extensions#syntastic#enabled = 1',
-\            'let g:airline#extensions#tagbar#enabled = 1',
-\        ], "\n"),
+            \ 'hook_source' : join([
+            \                 'let g:airline#extensions'
+            \                 . '#branch#enabled = 1',
+            \                 'let g:airline#extensions'
+            \                 . '#branch#empty_message = ""',
+            \                 'let g:airline#extensions'
+            \                 . '#branch#displayed_head_limit = 10',
+            \                 'let g:airline#extensions'
+            \                 . '#branch#format = 2',
+            \                 'let g:airline#extensions'
+            \                 . '#syntastic#enabled = 1',
+            \                 'let g:airline#extensions'
+            \                 . '#tagbar#enabled = 1',
+            \                 ], "\n"),
             \ })
 " - airline-themes : airline helper                                    {{{3
 call dein#add('vim-airline/vim-airline-themes', {
@@ -364,7 +430,6 @@ call dein#add('majutsushi/tagbar', {
             \ })
 " - [various] : colour schemes                                         {{{3
 call dein#add('atelierbram/vim-colors_atelier-schemes')  " atelier
-call dein#add('sjl/badwolf')                             " bad wolf
 call dein#add('w0ng/vim-hybrid')                         " hybrid
 call dein#add('jonathanfilip/vim-lucius')                " lucius
 call dein#add('nlknguyen/papercolor-theme')              " papercolor
@@ -400,6 +465,7 @@ call dein#add('xolox/vim-easytags', {
             \ })
 " - shell : asynchronous operations in ms windows                      {{{3
 call dein#add('xolox/vim-shell', {
+            \ 'depends': ['vim-misc'],
             \ 'lazy' : 1,
             \ })
 " - misc : plugin library used by other scripts                        {{{3
@@ -510,11 +576,12 @@ if !VrcCygwin()
                 \ 'if'               : 'has("nvim")',
                 \ 'on_ft'            : ['javascript'],
                 \ 'depends'          : ['deoplete.nvim'],
-                \ 'hook_source'      :
-                \            join([
-                \                'let g:tern_request_timeout       = 1',
-                \                'let g:tern_show_signature_in_pum = 0',
-                \            ], "\n"),
+                \ 'hook_source'      : join([
+                \                      'let g:tern_'
+                \                      . 'request_timeout = 1',
+                \                      'let g:tern_'
+                \                      . 'show_signature_in_pum = 0',
+                \                      ], "\n"),
                 \ 'hook_post_update' : 'npm install -g tern',
                 \ })
 endif
