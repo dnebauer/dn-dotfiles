@@ -668,6 +668,12 @@ call dein#add('christoomey/vim-tmux-navigator')
 call dein#add('tmux-plugins/vim-tmux', {
             \ 'on_ft' : ['tmux'],
             \ })
+" bundles: vimhelp support                                             {{{2
+" - vimhelplint : lint for vim help                                    {{{3
+call dein#add('machakann/vim-vimhelplint', {
+            \ 'on_ft'  : ['help'],
+            \ 'on_cmd' : ['VimhelpLint'],
+            \ })
 " bundles: xml support                                                 {{{2
 " - xml : xml support                                                  {{{3
 call dein#add('xml.vim', {
