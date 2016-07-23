@@ -243,6 +243,14 @@ call dein#add('hewes/unite-gtags', {
             \ 'if'      : 'executable("global")',
             \ 'depends' : ['unite.vim'],
             \ })
+" - fonts : unite helper - font selector                               {{{3
+call dein#add('ujihisa/unite-font', {
+            \ 'depends' : ['unite.vim'],
+            \ })
+" - colorscheme : unite helper - colorscheme selector                  {{{3
+call dein#add('ujihisa/unite-colorscheme', {
+            \ 'depends' : ['unite.vim'],
+            \ })
 " bundles: internet                                                    {{{2
 " - vim-g : google lookup                                              {{{3
 call dein#add('szw/vim-g', {

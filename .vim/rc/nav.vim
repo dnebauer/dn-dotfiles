@@ -164,8 +164,10 @@ nnoremap <silent> [unite]s :<C-u>Unite
 nnoremap <silent> [unite]t :<C-u>Unite
             \ -buffer-name=tags
             \ tag<CR>
-" - ,u  : source = unicode                                             {{{2
-nnoremap <silent> [unite]u :<C-u>Unite
+" - ,u  : source = [blank]                                             {{{2
+nnoremap [unite]u :<C-u>Unite
+" - ,U  : source = unicode                                             {{{2
+nnoremap <silent> [unite]U :<C-u>Unite
             \ -buffer-name=unicode
             \ unicode<CR>
 " - ,y  : source = yank history                                        {{{2
