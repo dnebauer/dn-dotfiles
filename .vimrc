@@ -470,22 +470,20 @@ call dein#add('neomake/neomake', {
             \ 'on_cmd' : ['Neomake'],
             \ })
 " bundles: tags                                                        {{{2
-" - easytags : automated tag generation                                {{{3
-call dein#add('xolox/vim-easytags', {
-            \ 'if'      : 'executable("ctags")',
-            \ })
-" - shell : asynchronous operations in ms windows                      {{{3
-call dein#add('xolox/vim-shell', {
-            \ 'on_source' : ['vim-easytags'],
-            \ 'lazy' : 1,
-            \ })
 " - misc : plugin library used by other scripts                        {{{3
 call dein#add('xolox/vim-misc', {
-            \ 'on_source' : ['vim-easytags', 'vim-shell'],
-            \ 'lazy'    : 1,
+            \ 'if' : 'executable("ctags")',
             \ })
-"           - fails in git-bash/MinTTY with error:
-"             'Failed to read temporary file...'
+            " - fails in git-bash/MinTTY with error:
+            "   'Failed to read temporary file...'
+" - shell : asynchronous operations in ms windows                      {{{3
+call dein#add('xolox/vim-shell', {
+            \ 'if' : 'executable("ctags")',
+            \ })
+" - easytags : automated tag generation                                {{{3
+call dein#add('xolox/vim-easytags', {
+            \ 'if' : 'executable("ctags")',
+            \ })
 " bundles: version control                                             {{{2
 " - gitgutter : git giff symbols in gutter                             {{{3
 call dein#add('airblade/vim-gitgutter', {
