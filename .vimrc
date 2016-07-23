@@ -232,12 +232,6 @@ call dein#add('shougo/neoyank.vim', {
 " - outline : unite helper - document outline                          {{{3
 call dein#add('shougo/unite-outline', {
             \ 'on_source'   : ['unite.vim'],
-            \ 'hook_source' : join([
-            \                 'call unite#set_buffer_name_option('
-            \                 . '"outline", "ignorecase", 1)',
-            \                 'call unite#set_buffer_name_option('
-            \                 . '"outline", "smartcase",  1)',
-            \                 ], "\n"),
             \ })
 " - unicode : unite helper - insert unicode                            {{{3
 call dein#add('sanford1/unite-unicode', {
