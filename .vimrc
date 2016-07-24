@@ -93,7 +93,7 @@ call dein#add('shougo/neoinclude.vim')
 call dein#add('dnebauer/vim-dn-utils')
 " - repeat : plugin helper for repeating commands                      {{{3
 call dein#add('tpope/vim-repeat', {
-            \ 'lazy' : 1,
+            \ 'on_source': ['vim-surround'],
             \ })
 " - context_filetype : plugin helper                                   {{{3
 call dein#add('shougo/context_filetype.vim', {
@@ -142,9 +142,7 @@ call dein#add('tpope/vim-unimpaired', {
             \ 'depends' : ['vim-repeat'],
             \ })
 " - surround : delete/change surrounding parens, etc.                  {{{3
-call dein#add('tpope/vim-surround', {
-            \ 'depends' : ['vim-repeat'],
-            \ })
+call dein#add('tpope/vim-surround')
 " - commentary : comment and uncomment lines                           {{{3
 call dein#add('tpope/vim-commentary', {
             \ 'on_cmd' : ['Commentary', 'CommentaryLine',
@@ -185,70 +183,48 @@ call dein#add('ervandew/ag', {
 "     too fragile; only works dependably if force load at start
 "   . call functions after dein#end [see unite.vim issue #330]
 call dein#add('shougo/unite.vim', {
-            \ 'depends'     : ['vimproc.vim', 'neoinclude'],
+            \ 'depends'          : ['vimproc.vim', 'neoinclude'],
             \ 'hook_post_source' : join([
-            \                 'call unite#filters#matcher_default#use('
-            \                 . '["matcher_fuzzy"])',
-            \                 'call unite#custom#profile('
-            \                 . '"default", "context", {'
-            \                 . '"start_insert" : 1})',
-            \                 'call unite#custom#source('
-            \                 . '"grep", "matchers", "matcher_fuzzy")',
-            \                 'call unite#custom#source('
-            \                 . '"buffer,file,file_rec", "sorters", '
-            \                 . '"sorter_selecta")',
-            \                 ], "\n"),
+            \             'call unite#filters#matcher_default#use('
+            \             . '["matcher_fuzzy"])',
+            \             'call unite#custom#profile('
+            \             . '"default", "context", {'
+            \             . '"start_insert" : 1})',
+            \             'call unite#custom#source('
+            \             . '"grep", "matchers", "matcher_fuzzy")',
+            \             'call unite#custom#source('
+            \             . '"buffer,file,file_rec", "sorters", '
+            \             . '"sorter_selecta")',
+            \             ], "\n"),
             \ })
 " - neomru : unite helper - recently used files                        {{{3
-call dein#add('shougo/neomru.vim', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+call dein#add('shougo/neomru.vim')
 " - help : unite helper - help                                         {{{3
-call dein#add('shougo/unite-help', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+call dein#add('shougo/unite-help')
 " - tag : unite helper - tags                                          {{{3
-call dein#add('tsukkee/unite-tag', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+call dein#add('tsukkee/unite-tag')
 " - session : unite helper - session support                           {{{3
-call dein#add('shougo/unite-session', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+call dein#add('shougo/unite-session')
 " - history : unite helper - command and search history                {{{3
-call dein#add('thinca/vim-unite-history', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+call dein#add('thinca/vim-unite-history')
 " - neoyank : unite helper - yank history                              {{{3
-call dein#add('shougo/neoyank.vim', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+call dein#add('shougo/neoyank.vim')
 " - outline : unite helper - document outline                          {{{3
-call dein#add('shougo/unite-outline', {
-            \ 'on_source'   : ['unite.vim'],
-            \ })
+call dein#add('shougo/unite-outline')
 " - unicode : unite helper - insert unicode                            {{{3
-call dein#add('sanford1/unite-unicode', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+call dein#add('sanford1/unite-unicode')
 " - bibtex : unite helper - BibTeX references                          {{{3
 call dein#add('termoshtt/unite-bibtex', {
-            \ 'if'        : 'has ("python") && executable("pybtex")',
-            \ 'on_source' : ['unite.vim'],
+            \ 'if' : 'has ("python") && executable("pybtex")',
             \ })
 " - global : unite helper - global/gtags                               {{{3
 call dein#add('hewes/unite-gtags', {
-            \ 'if'        : 'executable("global")',
-            \ 'on_source' : ['unite.vim'],
+            \ 'if' : 'executable("global")',
             \ })
 " - fonts : unite helper - font selector                               {{{3
-call dein#add('ujihisa/unite-font', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+call dein#add('ujihisa/unite-font')
 " - colorscheme : unite helper - colorscheme selector                  {{{3
-call dein#add('ujihisa/unite-colorscheme', {
-            \ 'on_source' : ['unite.vim'],
-            \ })
+call dein#add('ujihisa/unite-colorscheme')
 " bundles: internet                                                    {{{2
 " - vim-g : google lookup                                              {{{3
 call dein#add('szw/vim-g', {
@@ -332,8 +308,8 @@ call dein#add('shougo/neopairs.vim', {
             \ })
 " - perlomni : perl completion                                         {{{3
 call dein#add('c9s/perlomni.vim', {
-            \ 'if'        : 'v:version >= 702',
-            \ 'on_ft'     : ['perl'],
+            \ 'if'    : 'v:version >= 702',
+            \ 'on_ft' : ['perl'],
             \ })
 " - delimitMate : completion helper closes paired syntax               {{{3
 call dein#add('raimondi/delimitMate', {
@@ -536,6 +512,7 @@ call dein#add('mattn/emmet-vim', {
 "     install in global mode without needing superuser privileges
 "   . update of tern is used as trigger to reinstall jsctags
 function! VrcBuildTernAndJsctags()                                   " {{{4
+    " called by post-install hook below
     call VrcBuildTern()
     call VrcBuildJsctags()
 endfunction

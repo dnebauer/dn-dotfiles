@@ -21,8 +21,8 @@ endfunction
 " - ,b  : source = buffers                                             {{{2
 nnoremap <silent> [unite]b :<C-u>Unite
             \ -buffer-name=buffers
-            \ -quick-match buffer<CR>
-" - ,B  : source = buffers                                             {{{2
+            \ buffer<CR>
+" - ,B  : source = bibtex references                                   {{{2
 nnoremap <silent> [unite]B :call <SID>Unite_BibTeX()<CR>
 function! s:Unite_BibTeX()
     " pybtex is a prerequisite
@@ -150,7 +150,7 @@ nnoremap <silent> [unite]m :<C-u>Unite
 " - ,o  : source = outline                                             {{{2
 nnoremap <silent> [unite]o :<C-u>Unite
             \ -buffer-name=outline
-            \ -quick-match outline<CR>
+            \ outline<CR>
 " - ,r  : source = register                                            {{{2
 nnoremap <silent> [unite]r :<C-u>Unite
             \ -buffer-name=registers
@@ -163,7 +163,7 @@ nnoremap <silent> [unite]s :<C-u>Unite
 " - ,t  : source = tags                                                {{{2
 nnoremap <silent> [unite]t :<C-u>Unite
             \ -buffer-name=tags
-            \ tag<CR>
+            \ tag:%<CR>
 " - ,u  : source = [blank]                                             {{{2
 nnoremap [unite]u :<C-u>Unite
 " - ,U  : source = unicode                                             {{{2
