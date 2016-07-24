@@ -14,12 +14,12 @@ set history=10000
 " - save undo history in a file
 set undofile
 " - avoid clutter of backup|swap|undo files in local dir
-if VrcOS() == 'unix'
+if VrcOS() ==# 'unix'
     set directory=./backup,~/var/vim/swap,.,/tmp
     set backupdir=./backup,~/var/vim/backup,.,/tmp
     set undodir=./backup,~/var/vim/undo,.,/tmp
 endif
-if VrcOS() == 'windows'
+if VrcOS() ==# 'windows'
     set directory=C:/Windows/Temp
     set backupdir=C:/Windows/Temp
     set undodir=C:/Windows/Temp
@@ -38,7 +38,10 @@ function! VrcSaveOnFocusLost()
     catch /^Vim\((\a\+)\)\=:E141:/ |
     endtry
 endfunction                                                          " }}}2
-autocmd FocusLost * call VrcSaveOnFocusLost()
+augroup vrc_save_on_focus_lost
+    autocmd!
+    autocmd FocusLost * call VrcSaveOnFocusLost()
+augroup END
 
 " Save and exit mappings                                               {{{1
 " - save file [N,V,I] : <C-s>
@@ -62,18 +65,15 @@ nnoremap <C-w><C-w> :update<CR><C-w><C-w>
 "   return: nil
 function! VrcExitOnNerdtree()
     " all these conditions must be satisfied
-    if winnr("$") != 1
-        return
-    endif
-    if !exists("b:NERDTree")
-        return
-    endif
-    if !b:NERDTree.isTabTree()
-        return
-    endif
+    if winnr('$') != 1         | return | endif
+    if !exists('b:NERDTree')   | return | endif
+    if !b:NERDTree.isTabTree() | return | endif
     " all conditions met, so exit
     quit
 endfunction                                                          " }}}2
-au BufEnter * call VrcExitOnNerdtree()                               " }}}1
+augroup vrc_close_on_nerdtree                                        " {{{2
+    autocmd!
+    autocmd BufEnter * call VrcExitOnNerdtree()
+augroup END                                                          " }}}3
 
 " vim: set foldmethod=marker :
