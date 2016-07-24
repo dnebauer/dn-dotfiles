@@ -10,8 +10,8 @@ function! VrcDocbookSupport()
     let g:dn_docbk_schematron_schema =
                 \ '/usr/share/xml/docbook/schema/schematron/'
                 \ . '5.0/docbook.sch'
-    if VrcOS() == 'unix'
-        let g:dn_docbook_xml_catalog 
+    if VrcOS() ==# 'unix'
+        let g:dn_docbook_xml_catalog
                     \ = $HOME . '/.config/docbk/catalog.xml'
     endif                                                            " }}}1
 endfunction
