@@ -4,7 +4,7 @@
 set spell spelllang=en_au
 
 " Dictionaries                                                         {{{1
-if VrcOS() == 'unix' && filereadable('/usr/share/dict/words')
+if VrcOS() ==# 'unix' && filereadable('/usr/share/dict/words')
     set dictionary-=/usr/share/dict/words
     set dictionary+=/usr/share/dict/words
 endif
@@ -19,7 +19,7 @@ set spell!
 "           2 - clear message after brief display (boolean, optional)
 "   return: nil
 function! VrcMsg(msg, ...)
-	if mode() == 'i' | execute "normal \<Esc>" | endif
+	if mode() ==# 'i' | execute "normal \<Esc>" | endif
 	echohl ModeMsg | echo a:msg | echohl Normal
     if a:0 > 0 && a:1 | sleep 1 | execute "normal :\<BS>" | endif
 endfunction                                                          " }}}2
