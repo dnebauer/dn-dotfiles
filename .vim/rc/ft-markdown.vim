@@ -17,10 +17,6 @@ function! VrcMarkdownSupport()
                     \ 'sort'       : 0,
                     \ }
     endif                                                            " }}}1
-    " omni completion                                                  {{{1
-    autocmd FileType markdown setlocal
-                \ omnifunc=htmlcomplete#CompleteTags
-                                                                     " }}}1
 endfunction
 
 augroup vrc_markdown_files
@@ -37,6 +33,10 @@ augroup vrc_markdown_files
     endif                                                            " }}}1
     " add system dictionary to word completions                        {{{1
     autocmd FileType text setlocal complete+=k
+                                                                     " }}}1
+    " omni completion                                                  {{{1
+    autocmd FileType markdown setlocal
+                \ omnifunc=htmlcomplete#CompleteTags
                                                                      " }}}1
 augroup END
 
