@@ -1,17 +1,12 @@
 " Vim configuration: javascript file support
 
-function! VrcJavascriptSupport()
-    " omni completion                                                  {{{1
-    autocmd FileType javascript setlocal
-                \ omnifunc=javascriptcomplete#CompleteJS
-                                                                     " }}}1
-endfunction
-
 augroup vrc_javascript_files
     autocmd!
-    " call support function                                            {{{1
+    " call support function
     autocmd FileType javascript call VrcJavascriptSupport()
-                                                                     " }}}1
+    " omni completion
+    autocmd FileType javascript setlocal
+                \ omnifunc=javascriptcomplete#CompleteJS()
 augroup END
 
 " vim: set foldmethod=marker :
