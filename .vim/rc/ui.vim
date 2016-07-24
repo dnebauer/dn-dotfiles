@@ -43,6 +43,7 @@ set showcmd
 set showmatch
 " - recommended by vim-gitgutter plugin
 set updatetime=250
+let g:gitgutter_max_signs = 2000
 
 " GUI options                                                          {{{1
 " - a,A = visual selection globally available for pasting,
