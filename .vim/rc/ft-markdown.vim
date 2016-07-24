@@ -32,7 +32,7 @@ augroup vrc_markdown_files
         autocmd BufNewFile *.md call DNU_LoadTemplate('markdown')
     endif                                                            " }}}1
     " add system dictionary to word completions                        {{{1
-    autocmd FileType text setlocal complete+=k
+    autocmd FileType markdown setlocal complete+=k
                                                                      " }}}1
     " omni completion                                                  {{{1
     autocmd FileType markdown setlocal

@@ -191,7 +191,10 @@ vnoremap <Space> <PageDown>
 
 " Arrows                                                               {{{1
 " - default to arrows off
-autocmd VimEnter,BufNewFile,BufReadPost * silent! call EasyMode()
+augroup nav_easy_mode
+    autocmd!
+    autocmd VimEnter,BufNewFile,BufReadPost * silent! call EasyMode()
+augroup END
 " - toggle hardmode [N] : \hr
 nnoremap <LocalLeader>hm <Esc>:call ToggleHardMode()<CR>
 

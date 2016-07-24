@@ -1,21 +1,5 @@
 " Vim configuration: startup
 
-" NERDTree used if opened with no file                                 {{{1
-" - function VrcNerdtreeOnStartup()                                    {{{2
-"   intent: open NERDTree if no file opened
-"   params: nil
-"   return: nil
-function! VrcNerdtreeOnStartup()
-    if argc() == 0 && !exists('s:std_in') && line('$') <= 1
-        NERDTree
-    endif
-endfunction                                                          " }}}2
-augroup nerd_open
-    autocmd!
-    autocmd StdinReadPre * let s:std_in = 1
-    autocmd VimEnter * call VrcNerdtreeOnStartup()
-augroup END
-
 " Change to document directory                                         {{{1
 " - function VrcCdToLocalDir()                                         {{{2
 "   intent: cd to local directory
@@ -42,31 +26,9 @@ function! VrcCursorToLastPosition()
         exe "normal g`\""
     endif
 endfunction                                                          " }}}2
-augroup cursor_pos
+augroup open_cursor_pos
     autocmd!
     autocmd BufReadPost * call VrcCursorToLastPosition()
-augroup END
-
-" Initialise neocomplete                                               {{{1
-" - function VrcInitialiseNeocomplete()                                {{{2
-"   intent: initialise neocomplete if it is running
-"   params: nil
-"   return: nil
-function! VrcInitialiseNeocomplete()
-    " ensure neocomplete is being used
-    " var is set in 'dein#add' call for plugin
-    if !exists('g:neocomplete#enable_at_startup')
-        return
-    endif
-    if g:neocomplete#enable_at_startup != 1
-        return
-    endif
-    " initialise
-    call neocomplete#initialize()
-endfunction                                                           "}}}2
-augroup neo_init
-    autocmd!
-    autocmd VimEnter * call VrcInitialiseNeocomplete()
 augroup END                                                          " }}}1
 
 " vim: set foldmethod=marker :

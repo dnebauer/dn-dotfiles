@@ -80,6 +80,20 @@ call dein#add('shougo/dein.vim')
 call dein#add('haya14busa/dein-command.vim', {
             \ 'on_cmd' : ['Dein'],
             \ })
+" dein events                                                          {{{2
+" - VimEnter                                                           {{{3
+"   . many important dein-related function calls are made at this event
+"   . all post_source hooks are called at VimEnter
+" nvim issues                                                          {{{2
+" - has("python")                                                      {{{3
+"   . have removed 'has("python")' from nvim checks because it
+"     results in nvim throwing endless errors, beginning with:
+"       Error detected while processing \
+"         /usr/share/nvim/runtime/autoload/provider/pythonx.vim
+"       E48: Not allowed in sandbox: function! \
+"         provider#pythonx#Require(host) abort
+"       E121: Undefined variable: a:host
+"       E15: Invalid expression: (a:host.orig_name ==# 'python') ? 2 : 3
 " bundles: utilities                                                   {{{2
 " - vimproc : asynchronous execution                                   {{{3
 call dein#add('shougo/vimproc.vim', {
@@ -162,7 +176,21 @@ call dein#add('vim-scripts/DeleteTrailingWhitespace')
 " bundles: searching and finding                                       {{{2
 " - nerdtree : tree explorer                                           {{{3
 call dein#add('scrooloose/nerdtree', {
-            \ 'on_cmd' : ['NERDTree', 'NERDTreeToggle'],
+            \ 'on_cmd'           : ['NERDTree', 'NERDTreeToggle'],
+            \ 'hook_source'      : join([
+            \                      'augroup vrc_open_nerd',
+            \                      'autocmd!',
+            \                      'autocmd StdinReadPre * '
+            \                      . 'let s:std_in = 1',
+            \                      'augroup END',
+            \                      ], "\n"),
+            \ 'hook_post_source' : join([
+            \                      'if argc() == 0 '
+            \                      . '&& !exists("s:std_in") '
+            \                      . '&& line("$") <= 1',
+            \                      'NERDTree',
+            \                      'endif',
+            \                      ], "\n"),
             \ })
 " - nerdtree-git-plugun : show file git status                         {{{3
 call dein#add('xuyuanp/nerdtree-git-plugin', {
@@ -214,8 +242,17 @@ call dein#add('shougo/unite-outline')
 " - unicode : unite helper - insert unicode                            {{{3
 call dein#add('sanford1/unite-unicode')
 " - bibtex : unite helper - BibTeX references                          {{{3
+"   . do not check for python in nvim (see note above at 'nvim issues')
 call dein#add('termoshtt/unite-bibtex', {
-            \ 'if' : 'has ("python") && executable("pybtex")',
+            \ 'if' : '    has("nvim")'
+            \      . ' && executable("python")'
+            \      . ' && executable("pybtex")',
+            \ })
+call dein#add('termoshtt/unite-bibtex', {
+            \ 'if' : '    !has("nvim")'
+            \      . ' && has("python")'
+            \      . ' && executable("python")'
+            \      . ' && executable("pybtex")',
             \ })
 " - global : unite helper - global/gtags                               {{{3
 call dein#add('hewes/unite-gtags', {
@@ -275,13 +312,11 @@ call dein#add('shougo/deoplete.nvim', {
             \ })
 " - neocomplete : vim completion engine                                {{{3
 call dein#add('shougo/neocomplete.vim', {
-            \ 'depends'     : ['context_filetype.vim'],
-            \ 'if'          : '     v:version >= 704'
-            \               . ' &&  !has("nvim")'
-            \               . ' &&  has("lua")',
-            \ 'hook_source' : join([
-            \                 'let g:neocomplete#enable_at_startup = 1',
-            \                 ], "\n"),
+            \ 'depends'          : ['context_filetype.vim'],
+            \ 'if'               : '     !has("nvim")'
+            \                    . ' &&  v:version >= 704'
+            \                    . ' &&  has("lua")',
+            \ 'hook_post_source' :  'call neocomplete#initialize()',
             \ })
 " - neco-syntax : completion syntax helper                             {{{3
 call dein#add('shougo/neco-syntax', {
@@ -368,8 +403,15 @@ call dein#add('vim-scripts/matchit.zip')
 call dein#add('justinmk/vim-sneak')
 " bundles: ui                                                          {{{2
 " - headlights : integrate plugins with vim menus                      {{{3
+"   . do not check for python in nvim (see note above at 'nvim issues')
 call dein#add('mbadran/headlights', {
-            \ 'if' : '     v:version >= 700'
+            \ 'if' : '     has("nvim")'
+            \      . ' &&  v:version >= 700'
+            \      . ' &&  executable("python")',
+            \ })
+call dein#add('mbadran/headlights', {
+            \ 'if' : '     !has("nvim")'
+            \      . ' &&  v:version >= 700'
             \      . ' &&  has("python")'
             \      . ' &&  executable("python")',
             \ })
@@ -407,6 +449,7 @@ call dein#add('majutsushi/tagbar', {
             \             'TagbarDebug',         'TagbarDebugEnd'],
             \ })
 " - [various] : colour schemes                                         {{{3
+"   TODO: possibly load based on colorscheme-related commands
 call dein#add('atelierbram/vim-colors_atelier-schemes')  " atelier
 call dein#add('w0ng/vim-hybrid')                         " hybrid
 call dein#add('jonathanfilip/vim-lucius')                " lucius
