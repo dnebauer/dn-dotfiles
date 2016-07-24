@@ -85,15 +85,23 @@ call dein#add('haya14busa/dein-command.vim', {
 "   . many important dein-related function calls are made at this event
 "   . all post_source hooks are called at VimEnter
 " nvim issues                                                          {{{2
-" - has("python")                                                      {{{3
+" - has("python") checks disabled                                      {{{3
 "   . have removed 'has("python")' from nvim checks because it
 "     results in nvim throwing endless errors, beginning with:
-"       Error detected while processing \
-"         /usr/share/nvim/runtime/autoload/provider/pythonx.vim
-"       E48: Not allowed in sandbox: function! \
-"         provider#pythonx#Require(host) abort
+"       Error detected while processing
+"       +/usr/share/nvim/runtime/autoload/provider/pythonx.vim
+"       E48: Not allowed in sandbox: function!
+"       + provider#pythonx#Require(host) abort
 "       E121: Undefined variable: a:host
 "       E15: Invalid expression: (a:host.orig_name ==# 'python') ? 2 : 3
+" - fix cursor shape                                                   {{{3
+"   . from https://github.com/neovim/neovim/wiki/FAQ
+"     +#how-can-i-change-the-cursor-shape-in-the-terminal
+"   . make cursor a pipe in insert mode and a block in normal mode
+"   . this is a temporary fix and another solution may be
+"     implemented in the future
+"   . variable name must be in uppercase
+:let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " bundles: utilities                                                   {{{2
 " - vimproc : asynchronous execution                                   {{{3
 call dein#add('shougo/vimproc.vim', {
