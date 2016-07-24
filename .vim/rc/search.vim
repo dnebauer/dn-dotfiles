@@ -47,21 +47,21 @@ endfunction                                                          " }}}2
 function! VrcVisual(direction) range
     " store away contents of unnamed register and save selection to it
     let l:saved_reg = @"
-    execute "normal! vgvy"
+    execute 'normal! vgvy'
     " tidy up selection by escaping control characters and removing newlines
     let l:pattern = escape(@", '\\/.*$^~[]')
     let l:pattern = substitute(l:pattern, "\n$", '', '')
     " extend selection forwards to next match on current selection
-    if     a:direction == 'f'
-        execute "normal /" . l:pattern . "<CR>"
+    if     a:direction ==# 'f'
+        execute 'normal /' . l:pattern . '<CR>'
     " extend selection backwards to next match on current selection
-    elseif a:direction == 'b'
-        execute "normal 2?" . l:pattern . "<CR>"
+    elseif a:direction ==# 'b'
+        execute 'normal 2?' . l:pattern . '<CR>'
     " search current directory recursively for selection
-    elseif a:direction == 'gv'
-        call VrcCmd("vimgrep " . '/' . l:pattern . '/' . ' **/*')
+    elseif a:direction ==# 'gv'
+        call VrcCmd('vimgrep ' . '/' . l:pattern . '/' . ' **/*')
     " make selection target for substitution
-    elseif a:direction == 'replace'
+    elseif a:direction ==# 'replace'
         call VrcCmd('%s' . '/'. l:pattern . '/')
     endif
     " save selection to last search pattern register
