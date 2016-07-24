@@ -6,7 +6,7 @@
 "   params: nil
 "   return: nil
 function! VrcNerdtreeOnStartup()
-    if argc() == 0 && !exists("s:std_in") && line('$') <= 1
+    if argc() == 0 && !exists('s:std_in') && line('$') <= 1
         NERDTree
     endif
 endfunction                                                          " }}}2
@@ -22,11 +22,14 @@ augroup END
 "   params: nil
 "   return: nil
 function! VrcCdToLocalDir()
-    if expand('%:p') !~ '://'
+    if expand('%:p') !~? '://'
         lcd %:p:h
     endif
 endfunction                                                          " }}}2
-au BufEnter * call VrcCdToLocalDir()
+augroup vrc_local_dir
+    autocmd!
+    autocmd BufEnter * call VrcCdToLocalDir()
+augroup END
 
 " Remember cursor location                                             {{{1
 " - function VrcCursorToLastPosition()                                 {{{2
