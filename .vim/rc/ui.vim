@@ -70,14 +70,14 @@ endif
 " - guifont: any spaces after commas must be escaped
 "            cannot use quotes around font name
 if has('gui_running')
-    if VrcOS() == 'unix'
+    if VrcOS() ==# 'unix'
         set guifont=Andale\ Mono\ 18,
                     \\ FreeMono\ 16,
                     \\ Courier\ 18,
                     \\ Bitstream\ Vera\ Sans\ Mono\ 16,
                     \\ Monospace\ 18
     endif
-    if VrcOS() == 'windows'
+    if VrcOS() ==# 'windows'
         set guifont=Bitstream\ Vera\ Sans\ Mono:h10
     endif
 else  " no gui
@@ -96,36 +96,33 @@ nnoremap <F8> :TagbarToggle<CR>
 " note:   sets colour schemes for gvim and vim
 function! VrcSetColorScheme(gui, term)
     if has('gui_running')    " gui
-        if     a:gui == 'solarized'
+        if     a:gui ==# 'solarized'
             set background=dark
             colorscheme solarized
-        elseif a:gui == 'peaksea'
+        elseif a:gui ==# 'peaksea'
             set background=dark
             colorscheme peaksea
-        elseif a:gui == 'desert'
+        elseif a:gui ==# 'desert'
             colorscheme desert
-        elseif a:gui == 'hybrid'
+        elseif a:gui ==# 'hybrid'
             let g:hybrid_use_Xresources = 1
             colorscheme hybrid
-        elseif a:gui == 'badwolf'
-            let g:badwolf_darkgutter = 1
-            colorscheme badwolf
-        elseif a:gui == 'railscasts'
+        elseif a:gui ==# 'railscasts'
             colorscheme railscasts
-        elseif a:gui == 'zenburn'
+        elseif a:gui ==# 'zenburn'
             colorscheme zenburn
-        elseif a:gui == 'lucius'
+        elseif a:gui ==# 'lucius'
             colorscheme lucius
             "LuciusDark|LuciusDarkHighContrast|LuciusDarkLowContrast
             "LuciusBlack|LuciusBlackHighContrast|LuciusBlackLowContrast
             "LuciusLight|LuciusLightLowContrast
             "LuciusWhite|LuciusWhiteLowContrast
             LuciusDarkLowContrast
-        elseif a:gui == 'atelierheath'
+        elseif a:gui ==# 'atelierheath'
             colorscheme base16-atelierheath
-        elseif a:gui == 'atelierforest'
+        elseif a:gui ==# 'atelierforest'
             colorscheme base16-atelierforest
-        elseif a:gui == 'papercolor'
+        elseif a:gui ==# 'papercolor'
             set background=dark
             set t_Co=256
             colorscheme PaperColor
@@ -135,31 +132,28 @@ function! VrcSetColorScheme(gui, term)
         endif
     else    " no gui, presumably terminal/console
         set t_Co=256    " improves all themes in terminals
-        if     a:term == 'solarized'
+        if     a:term ==# 'solarized'
             colorscheme solarized
-        elseif a:term == 'peaksea'
+        elseif a:term ==# 'peaksea'
             colorscheme peaksea
-        elseif a:term == 'desert'
+        elseif a:term ==# 'desert'
             colorscheme desert
-        elseif a:term == 'badwolf'
-            let g:badwolf_darkgutter = 1
-            colorscheme badwolf
-        elseif a:term == 'hybrid'
+        elseif a:term ==# 'hybrid'
             let g:hybrid_use_Xresources = 1
             colorscheme hybrid
             let g:colors_name = 'hybrid'
-        elseif a:term == 'railscasts'
+        elseif a:term ==# 'railscasts'
             colorscheme railscasts
-        elseif a:term == 'zenburn'
+        elseif a:term ==# 'zenburn'
             colorscheme zenburn
-        elseif a:term == 'lucius'
+        elseif a:term ==# 'lucius'
             colorscheme lucius
             "LuciusDark|LuciusDarkHighContrast|LuciusDarkLowContrast
             "LuciusBlack|LuciusBlackHighContrast|LuciusBlackLowContrast
             "LuciusLight|LuciusLightLowContrast
             "LuciusWhite|LuciusWhiteLowContrast
             LuciusLightLowContrast
-        elseif a:term == 'papercolor'
+        elseif a:term ==# 'papercolor'
             set background=dark
             colorscheme PaperColor
         else
@@ -169,10 +163,10 @@ function! VrcSetColorScheme(gui, term)
     endif
 endfunction                                                     " }}}2
 " - set colour schemes                                            {{{2
-"   1 - gui/gvim = solarized|peaksea|desert|hybrid|badwolf|railscasts|
-"                  zenburn|lucius|atelierheath|atelierforest|papercolor
-"   2 - term/vim = solarized|peaksea|desert|badwolf|hybrid|railscasts|
-"                  zenburn|lucius|papercolor
+"   1 - gui/gvim = solarized|peaksea|desert|hybrid|railscasts|zenburn|
+"                  lucius|atelierheath|atelierforest|papercolor
+"   2 - term/vim = solarized|peaksea|desert|hybrid|railscasts|zenburn|
+"                  lucius|papercolor
 call VrcSetColorScheme('peaksea', 'desert')
 " - toggle between light and dark schemes (<F5>)
 "   . some colour schemes support switching between light and dark
