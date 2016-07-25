@@ -123,6 +123,10 @@ call dein#add('tpope/vim-repeat', {
 call dein#add('shougo/context_filetype.vim', {
             \ 'lazy': 1,
             \ })
+" - bclose : delete buffer without closing window                      {{{3
+call dein#add('rbgrouleff/bclose.vim', {
+            \ 'on_source' : ['ranger.vim'],
+            \ })
 " bundles: shell integration                                           {{{2
 " - vimshell : shell emulation                                         {{{3
 call dein#add('shougo/vimshell.vim', {
@@ -210,6 +214,12 @@ endif
 if VrcOS() ==# 'windows'
     call dein#add('xuyuanp/nerdtree-git-plugin', {
                 \ 'if' : 'executable("git")',
+                \ })
+endif
+" - ranger : curses-based file explorer                                {{{3
+if VrcOS() !=# 'windows'
+    call dein#add('francoiscabrol/ranger.vim', {
+                \ 'if' : 'executable("ranger")',
                 \ })
 endif
 " - unite : integrated information display                             {{{3
