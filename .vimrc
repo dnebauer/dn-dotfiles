@@ -321,7 +321,6 @@ call dein#add('shougo/deoplete.nvim', {
             \ 'depends'     : ['context_filetype.vim'],
             \ 'if'          : 'has("nvim")',
             \ 'on_event'    : 'InsertEnter',
-            \ 'build'       : 'pip3 install --upgrade neovim',
             \ 'hook_source' : join([
             \                 'let g:deoplete#enable_at_startup = 1',
             \                 ], "\n"),
