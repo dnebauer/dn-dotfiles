@@ -1,5 +1,8 @@
-" Vim configuration: completion
+" Vim configuration: neocomplete plugin
 
+if !exists('g:loaded_neocomplete')
+    finish
+endif
 " Startup                                                              {{{1
 " - disable AutoComplPop to prevent interference
 let g:acp_enableAtStartup = 0
