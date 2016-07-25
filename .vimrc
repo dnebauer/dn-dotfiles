@@ -101,7 +101,9 @@ call dein#add('haya14busa/dein-command.vim', {
 "   . this is a temporary fix and another solution may be
 "     implemented in the future
 "   . variable name must be in uppercase
-:let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+if has('nvim')
+    let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+endif
 " bundles: utilities                                                   {{{2
 " - vimproc : asynchronous execution                                   {{{3
 call dein#add('shougo/vimproc.vim', {
