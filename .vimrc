@@ -212,16 +212,6 @@ if VrcOS() ==# 'windows'
                 \ 'if' : 'executable("git")',
                 \ })
 endif
-" - ack : search tool                                                  {{{3
-call dein#add('mileszs/ack.vim', {
-            \ 'if'     : 'executable("ack")',
-            \ 'on_cmd' : ['Ack', 'AckAdd', 'LAck', 'LAckAdd'],
-            \ })
-" - ag : search tool                                                   {{{3
-call dein#add('ervandew/ag', {
-            \ 'if'     : 'executable("Ag")',
-            \ 'on_cmd' : ['Ag'],
-            \ })
 " - unite : integrated information display                             {{{3
 "   . gave up loading unite on demand as the dependencies are
 "     too fragile; only works dependably if force load at start
