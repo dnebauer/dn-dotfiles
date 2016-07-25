@@ -101,7 +101,7 @@ function! s:SetGrepOptions()
                 \ 'ag': {
                 \     'default': "-i --vimgrep --hidden --ignore '.hg' "
                 \              . " --ignore '.svn' --ignore '.git' "
-                \              . " --ignore '.bzr'",
+                \              . " --ignore '.bzr' --smart-case",
                 \     'recurse': '',
                 \     },
                 \ 'hw': {

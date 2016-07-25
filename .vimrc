@@ -185,27 +185,33 @@ call dein#add('sjl/gundo.vim', {
 call dein#add('vim-scripts/DeleteTrailingWhitespace')
 " bundles: searching and finding                                       {{{2
 " - nerdtree : tree explorer                                           {{{3
-call dein#add('scrooloose/nerdtree', {
-            \ 'on_cmd'           : ['NERDTree', 'NERDTreeToggle'],
-            \ 'hook_source'      : join([
-            \                      'augroup vrc_open_nerd',
-            \                      'autocmd!',
-            \                      'autocmd StdinReadPre * '
-            \                      . 'let s:std_in = 1',
-            \                      'augroup END',
-            \                      ], "\n"),
-            \ 'hook_post_source' : join([
-            \                      'if argc() == 0 '
-            \                      . '&& !exists("s:std_in") '
-            \                      . '&& line("$") <= 1',
-            \                      'NERDTree',
-            \                      'endif',
-            \                      ], "\n"),
-            \ })
+"   . only use in windows; elsewhere use :Unite file_rec/async!
+if VrcOS() ==# 'windows'
+    call dein#add('scrooloose/nerdtree', {
+                \ 'on_cmd'           : ['NERDTree', 'NERDTreeToggle'],
+                \ 'hook_source'      : join([
+                \                      'augroup vrc_open_nerd',
+                \                      'autocmd!',
+                \                      'autocmd StdinReadPre * '
+                \                      . 'let s:std_in = 1',
+                \                      'augroup END',
+                \                      ], "\n"),
+                \ 'hook_post_source' : join([
+                \                      'if argc() == 0 '
+                \                      . '&& !exists("s:std_in") '
+                \                      . '&& line("$") <= 1',
+                \                      'NERDTree',
+                \                      'endif',
+                \                      ], "\n"),
+                \ })
+endif
 " - nerdtree-git-plugun : show file git status                         {{{3
-call dein#add('xuyuanp/nerdtree-git-plugin', {
-            \ 'if' : 'executable("git")',
-            \ })
+"   . NERDTree is only used in windows
+if VrcOS() ==# 'windows'
+    call dein#add('xuyuanp/nerdtree-git-plugin', {
+                \ 'if' : 'executable("git")',
+                \ })
+endif
 " - ack : search tool                                                  {{{3
 call dein#add('mileszs/ack.vim', {
             \ 'if'     : 'executable("ack")',
