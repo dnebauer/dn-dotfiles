@@ -193,22 +193,22 @@ call dein#add('vim-scripts/DeleteTrailingWhitespace')
 " - nerdtree : tree explorer                                           {{{3
 "   . only use in windows; elsewhere use :Unite file_rec/async!
 if VrcOS() ==# 'windows'
+    let s:nerd_hook_source = join([
+                \ 'augroup vrc_open_nerd',
+                \ 'autocmd!',
+                \ 'autocmd StdinReadPre * let s:std_in = 1',
+                \ 'augroup END',
+                \ ], "\n")
+    let s:nerd_hook_post_source = join([
+                \ 'if argc() == 0 && !exists("s:std_in") '
+                \ . '&& line("$") <= 1',
+                \ 'NERDTree',
+                \ 'endif',
+                \ ], "\n")
     call dein#add('scrooloose/nerdtree', {
                 \ 'on_cmd'           : ['NERDTree', 'NERDTreeToggle'],
-                \ 'hook_source'      : join([
-                \                      'augroup vrc_open_nerd',
-                \                      'autocmd!',
-                \                      'autocmd StdinReadPre * '
-                \                      . 'let s:std_in = 1',
-                \                      'augroup END',
-                \                      ], "\n"),
-                \ 'hook_post_source' : join([
-                \                      'if argc() == 0 '
-                \                      . '&& !exists("s:std_in") '
-                \                      . '&& line("$") <= 1',
-                \                      'NERDTree',
-                \                      'endif',
-                \                      ], "\n"),
+                \ 'hook_source'      : s:nerd_hook_source,
+                \ 'hook_post_source' : s:nerd_hook_post_source,
                 \ })
 endif
 " - nerdtree-git-plugun : show file git status                         {{{3
@@ -228,20 +228,18 @@ endif
 "   . gave up loading unite on demand as the dependencies are
 "     too fragile; only works dependably if force load at start
 "   . call functions after dein#end [see unite.vim issue #330]
+let s:unite_hook_post_source = join([
+            \ 'call unite#filters#matcher_default#use(["matcher_fuzzy"])',
+            \ 'call unite#custom#profile("default", '
+            \ . '"context", {"start_insert" : 1})',
+            \ 'call unite#custom#source("grep", '
+            \ . '"matchers", "matcher_fuzzy")',
+            \ 'call unite#custom#source("buffer,file,file_rec", '
+            \ . '"sorters" ,"sorter_selecta")',
+            \ ], "\n")
 call dein#add('shougo/unite.vim', {
             \ 'depends'          : ['vimproc.vim', 'neoinclude'],
-            \ 'hook_post_source' : join([
-            \             'call unite#filters#matcher_default#use('
-            \             . '["matcher_fuzzy"])',
-            \             'call unite#custom#profile('
-            \             . '"default", "context", {'
-            \             . '"start_insert" : 1})',
-            \             'call unite#custom#source('
-            \             . '"grep", "matchers", "matcher_fuzzy")',
-            \             'call unite#custom#source('
-            \             . '"buffer,file,file_rec", "sorters", '
-            \             . '"sorter_selecta")',
-            \             ], "\n"),
+            \ 'hook_post_source' : s:unite_hook_post_source,
             \ })
 " - neomru : unite helper - recently used files                        {{{3
 call dein#add('shougo/neomru.vim')
@@ -328,23 +326,21 @@ call dein#add('mattn/calendar-vim', {
 "     start plugin at VimEnter (using hook_post_source)
 "   . plugin author recommends initialising it at VimEnter
 "     and requires all configuration to be done by then
+let s:deoplete_config = join([
+            \ 'call deoplete#initialize()',
+            \ 'call deoplete#enable()',
+            \ 'call deoplete#custom#'
+            \ . 'set("_", "matchers", ["matcher_fuzzy"])',
+            \ 'call deoplete#custom#'
+            \ . 'set("_", "converters", ["converter_remove_paren"])',
+            \ 'call deoplete#custom#'
+            \ . 'set("_", "disabled_syntaxes", ["Comment", "String"])',
+            \ 'call deoplete#custom#'
+            \ . 'set("_", "min_pattern_length", 3)',
+            \ ], "\n")
 call dein#add('shougo/deoplete.nvim', {
             \ 'if'               : 'has("nvim")',
-            \ 'hook_post_source' : join([
-            \                      'call deoplete#initialize()',
-            \                      'call deoplete#enable()',
-            \                      'call deoplete#custom#set('
-            \                      . '"_", "matchers", '
-            \                      . '["matcher_fuzzy"])',
-            \                      'call deoplete#custom#set('
-            \                      . '"_", "converters", '
-            \                      . '["converter_remove_paren"])',
-            \                      'call deoplete#custom#set('
-            \                      . '"_", "disabled_syntaxes", '
-            \                      . '["Comment", "String"])',
-            \                      'call deoplete#custom#set('
-            \                      . '"_", "min_pattern_length", 3)',
-            \                      ], "\n"),
+            \ 'hook_post_source' : s:deoplete_config,
             \ })
 " - neocomplete : vim completion engine                                {{{3
 call dein#add('shougo/neocomplete.vim', {
@@ -362,12 +358,13 @@ call dein#add('shougo/neco-vim', {
             \ 'on_ft' : ['vim'],
             \ })
 " - echodoc : plugin helper that prints to echo area                   {{{3
+let s:echodoc_hook_source = join([
+            \ 'let g:echodoc_enable_at_startup = 1',
+            \ 'set cmdheight=2',
+            \ ], "\n")
 call dein#add('shougo/echodoc.vim', {
             \ 'on_event'    : ['CompleteDone'],
-            \ 'hook_source' : join([
-            \                 'let g:echodoc_enable_at_startup = 1',
-            \                 'set cmdheight=2',
-            \                 ], "\n"),
+            \ 'hook_source' : s:echodoc_hook_source,
             \ })
 " - neopairs : completion helper closes paired structures              {{{3
 call dein#add('shougo/neopairs.vim', {
@@ -449,22 +446,17 @@ call dein#add('mbadran/headlights', {
             \      . ' &&  executable("python")',
             \ })
 " - airline : status line                                              {{{3
+let s:airline_hook_source = join([
+            \ 'let g:airline#extensions#branch#enabled = 1',
+            \ 'let g:airline#extensions#branch#empty_message = ""',
+            \ 'let g:airline#extensions#branch#displayed_head_limit = 10',
+            \ 'let g:airline#extensions#branch#format = 2',
+            \ 'let g:airline#extensions#syntastic#enabled = 1',
+            \ 'let g:airline#extensions#tagbar#enabled = 1',
+            \ ], "\n")
 call dein#add('vim-airline/vim-airline', {
             \ 'if'          : 'v:version >= 702',
-            \ 'hook_source' : join([
-            \                 'let g:airline#extensions'
-            \                 . '#branch#enabled = 1',
-            \                 'let g:airline#extensions'
-            \                 . '#branch#empty_message = ""',
-            \                 'let g:airline#extensions'
-            \                 . '#branch#displayed_head_limit = 10',
-            \                 'let g:airline#extensions'
-            \                 . '#branch#format = 2',
-            \                 'let g:airline#extensions'
-            \                 . '#syntastic#enabled = 1',
-            \                 'let g:airline#extensions'
-            \                 . '#tagbar#enabled = 1',
-            \                 ], "\n"),
+            \ 'hook_source' : s:airline_hook_source,
             \ })
 " - airline-themes : airline helper                                    {{{3
 call dein#add('vim-airline/vim-airline-themes', {
@@ -626,16 +618,15 @@ if !VrcCygwin()
                 \ 'on_ft'            : ['javascript'],
                 \ 'hook_post_update' : function('VrcBuildTernAndJsctags'),
                 \ })
+    let s:ternjs_hook_source = join([
+                \ 'let g:tern_request_timeout = 1',
+                \ 'let g:tern_show_signature_in_pum = 0',
+                \ ], "\n")
     call dein#add('carlitux/deoplete-ternjs', {
                 \ 'if'               : 'has("nvim")',
                 \ 'on_ft'            : ['javascript'],
                 \ 'depends'          : ['deoplete.nvim'],
-                \ 'hook_source'      : join([
-                \                      'let g:tern_'
-                \                      . 'request_timeout = 1',
-                \                      'let g:tern_'
-                \                      . 'show_signature_in_pum = 0',
-                \                      ], "\n"),
+                \ 'hook_source'      : s:ternjs_hook_source,
                 \ 'hook_post_update' : 'npm install -g tern',
                 \ })
 endif
