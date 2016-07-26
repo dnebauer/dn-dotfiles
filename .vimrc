@@ -317,13 +317,22 @@ call dein#add('mattn/calendar-vim', {
             \ })
 " bundles: completion                                                  {{{2
 " - deoplete : nvim completion engine                                  {{{3
+"   . previously enabled at InsertEnter but is currently
+"     (nvim: 0.1.3, python-neovim: 0.1.9) failing with
+"     numerous error messages so enable at startup to make
+"     troubleshooting easier
+"   . attempting to set g:deoplete#enable_at_startup using
+"     hook_source failed for unknown reasons, so instead
+"     start plugin at VimEnter (using hook_post_source)
+"   . plugin author recommends initialising it at VimEnter
+"     and requires all configuration to be done by then
 call dein#add('shougo/deoplete.nvim', {
-            \ 'depends'     : ['context_filetype.vim'],
-            \ 'if'          : 'has("nvim")',
-            \ 'on_event'    : 'InsertEnter',
-            \ 'hook_source' : join([
-            \                 'let g:deoplete#enable_at_startup = 1',
-            \                 ], "\n"),
+            \ 'depends'          : ['context_filetype.vim'],
+            \ 'if'               : 'has("nvim")',
+            \ 'hook_post_source' : join([
+            \                      'call deoplete#initialize()',
+            \                      'call deoplete#enable()',
+            \                      ], "\n"),
             \ })
 " - neocomplete : vim completion engine                                {{{3
 call dein#add('shougo/neocomplete.vim', {
@@ -489,6 +498,7 @@ call dein#add('scrooloose/syntastic', {
             \ 'if' : '!has("nvim")',
             \ })
 " - neomake : asynchronous syntax checker for nvim                     {{{3
+"   TODO: setup language checkers
 call dein#add('neomake/neomake', {
             \ 'if'     : 'has("nvim")',
             \ 'on_cmd' : ['Neomake'],
