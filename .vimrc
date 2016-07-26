@@ -121,6 +121,8 @@ call dein#add('tpope/vim-repeat', {
             \ })
 " - context_filetype : plugin helper                                   {{{3
 call dein#add('shougo/context_filetype.vim', {
+            \ 'on_source' : ['deoplete.nvim', 'neocomplete.vim',
+            \                'echodoc.vim', 'neosnippet.vim'],
             \ 'lazy': 1,
             \ })
 " - bclose : delete buffer without closing window                      {{{3
@@ -327,16 +329,25 @@ call dein#add('mattn/calendar-vim', {
 "   . plugin author recommends initialising it at VimEnter
 "     and requires all configuration to be done by then
 call dein#add('shougo/deoplete.nvim', {
-            \ 'depends'          : ['context_filetype.vim'],
             \ 'if'               : 'has("nvim")',
             \ 'hook_post_source' : join([
             \                      'call deoplete#initialize()',
             \                      'call deoplete#enable()',
+            \                      'call deoplete#custom#set('
+            \                      . '"_", "matchers", '
+            \                      . '["matcher_fuzzy"])',
+            \                      'call deoplete#custom#set('
+            \                      . '"_", "converters", '
+            \                      . '["converter_remove_paren"])',
+            \                      'call deoplete#custom#set('
+            \                      . '"_", "disabled_syntaxes", '
+            \                      . '["Comment", "String"])',
+            \                      'call deoplete#custom#set('
+            \                      . '"_", "min_pattern_length", 3)',
             \                      ], "\n"),
             \ })
 " - neocomplete : vim completion engine                                {{{3
 call dein#add('shougo/neocomplete.vim', {
-            \ 'depends'          : ['context_filetype.vim'],
             \ 'if'               : '     !has("nvim")'
             \                    . ' &&  v:version >= 704'
             \                    . ' &&  has("lua")',
@@ -352,7 +363,6 @@ call dein#add('shougo/neco-vim', {
             \ })
 " - echodoc : plugin helper that prints to echo area                   {{{3
 call dein#add('shougo/echodoc.vim', {
-            \ 'depends'     : ['context_filetype.vim'],
             \ 'on_event'    : ['CompleteDone'],
             \ 'hook_source' : join([
             \                 'let g:echodoc_enable_at_startup = 1',
@@ -377,7 +387,6 @@ call dein#add('raimondi/delimitMate', {
 " bundles: snippets                                                    {{{2
 " - neonippet : snippet engine                                         {{{3
 call dein#add('shougo/neosnippet.vim', {
-            \ 'depends'  : ['context_filetype.vim'],
             \ 'on_event' : 'InsertCharPre',
             \ })
 " - snippets : snippet library                                         {{{3
