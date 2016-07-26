@@ -33,11 +33,10 @@ endfunction
 inoremap <expr><C-l> deoplete#refresh()
 
 " - <BS> : close popup and delete backword char                        {{{2
-"   . in deoplete these conflict with endwise, so disable
-"inoremap <expr><C-h>
-"            \ deoplete#mappings#smart_close_popup()."\<C-h>"
-"inoremap <expr><BS>
-"            \ deoplete#mappings#smart_close_popup()."\<C-h>"
+inoremap <expr><C-h>
+            \ deoplete#mappings#smart_close_popup()."\<C-h>"
+inoremap <expr><BS>
+            \ deoplete#mappings#smart_close_popup()."\<C-h>"
 
 " - <C-g>: undo completion                                             {{{2
 inoremap <expr><C-g> deoplete#undo_completion()

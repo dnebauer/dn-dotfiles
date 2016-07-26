@@ -181,8 +181,6 @@ call dein#add('tpope/vim-commentary', {
             \             'n': ['gc', 'gcc', 'cgc', 'gcu'],
             \             'o': ['gc']},
             \ })
-" - endwise : automatically end structures like if..endif              {{{3
-call dein#add('tpope/vim-endwise')
 " - gundo : undo tree                                                  {{{3
 call dein#add('sjl/gundo.vim', {
             \ 'on_cmd' : ['GundoToggle'],
