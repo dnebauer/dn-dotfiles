@@ -715,8 +715,10 @@ call dein#add('davidhalter/jedi-vim', {
             \ 'hook_post_update' : 'pip install --upgrade jedi',
             \ })
 " - deoplete-jedi : deoplete helper                                    {{{3
+"   . do not check for python3 in nvim (see note above at 'nvim issues')
 call dein#add('zchee/deoplete-jedi', {
-            \ 'if'               : 'has("nvim") && has("python3")',
+            \ 'if'               : '    has("nvim")'
+            \                    . ' && executable("python3")',
             \ 'on_ft'            : ['python'],
             \ 'depends'          : ['deoplete.nvim'],
             \ 'hook_post_update' : 'pip install --upgrade jedi',
