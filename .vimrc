@@ -554,7 +554,6 @@ call dein#add('dnebauer/vim-dn-docbk', {
             \ 'on_ft' : ['docbk'],
             \ })
 " bundles: go support                                                  {{{2
-" [TODO: set package variables for vim-go and deoplete-go]
 " - vim-go : language support                                          {{{3
 call dein#add('fatih/vim-go', {
             \ 'on_ft' : ['go'],
