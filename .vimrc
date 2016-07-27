@@ -547,6 +547,29 @@ call dein#add('jhradilek/vim-docbk', {
 call dein#add('dnebauer/vim-dn-docbk', {
             \ 'on_ft' : ['docbk'],
             \ })
+" bundles: go support                                                  {{{2
+" - TODO: set package variables for vim-go and deoplete-go
+call dein#add('fatih/vim-go', {
+            \ 'on_ft' : ['go'],
+            \ })
+" - nvim-specific
+call dein#add('nsf/gocode', {
+            \ 'if'        : 'has("nvim")',
+            \ 'on_source' : ['vim-go'],
+            \ 'rtp'       : 'nvim',
+            \ })
+call dein#add('zchee/deoplete-go', {
+            \ 'if'        : 'has("nvim")',
+            \ 'on_source' : ['vim-go'],
+            \ 'build'     : 'make',
+            \ })
+" - vim-specific
+call dein#add('nsf/gocode', {
+            \ 'if'        : 'has("vim")',
+            \ 'on_source' : ['vim-go'],
+            \ 'rtp'       : 'vim',
+            \ })
+
 " bundles: html support                                                {{{2
 " - html5 : html5 support                                              {{{3
 call dein#add('othree/html5.vim', {
