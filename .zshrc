@@ -7,7 +7,8 @@
 HIST_STAMPS="yyyy-mm-dd"
 
 # Modules
-zmodload zsh/files zsh/zutil
+# - zpty used by vim plugin zchee/deoplete-zsh
+zmodload zsh/files zsh/zutil zsh/zpty
 
 # Plugins
 plugins=(
