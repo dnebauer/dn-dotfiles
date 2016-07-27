@@ -750,6 +750,11 @@ call dein#add('xml.vim', {
 call dein#add('XQuery-indentomnicompleteftplugin', {
             \ 'on_ft' : ['xquery'],
             \ })
+" bundles: zsh support                                                 {{{2
+" - deoplete-zsh : nvim completion support                             {{{3
+call dein#add('zchee/deoplete-zsh', {
+            \ 'on_ft' : ['zsh'],
+            \ })
 " close dein                                                           {{{2
 call dein#end()
 " required settings                                                    {{{2
