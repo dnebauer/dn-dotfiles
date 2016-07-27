@@ -162,7 +162,7 @@ call dein#add('tpope/vim-eunuch', {
 " - vimpager : unix shell uses vim as pager                            {{{3
 "   . sets shell PAGER variable to use vim
 "   . sets alias 'less' to $PAGER
-cal dein#add('rkitover/vimpager', {
+call dein#add('rkitover/vimpager', {
             \ 'if'     : 'has("unix")',
             \ 'on_cmd' : ['Page'],
             \ })
