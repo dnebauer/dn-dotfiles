@@ -535,6 +535,12 @@ call dein#add('airblade/vim-gitgutter', {
 call dein#add('tpope/vim-fugitive', {
             \ 'if' : 'executable("git")',
             \ })
+" bundles: clang support                                               {{{2
+call dein#add('zchee/deoplete-clang', {
+            \ 'if' : 'has("nvim")',
+            \ 'on_ft' : ['c', 'cpp', 'objc'],
+            \ 'depends' : ['deoplete.nvim'],
+            \ })
 " bundles: docbook support                                             {{{2
 " - jhradilek/vim-snippets : NOT installed using dein                  {{{3
 "   . because its default location clashes with honza/vim-snippets
