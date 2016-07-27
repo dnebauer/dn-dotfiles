@@ -52,6 +52,13 @@ inoremap <expr><C-g> neocomplete#undo_completion()
 "inoremap <expr><C-y>  neocomplete#close_popup()
 "inoremap <expr><C-e>  neocomplete#cancel_popup()
 
+" Sources                                                              {{{1
+if !exists('g:neocomplete#sources')
+    let g:neocomplete#sources = {}
+endif
+let g:neocomplete#sources._ = ['buffer', 'member', 'tag', 'file',
+            \ 'dictionary', 'neosnippet']
+
 " Omni completion                                                      {{{1
 " - recording keyword patterns used in omni completion
 "   . hard to understand from help files
