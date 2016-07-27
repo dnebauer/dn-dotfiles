@@ -710,7 +710,7 @@ call dein#add('davidhalter/jedi-vim', {
             \ })
 " - deoplete-jedi : deoplete helper                                    {{{3
 call dein#add('zchee/deoplete-jedi', {
-            \ 'if'               : '!has("nvim")',
+            \ 'if'               : 'has("nvim") && has("python3")',
             \ 'on_ft'            : ['python'],
             \ 'depends'          : ['deoplete.nvim'],
             \ 'hook_post_update' : 'pip install --upgrade jedi',
