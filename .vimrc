@@ -554,22 +554,23 @@ call dein#add('dnebauer/vim-dn-docbk', {
             \ 'on_ft' : ['docbk'],
             \ })
 " bundles: go support                                                  {{{2
-" - TODO: set package variables for vim-go and deoplete-go
+" [TODO: set package variables for vim-go and deoplete-go]
+" - vim-go : language support                                          {{{3
 call dein#add('fatih/vim-go', {
             \ 'on_ft' : ['go'],
             \ })
-" - nvim-specific
-call dein#add('nsf/gocode', {
-            \ 'if'        : 'has("nvim")',
-            \ 'on_source' : ['vim-go'],
-            \ 'rtp'       : 'nvim',
-            \ })
+" - deoplete-go : deoplete helper                                      {{{3
 call dein#add('zchee/deoplete-go', {
             \ 'if'        : 'has("nvim")',
             \ 'on_source' : ['vim-go'],
             \ 'build'     : 'make',
             \ })
-" - vim-specific
+" - gocode : autocompletion daemon for go                              {{{3
+call dein#add('nsf/gocode', {
+            \ 'if'        : 'has("nvim")',
+            \ 'on_source' : ['vim-go'],
+            \ 'rtp'       : 'nvim',
+            \ })
 call dein#add('nsf/gocode', {
             \ 'if'        : 'has("vim")',
             \ 'on_source' : ['vim-go'],
@@ -746,12 +747,12 @@ call dein#add('xml.vim', {
             \ 'on_ft' : ['xml'],
             \ })
 " bundles: xquery support                                              {{{2
-" indentomnicomplete : autoindent and omnicomplete                     {{{3
+" - indentomnicomplete : autoindent and omnicomplete                   {{{3
 call dein#add('XQuery-indentomnicompleteftplugin', {
             \ 'on_ft' : ['xquery'],
             \ })
 " bundles: zsh support                                                 {{{2
-" - deoplete-zsh : nvim completion support                             {{{3
+" - deoplete-zsh : deoplete helper                                     {{{3
 call dein#add('zchee/deoplete-zsh', {
             \ 'on_ft' : ['zsh'],
             \ })
