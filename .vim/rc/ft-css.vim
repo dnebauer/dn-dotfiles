@@ -1,20 +1,26 @@
 " Vim configuration: css file support
 
-" Omnicompletion for neocomplete (vim)                                 {{{1
+" vim-specific                                                         {{{1
+function! s:VimCssSupport()
+    " omnicompletion for neocomplete (vim)                             {{{2
+    setlocal omnifunc=csscomplete#CompleteCSS                        " }}}2
+endfunction
+
 if has('vim')
     augroup vrc_css_files
         autocmd!
-        autocmd FileType css setlocal
-                    \ omnifunc=csscomplete#CompleteCSS
+        autocmd FileType css call s:VimCssSupport()
     augroup END
 endif
 
-" Completion for deoplete (nvim)                                       {{{1
+" nvim-specific                                                        {{{1
 if has('nvim')
-    let g:deoplete#omni#input_patterns
-                \ = get(g:, 'deoplete#omni#input_patterns', {})
+    "  completion for deoplete (nvim)                                  {{{2
+    if !exists('g:deoplete#omni#input_patterns')
+        let g:deoplete#omni#input_patterns = {}
+    endif
     let g:deoplete#omni#input_patterns.css
-                \ = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
-endif                                                                " }}}1
+                \ = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'            " }}}2
+endif
 
 " vim: set foldmethod=marker :

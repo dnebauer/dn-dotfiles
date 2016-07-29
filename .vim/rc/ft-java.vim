@@ -1,6 +1,5 @@
 " Vim configuration: java file support
 
-" TODO: add autocmd FileType java set omnifunc=javacomplete#Complete
 function! s:JavaSupport()
     " vim omnicompletion                                               {{{1
     if has('vim')
@@ -19,7 +18,6 @@ function! s:JavaSupport()
                     \ '^\s*@[A-Z][a-z]',
                     \ ]
     endif                                                            " }}}1
-
 endfunction
 
 augroup vrc_java_files

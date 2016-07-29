@@ -30,9 +30,7 @@ endfunction
 
 augroup vrc_haskell_files
     autocmd!
-    " call support function                                            {{{1
     autocmd FileType haskell call s:HaskellSupport()
-                                                                     " }}}1
 augroup END
 
 " vim: set foldmethod=marker :

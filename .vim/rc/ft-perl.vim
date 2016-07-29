@@ -13,10 +13,11 @@ function! s:PerlSupport()
             \ 'sro'        : '::',
             \ 'kind2scope' : {},
             \ }                                                      " }}}1
-    " omni completion                                                  {{{1
+    " vim omnicompletion                                               {{{1
     " - plugin: perlomni.vim
-    "let g:neocomplete#sources#omni#input_patterns.perl =
-    "            \ '\h\w*->\h\w*\|\h\w*::'
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+        let g:neocomplete#sources#omni#input_patterns = {}
+    endif
     let g:neocomplete#sources#omni#input_patterns.perl =
                 \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'       " }}}1
 endfunction

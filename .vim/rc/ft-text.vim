@@ -1,10 +1,13 @@
 " Vim configuration: text file support
 
+function! s:TextSupport()
+    " add system dictionary to word completions                        {{{1
+    setlocal complete+=k                                             " }}}1
+endfunction
+
 augroup vrc_text_files
     autocmd!
-    " add system dictionary to word completions                        {{{1
-    au FileType text setlocal complete+=k
-                                                                     " }}}1
+    autocmd FileType text call s:TextSupport()
 augroup END
 
 " vim: set foldmethod=marker :

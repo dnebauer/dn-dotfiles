@@ -32,13 +32,15 @@ function! s:VimSupport()
     " K command: use internal vim help                                 {{{1
     setlocal keywordprg=:help                                        " }}}1
 endfunction
+function! s:VimrcSupport()
+    " reload after changing                                            {{{1
+    source $HOME/.vimrc                                              " }}}1
+endfunction
 
 augroup vrc_vim_files
     autocmd!
     autocmd FileType vim call s:VimSupport()
-    " reload after changing                                            {{{1
-    autocmd BufWritePost .vimrc source $HOME/.vimrc
-                                                                     " }}}1
+    autocmd BufWritePost .vimrc call s:VimrcSupport()
 augroup END
 
 " vim: set foldmethod=marker :

@@ -18,9 +18,7 @@ endfunction
 
 augroup vrc_docbook_files
     autocmd!
-    " call support function                                            {{{1
     autocmd FileType docbk call s:DocbookSupport()
-                                                                     " }}}1
 augroup END
 
 " vim: set foldmethod=marker :

@@ -20,7 +20,9 @@ function! s:MarkdownSupport()
     " add system dictionary to word completions                        {{{1
     setlocal complete+=k
     " vim omnicompletion                                               {{{1
-    setlocal omnifunc=htmlcomplete#CompleteTags                      " }}}1
+    if has('vim')
+        setlocal omnifunc=htmlcomplete#CompleteTags
+    endif                                                            " }}}1
 endfunction
 
 augroup vrc_markdown_files
@@ -33,7 +35,6 @@ augroup vrc_markdown_files
     if exists('*DNU_LoadTemplate')
         autocmd BufNewFile *.md call DNU_LoadTemplate('markdown')
     endif                                                            " }}}1
-
 augroup END
 
 " vim: set foldmethod=marker :

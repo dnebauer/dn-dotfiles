@@ -1,14 +1,24 @@
 " Vim configuration: tex file support
 
-" Completion for deoplete (nvim)
-let g:deoplete#omni#input_patterns
-            \ = get(g:, 'g:deoplete#omni#input_patterns', {})
-let g:deoplete#omni#input_patterns.tex = '\v\\%('
-            \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-            \ . '|\a*ref%(\s*\{[^}]*|range\s*\{[^,}]*%(}\{)?)'
-            \ . '|hyperref\s*\[[^]]*'
-            \ . '|includegraphics\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-            \ . '|%(include%(only)?|input)\s*\{[^}]*'
-            \ . ')'
+function! s:TexSupport()
+    " nvim completion using deoplete                                   {{{1
+    if has('nvim')
+        if !exists('g:deoplete#omni#input_patterns')
+            let g:deoplete#omni#input_patterns = {}
+        endif
+        let g:deoplete#omni#input_patterns.tex = '\v\\%('
+                    \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+                    \ . '|\a*ref%(\s*\{[^}]*|range\s*\{[^,}]*%(}\{)?)'
+                    \ . '|hyperref\s*\[[^]]*'
+                    \ . '|includegraphics\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+                    \ . '|%(include%(only)?|input)\s*\{[^}]*'
+                    \ . ')'
+    endif
+endfunction
+
+augroup vrc_tex_files
+    autocmd!
+    autocmd FileType tex,context call a:TexSupport()
+augroup END
 
 " vim: set foldmethod=marker :

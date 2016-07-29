@@ -89,9 +89,7 @@ endfunction
 
 augroup vrc_go_files
     autocmd!
-    " call support function                                            {{{1
     autocmd FileType go call s:GoSupport()
-                                                                     " }}}1
 augroup END
 
 " vim: set foldmethod=marker :
