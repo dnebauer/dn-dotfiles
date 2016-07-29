@@ -39,9 +39,7 @@ endfunction
 inoremap <silent> <CR> <C-r>=<SID>VrcCrFunction()<CR>
 " - <C-l>: complete common mapping
 inoremap <expr><C-l> neocomplete#complete_common_string()
-" - <Tab>: completion
-inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-" - <C-h>, <BS>: close popup and delete backword char
+" - <Tab>: see tab.vim
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 " - <C-g>: undo completion

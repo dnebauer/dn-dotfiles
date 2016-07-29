@@ -11,7 +11,7 @@ function! s:TabComplete()
     if neosnippet#expandable_or_jumpable()
         return "\<Plug>(neosnippet_expand_or_jump)"
     endif
-    " if none of these match just use regular tab
+    " if no previous option worked, just use regular tab
     return "\<Tab>"
 endfunction
 inoremap <silent><expr><Tab> <SID>TabComplete()
@@ -22,7 +22,7 @@ function! s:ShiftTabComplete()
     if pumvisible()
         return "\<C-p>"
     endif
-    " if not just use regular shift-tab
+    " if no previous option worked, just use regular shift-tab
     return "\<S-Tab>"
 endfunction
 inoremap <silent><expr><S-Tab> <SID>ShiftTabComplete()
