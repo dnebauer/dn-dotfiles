@@ -498,9 +498,17 @@ call dein#add('scrooloose/syntastic', {
             \ })
 " - neomake : asynchronous syntax checker for nvim                     {{{3
 "   TODO: setup language checkers
+let s:neomake_hook_source = join([
+            \ 'augroup vrc_neomake',
+            \ 'autocmd!',
+            \ 'autocmd BufWritePost,BufEnter * Neomake',
+            \ 'augroup END',
+            \ ], "\n")
 call dein#add('neomake/neomake', {
-            \ 'if'     : 'has("nvim")',
-            \ 'on_cmd' : ['Neomake'],
+            \ 'if'               : 'has("nvim")',
+            \ 'on_cmd'           : ['Neomake'],
+            \ 'hook_source'      : s:neomake_hook_source,
+            \ 'hook_post_update' : 'pip install --upgrade vim-vint',
             \ })
 " bundles: tags                                                        {{{2
 " - misc : plugin library used by other scripts                        {{{3
