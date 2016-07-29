@@ -1,6 +1,6 @@
 " Vim configuration: vim (and vimrc) file support
 
-function! VrcVimSupport()
+function! s:VimSupport()
     " syntax checker: set syntastic to use 'vint'                      {{{1
     " - ensure it is installed
     let l:check_cmd = 'python -c "import vint"'
@@ -35,9 +35,7 @@ endfunction
 
 augroup vrc_vim_files
     autocmd!
-    " call support function                                            {{{1
-    autocmd FileType vim call VrcVimSupport()
-                                                                     " }}}1
+    autocmd FileType vim call s:VimSupport()
     " reload after changing                                            {{{1
     autocmd BufWritePost .vimrc source $HOME/.vimrc
                                                                      " }}}1

@@ -1,6 +1,6 @@
 " Vim configuration: php file support
 
-function! VrcPHPSupport()
+function! s:PHPSupport()
     " tagbar support                                                   {{{1
     " - from https://github.com/vim-php/tagbar-phpctags.vim
     let l:bin = VrcPluginsDir()
@@ -13,9 +13,7 @@ endfunction
 
 augroup vrc_php_files
     autocmd!
-    " call support function                                            {{{1
-    autocmd FileType php call VrcPHPSupport()
-                                                                     " }}}1
+    autocmd FileType php call s:PHPSupport()
 augroup END
 
 " vim: set foldmethod=marker :

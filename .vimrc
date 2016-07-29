@@ -589,6 +589,11 @@ call dein#add('rstacruz/sparkup', {
 call dein#add('mattn/emmet-vim', {
             \ 'on_ft' : ['html', 'css'],
             \ })
+" bundles: java support                                                {{{2
+" - javacomplete2 - completion                                         {{{3
+call dein#add('artur-shaik/vim-javacomplete2', {
+            \ 'on_ft' : ['java'],
+            \ })
 " bundles: javascript support                                          {{{2
 " - tern + jcstags : javascript tag generator                          {{{3
 " - jsctags install details                                            {{{4

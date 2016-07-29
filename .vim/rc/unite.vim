@@ -6,9 +6,9 @@ nmap , [unite]
 " - configure: settings                                                {{{1
 augroup vrc_unite_settings
     autocmd!
-    autocmd FileType unite call s:Unite_Settings()
+    autocmd FileType unite call s:UniteSettings()
 augroup END
-function! s:Unite_Settings()
+function! s:UniteSettings()
     " exit with Esc
     nmap <buffer> <ESC>  <Plug>(unite_exit)
     " supertab integration

@@ -1,6 +1,6 @@
 " Vim configuration: haskell file support
 
-function! VrcHaskellSupport()
+function! s:HaskellSupport()
     " tagbar support                                                   {{{1
     " - from https://github.com/majutsushi/tagbar/wiki
     if executable('hasktags')
@@ -31,7 +31,7 @@ endfunction
 augroup vrc_haskell_files
     autocmd!
     " call support function                                            {{{1
-    autocmd FileType haskell call VrcHaskellSupport()
+    autocmd FileType haskell call s:HaskellSupport()
                                                                      " }}}1
 augroup END
 

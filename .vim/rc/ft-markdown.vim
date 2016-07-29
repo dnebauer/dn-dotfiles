@@ -1,6 +1,6 @@
 " Vim configuration: markdown file support
 
-function! VrcMarkdownSupport()
+function! s:MarkdownSupport()
     " tagbar support                                                   {{{1
     " - from https://github.com/majutsushi/tagbar/wiki
     let l:bin = VrcPluginsDir()
@@ -16,14 +16,16 @@ function! VrcMarkdownSupport()
                     \ 'kind2scope' : {'s' : 'section'},
                     \ 'sort'       : 0,
                     \ }
-    endif                                                            " }}}1
+    endif
+    " add system dictionary to word completions                        {{{1
+    setlocal complete+=k
+    " vim omnicompletion                                               {{{1
+    setlocal omnifunc=htmlcomplete#CompleteTags                      " }}}1
 endfunction
 
 augroup vrc_markdown_files
     autocmd!
-    " call support function                                            {{{1
-    autocmd FileType markdown call VrcMarkdownSupport()
-                                                                     " }}}1
+    autocmd FileType markdown call s:MarkdownSupport()
     " template file                                                    {{{1
     if exists('*DNU_InsertTemplate')
         autocmd BufRead *.md call DNU_InsertTemplate('markdown')
@@ -31,13 +33,7 @@ augroup vrc_markdown_files
     if exists('*DNU_LoadTemplate')
         autocmd BufNewFile *.md call DNU_LoadTemplate('markdown')
     endif                                                            " }}}1
-    " add system dictionary to word completions                        {{{1
-    autocmd FileType markdown setlocal complete+=k
-                                                                     " }}}1
-    " omni completion                                                  {{{1
-    autocmd FileType markdown setlocal
-                \ omnifunc=htmlcomplete#CompleteTags
-                                                                     " }}}1
+
 augroup END
 
 " vim: set foldmethod=marker :

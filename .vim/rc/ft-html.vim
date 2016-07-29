@@ -3,9 +3,6 @@
 augroup vrc_html_files
     autocmd!
 
-    " call support function                                            {{{1
-    autocmd FileType html call VrcHtmlSupport()
-
     " template file                                                    {{{1
     if exists('*DNU_InsertTemplate')
         autocmd BufRead *.html call DNU_InsertTemplate('html')

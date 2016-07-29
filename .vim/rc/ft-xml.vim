@@ -1,19 +1,17 @@
 " Vim configuration: xml file support
 
-function! VrcXMLSupport()
+function! s:XMLSupport()
     " fold by syntax                                                   {{{1
-    setlocal foldmethod=syntax                                       " }}}1
+    setlocal foldmethod=syntax
+    " vim omnicompletion                                               {{{1
+    if has('vim')
+        setlocal omnifunc=xmlcomplete#CompleteTags
+    endif                                                            " }}}1
 endfunction
 
 augroup vrc_xml_files
     autocmd!
-    " call support function                                            {{{1
-    autocmd FileType xml call VrcXMLSupport()
-                                                                     " }}}1
-    " omni completion                                                  {{{1
-    autocmd FileType xml setlocal
-                \ omnifunc=xmlcomplete#CompleteTags
-                                                                     " }}}1
+    autocmd FileType xml call s:XMLSupport()
 augroup END
 
 " vim: set foldmethod=marker :

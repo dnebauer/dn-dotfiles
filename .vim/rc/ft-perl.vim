@@ -23,9 +23,7 @@ endfunction
 
 augroup vrc_perl_files
     autocmd!
-    " call support function                                            {{{1
     autocmd FileType perl call VrcPerlSupport()
-                                                                     " }}}1
     " template file                                                    {{{1
     if exists('*DNU_InsertTemplate')
         autocmd BufRead *.pl call DNU_InsertTemplate('perlscript')

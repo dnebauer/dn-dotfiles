@@ -1,6 +1,6 @@
 " Vim configuration: go file support
 
-function! VrcGoSupport()
+function! s:GoSupport()
     " tagbar support                                                   {{{1
     " - from https://github.com/majutsushi/tagbar/wiki
     if executable('go')
@@ -90,7 +90,7 @@ endfunction
 augroup vrc_go_files
     autocmd!
     " call support function                                            {{{1
-    autocmd FileType go call VrcGoSupport()
+    autocmd FileType go call s:GoSupport()
                                                                      " }}}1
 augroup END
 

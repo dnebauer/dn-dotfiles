@@ -1,6 +1,6 @@
 " Vim configuration: makefile support
 
-function! VrcMakefileSupport()
+function! s:MakefileSupport()
     " tagbar support                                                   {{{1
     " - from https://github.com/majutsushi/tagbar/wiki
     " - also edited ~/.ctags to contain 't:target' regex definition:
@@ -12,9 +12,7 @@ endfunction
 
 augroup vrc_make_files
     autocmd!
-    " call support function                                            {{{1
-    autocmd FileType make call VrcMakefileSupport()
-                                                                     " }}}1
+    autocmd FileType make call s:MakefileSupport()
 augroup END
 
 " vim: set foldmethod=marker :

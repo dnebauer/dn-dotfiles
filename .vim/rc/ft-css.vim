@@ -14,7 +14,7 @@ if has('nvim')
     let g:deoplete#omni#input_patterns
                 \ = get(g:, 'deoplete#omni#input_patterns', {})
     let g:deoplete#omni#input_patterns.css
-                    \ = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
+                \ = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
 endif                                                                " }}}1
 
 " vim: set foldmethod=marker :

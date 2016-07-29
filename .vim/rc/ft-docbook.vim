@@ -1,6 +1,6 @@
 " Vim configuration: docbook file support
 
-function! VrcDocbookSupport()
+function! s:DocbookSupport()
     " fold by syntax                                                   {{{1
     setlocal foldmethod=syntax                                       " }}}1
     " syntax checking                                                  {{{1
@@ -19,7 +19,7 @@ endfunction
 augroup vrc_docbook_files
     autocmd!
     " call support function                                            {{{1
-    autocmd FileType docbk call VrcDocbookSupport()
+    autocmd FileType docbk call s:DocbookSupport()
                                                                      " }}}1
 augroup END
 
