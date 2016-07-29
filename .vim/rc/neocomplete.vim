@@ -34,8 +34,6 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 " Key mappings                                                         {{{1
 " - <CR>: close popup and save indent
 function! s:VrcCrFunction()
-    "return neocomplete#close_popup() . "\<CR>"
-    "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
     return pumvisible() ? neocomplete#close_popup() : "\<CR>"
 endfunction
 inoremap <silent> <CR> <C-r>=<SID>VrcCrFunction()<CR>
@@ -48,9 +46,6 @@ inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 " - <C-g>: undo completion
 inoremap <expr><C-g> neocomplete#undo_completion()
-" - superseded mappings
-"inoremap <expr><C-y>  neocomplete#close_popup()
-"inoremap <expr><C-e>  neocomplete#cancel_popup()
 
 " Sources                                                              {{{1
 if !exists('g:neocomplete#sources')
