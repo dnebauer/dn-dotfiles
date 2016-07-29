@@ -507,7 +507,6 @@ let s:neomake_hook_source = join([
 call dein#add('neomake/neomake', {
             \ 'if'               : 'has("nvim")',
             \ 'on_cmd'           : ['Neomake'],
-            \ 'hook_source'      : s:neomake_hook_source,
             \ 'hook_post_update' : 'pip install --upgrade vim-vint',
             \ })
 " bundles: tags                                                        {{{2

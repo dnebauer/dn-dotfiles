@@ -1,6 +1,6 @@
 " Vim configuration: tab behaviour
 
-" Tab behaviour                                                        {{{3
+" Tab behaviour                                                        {{{1
 function! s:TabComplete()
     " is completion menu open? cycle to next item
     if pumvisible()
@@ -16,7 +16,7 @@ function! s:TabComplete()
 endfunction
 inoremap <silent><expr><Tab> <SID>TabComplete()
 
-" Shift-Tab behaviour                                                  {{{3
+" Shift-Tab behaviour                                                  {{{1
 function! s:ShiftTabComplete()
     " is completion menu open? cycle to previous item
     if pumvisible()
@@ -26,5 +26,6 @@ function! s:ShiftTabComplete()
     return "\<S-Tab>"
 endfunction
 inoremap <silent><expr><S-Tab> <SID>ShiftTabComplete()
+                                                                     " }}}1
 
 " vim: set foldmethod=marker :

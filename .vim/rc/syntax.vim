@@ -1,24 +1,38 @@
 " Vim configuration: syntax checking
 
-" Status line                                                          {{{1
-if !exists('s:edited_statusline')
-    set statusline+=%#warningmsg#
-    set statusline+=%{SyntasticStatuslineFlag()}
-    set statusline+=%*
+" Vim syntax checking with syntastic                                   {{{1
+if has('vim')
+    " - status line                                                    {{{2
+    if !exists('s:edited_statusline')
+        set statusline+=%#warningmsg#
+        set statusline+=%{SyntasticStatuslineFlag()}
+        set statusline+=%*
+    endif
+    let s:edited_statusline = 1
+
+    " - location list                                                  {{{2
+    "   . always fill location list with found errors
+    let g:syntastic_always_populate_loc_list = 1
+
+    " - error window                                                   {{{2
+    "   . always display error window when errors are detected
+    let g:syntastic_auto_loc_list = 1
+
+    " - when to check                                                  {{{2
+    "   . check for errors on opening, closing and quitting
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_check_on_wq = 0
 endif
-let s:edited_statusline = 1                                          " }}}1
 
-" Location list                                                        {{{1
-" - always fill location list with found errors
-let g:syntastic_always_populate_loc_list = 1
-
-" Error window                                                         {{{1
-" - always display error window when errors are detected
-let g:syntastic_auto_loc_list = 1
-
-" When to check                                                        {{{1
-" - check for errors on opening, closing and quitting
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0                                      " }}}1
+" Nvim suntax checking with neomake                                    {{{1
+if has('nvim')
+    augroup vrc_neomake
+        autocmd!
+        " check on entering and writing buffer
+        autocmd BufEnter * Neomake
+        " check on text changes ("lint-as-you-type")
+        autocmd InsertLeave,TextChanged * update | Neomake
+    augroup END
+endif
 
 " vim: set foldmethod=marker :

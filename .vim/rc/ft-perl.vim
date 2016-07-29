@@ -1,6 +1,6 @@
 " Vim configuration: perl file support
 
-function! VrcPerlSupport()
+function! s:PerlSupport()
     " tagbar support                                                   {{{1
     " - from https://github.com/majutsushi/tagbar/wiki
     " - based on ctags settings in ctags config file
@@ -23,7 +23,7 @@ endfunction
 
 augroup vrc_perl_files
     autocmd!
-    autocmd FileType perl call VrcPerlSupport()
+    autocmd FileType perl call s:PerlSupport()
     " template file                                                    {{{1
     if exists('*DNU_InsertTemplate')
         autocmd BufRead *.pl call DNU_InsertTemplate('perlscript')
