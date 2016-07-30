@@ -25,15 +25,6 @@ endfunction
 augroup vrc_perl_files
     autocmd!
     autocmd FileType perl call s:PerlSupport()
-    " template file                                                    {{{1
-    if exists('*DNU_InsertTemplate')
-        autocmd BufRead *.pl call DNU_InsertTemplate('perlscript')
-        autocmd BufRead *.pm call DNU_InsertTemplate('perlmod')
-    endif
-    if exists('*DNU_LoadTemplate')
-        autocmd BufNewFile *.pl call DNU_LoadTemplate('perlscript')
-        autocmd BufNewFile *.pm call DNU_LoadTemplate('perlmod')
-    endif                                                            " }}}1
 augroup END
 
 " vim: set foldmethod=marker :

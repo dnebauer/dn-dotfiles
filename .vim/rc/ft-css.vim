@@ -1,12 +1,11 @@
 " Vim configuration: css file support
 
 " vim-specific                                                         {{{1
-function! s:VimCssSupport()
-    " omnicompletion for neocomplete (vim)                             {{{2
-    setlocal omnifunc=csscomplete#CompleteCSS                        " }}}2
-endfunction
-
 if has('vim')
+    function! s:VimCssSupport()
+        " omnicompletion for neocomplete (vim)                         {{{2
+        setlocal omnifunc=csscomplete#CompleteCSS                    " }}}2
+    endfunction
     augroup vrc_css_files
         autocmd!
         autocmd FileType css call s:VimCssSupport()

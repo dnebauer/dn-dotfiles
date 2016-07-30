@@ -276,6 +276,9 @@ call dein#add('hewes/unite-gtags', {
 call dein#add('ujihisa/unite-font')
 " - colorscheme : unite helper - colorscheme selector                  {{{3
 call dein#add('ujihisa/unite-colorscheme')
+" bundles: templates                                                   {{{2
+" - template : file templates                                          {{{3
+call dein#add('hotoo/template.vim')
 " bundles: internet                                                    {{{2
 " - vim-g : google lookup                                              {{{3
 call dein#add('szw/vim-g', {

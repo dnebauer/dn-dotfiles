@@ -28,13 +28,6 @@ endfunction
 augroup vrc_markdown_files
     autocmd!
     autocmd FileType markdown call s:MarkdownSupport()
-    " template file                                                    {{{1
-    if exists('*DNU_InsertTemplate')
-        autocmd BufRead *.md call DNU_InsertTemplate('markdown')
-    endif
-    if exists('*DNU_LoadTemplate')
-        autocmd BufNewFile *.md call DNU_LoadTemplate('markdown')
-    endif                                                            " }}}1
 augroup END
 
 " vim: set foldmethod=marker :

@@ -9,13 +9,6 @@ endfunction
 
 augroup vrc_html_files
     autocmd!
-    " template file                                                    {{{1
-    if exists('*DNU_InsertTemplate')
-        autocmd BufRead *.html call DNU_InsertTemplate('html')
-    endif
-    if exists('*DNU_LoadTemplate')
-        autocmd BufNewFile *.html call DNU_LoadTemplate('html')
-    endif                                                            " }}}1
     autocmd FileType html call s:HtmlSupport()
 augroup END
 

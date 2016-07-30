@@ -13,7 +13,7 @@ function! s:TexSupport()
                     \ . '|includegraphics\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
                     \ . '|%(include%(only)?|input)\s*\{[^}]*'
                     \ . ')'
-    endif
+    endif                                                            " }}}1
 endfunction
 
 augroup vrc_tex_files
