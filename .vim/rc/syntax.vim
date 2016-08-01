@@ -26,12 +26,18 @@ endif
 
 " Nvim suntax checking with neomake                                    {{{1
 if has('nvim')
+    function! s:LintAsYouType()
+        if strlen(bufname('%')) > 0
+            update
+        endif
+        Neomake
+    endfunction
     augroup vrc_neomake
         autocmd!
         " check on entering and writing buffer
         autocmd BufEnter * Neomake
         " check on text changes ("lint-as-you-type")
-        autocmd InsertLeave,TextChanged * update | Neomake
+        autocmd InsertLeave,TextChanged * call s:LintAsYouType()
     augroup END
 endif
 
