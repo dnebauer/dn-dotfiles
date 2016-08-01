@@ -34,6 +34,9 @@ function! VrcVimPath(target)
     " dein plugin directory root
     elseif a:target ==# 'plug'
         return expand('~/.cache/dein')
+    " error
+    else
+        echoerr "Invalid path target '" . a:target . "'"
     endif
 endfunction                                                          " }}}2
 
