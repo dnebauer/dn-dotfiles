@@ -10,6 +10,7 @@ let g:deoplete#enable_smart_case  = 1
 
 " Close parentheses automatically                                      {{{1
 let g:neopairs#enable = 1
+call deoplete#custom#set('_', 'converters', ['converter_auto_paren'])
 
 " Keywords                                                             {{{1
 " - default
@@ -68,9 +69,11 @@ let g:deoplete#omni#input_patterns
             \ = get(g:,'deoplete#omni#input_patterns',{})
 
 " Sources                                                              {{{1
-" - default
-let g:deoplete#sources   = get(g:, 'deoplete#sources', {})
-let g:deoplete#sources._ = ['buffer', 'tag']
+" - make sure to include neosnippet
+if !exists('g:deoplete#sources')
+    let g:deoplete#sources = {}
+endif
+let g:deoplete#sources._ = ['buffer', 'tag', 'neosnippet']
 
 " Filetype-specific completion                                         {{{1
 " - see ft-filetype.vim configuration files                            }}}1
