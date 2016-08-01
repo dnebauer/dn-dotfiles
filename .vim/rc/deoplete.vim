@@ -10,16 +10,24 @@ let g:deoplete#enable_smart_case  = 1
 
 " Close parentheses automatically                                      {{{1
 let g:neopairs#enable = 1
-call deoplete#custom#set('_', 'converters', ['converter_auto_paren'])
+
+" Converters                                                           {{{1
+call deoplete#custom#set('_', 'converters', [
+            \ 'converter_auto_paren',     'converter_remove_paren',
+            \ 'converter_remove_overlap', 'converter_truncate_abbr',
+            \ 'converter_truncate_menu',  'converter_auto_delimiter',
+            \ ])
 
 " Keywords                                                             {{{1
 " - default
-let g:deoplete#keyword_patterns
-            \ = get(g:, 'deoplete#keyword_patterns', {})
+if !exists('g:deoplete#keyword_patterns')
+    let g:deoplete#keyword_patterns = {}
+endif
 if empty(g:deoplete#keyword_patterns)
             \ && exists('g:deoplete#_keyword_patterns')
     let g:deoplete#keyword_patterns = g:deoplete#_keyword_patterns
 endif
+let g:deoplete#keyword_patterns._ = '[a-zA-Z_]\k*\(?'
 
 " Key mappings                                                         {{{1
 " - <Tab>: see tab.vim                                                 {{{2
@@ -69,11 +77,12 @@ let g:deoplete#omni#input_patterns
             \ = get(g:,'deoplete#omni#input_patterns',{})
 
 " Sources                                                              {{{1
-" - make sure to include neosnippet
 if !exists('g:deoplete#sources')
     let g:deoplete#sources = {}
 endif
-let g:deoplete#sources._ = ['buffer', 'tag', 'neosnippet']
+" - load all sources (including neosnippets) except tags
+let g:deoplete#sources._ = []  " all sources
+let g:deoplete#ignore_sources = {'_': ['tag']}
 
 " Filetype-specific completion                                         {{{1
 " - see ft-filetype.vim configuration files                            }}}1
