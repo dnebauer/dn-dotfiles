@@ -35,9 +35,9 @@ endfunction                                                          " }}}2
 " using github.com/shougo/dein.vim
 " dein requirements                                                    {{{2
 " - required tools: rsync, git                                         {{{3
-for app in ['rsync', 'git']
-    if ! executable(app)
-        echoerr "plugin handler 'dein' can't find '" . app . "'"
+for s:app in ['rsync', 'git']
+    if ! executable(s:app)
+        echoerr "plugin handler 'dein' can't find '" . s:app . "'"
         echoerr 'aborting vim configuration file execution'
         finish
     endif
@@ -788,8 +788,8 @@ if dein#check_install()
 endif
 
 " SUBSIDIARY CONFIGURATION FILES:                                    " {{{1
-for conf_file in glob(VrcVimHome() . '/rc/*.vim', 0, 1)
-    execute 'source' conf_file
+for s:conf_file in glob(VrcVimHome() . '/rc/*.vim', 0, 1)
+    execute 'source' s:conf_file
 endfor
 
 " FINAL CONFIGURATION:                                                 {{{1
