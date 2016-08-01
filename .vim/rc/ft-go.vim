@@ -82,7 +82,7 @@ function! s:GoSupport()
                 \ 'mode'              : 'active',
                 \ 'passive_filetypes' : ['go']
                 \ }
-    " ensure command output is displayed                               {{{2
+    " - ensure command output is displayed                             {{{2
     let g:go_list_type = 'quickfix'
                                                                      " }}}1
 endfunction
