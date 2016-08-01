@@ -1,14 +1,14 @@
 " Vim configuration: snippets
 
 " Select snippets set                                                  {{{1
-" - use honza snippets (installs to vim-snippets/snippets)
+" -disable default neosnippet-snippets
 let g:neosnippet#disable_runtime_snippets = { '_' : 1 }
+" - use honza snippets (installs to vim-snippets/snippets)
 if !exists('g:neosnippet#snippets_directory')
     let g:neosnippet#snippets_directory = []
 endif
 let s:honza = VrcVimPath('plug')
             \ . '/repos/github.com/honza/vim-snippets'
-
 if !count(g:neosnippet#snippets_directory, s:honza)
     call add(g:neosnippet#snippets_directory, s:honza)
 endif
