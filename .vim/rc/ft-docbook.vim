@@ -19,7 +19,7 @@ function! s:DocbookSupport()
         let g:neosnippet#snippets_directory = []
     endif
     let l:repo = VrcVimPath('plug')
-                \ . '/repos/github.com/jhradilek/vim-snippets'
+                \ . '/repos/github.com/jhradilek/vim-snippets/snippets'
     if !count(g:neosnippet#snippets_directory, l:repo)
         call add(g:neosnippet#snippets_directory, l:repo)
     endif                                                            " }}}1
