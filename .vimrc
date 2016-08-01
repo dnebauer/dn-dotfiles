@@ -138,6 +138,9 @@ call dein#add('shougo/context_filetype.vim', {
 call dein#add('rbgrouleff/bclose.vim', {
             \ 'on_source' : ['ranger.vim'],
             \ })
+" - fastfold : reduce frequency of folding                             {{{3
+"   . required by neocomplete
+call dein#add('konfekt/fastfold')
 " bundles: shell integration                                           {{{2
 " - vimshell : shell emulation                                         {{{3
 call dein#add('shougo/vimshell.vim', {
