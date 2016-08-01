@@ -77,6 +77,6 @@ function! VrcAddThesaurus(thesaurus)
         echoerr "Cannot find thesaurus file '" . a:thesaurus . "'"
     endif
 endfunction                                                          " }}}2
-call VrcAddThesaurus(VrcVimHome() . '/thes/moby.thes')               " }}}1
+call VrcAddThesaurus(VrcVimPath('home') . '/thes/moby.thes')         " }}}1
 
 " vim: set foldmethod=marker :

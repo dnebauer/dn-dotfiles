@@ -8,7 +8,8 @@ if exists('g:neosnippet#snippets_directory')
 endif
 let g:neosnippet#snippets_directory = []
 call add(g:neosnippet#snippets_directory,
-            \ VrcVimHome() . '/repos/github.com/vim-snippets/snippets')
+            \ VrcVimPath('home') .
+            \ '/repos/github.com/vim-snippets/snippets')
 
 " Key mappings                                                         {{{1
 " - <C-k>: expand or jump to next placeholder                          {{{2

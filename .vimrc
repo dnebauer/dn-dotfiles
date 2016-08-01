@@ -14,20 +14,23 @@ function! VrcOS()
         return 'other'
     endif
 endfunction                                                          " }}}2
-" function VrcVimHome()                                                {{{2
-" intent: determine vim home directory
+" function VrcVimPath()                                                {{{2
+" intent: provide vim-related paths
 " params: nil
 " prints: nil
 " return: string (directory path)
-function! VrcVimHome()
-    let l:os   = VrcOS()
-    let l:home = escape($HOME, ' ')
-    if     l:os ==# 'windows'
-        return l:home . '/vimfiles'
-    elseif l:os ==# 'unix'
-        return l:home . '/.vim'
-    else
-        return l:home . '/.vim'
+function! VrcVimPath(target)
+    " vim home directory
+    if   a:target ==# 'home'
+        let l:os   = VrcOS()
+        let l:home = escape($HOME, ' ')
+        if     l:os ==# 'windows'
+            return l:home . '/vimfiles'
+        elseif l:os ==# 'unix'
+            return l:home . '/.vim'
+        else
+            return l:home . '/.vim'
+        endif
     endif
 endfunction                                                          " }}}2
 
@@ -788,7 +791,7 @@ if dein#check_install()
 endif
 
 " SUBSIDIARY CONFIGURATION FILES:                                    " {{{1
-for s:conf_file in glob(VrcVimHome() . '/rc/*.vim', 0, 1)
+for s:conf_file in glob(VrcVimPath('home') . '/rc/*.vim', 0, 1)
     execute 'source' s:conf_file
 endfor
 
