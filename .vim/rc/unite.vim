@@ -20,6 +20,7 @@ endfunction
 " - ,b : source = buffers                                             {{{1
 nnoremap <silent> [unite]b :<C-u>Unite
             \ -buffer-name=buffers
+            \ -quick-match
             \ buffer<CR>
 " - ,B : source = bibtex references                                   {{{1
 nnoremap <silent> [unite]B :call <SID>Unite_BibTeX()<CR>
