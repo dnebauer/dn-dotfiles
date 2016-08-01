@@ -14,6 +14,9 @@ if isdirectory(s:clang_header)
     let g:deoplete#sources#clang#clang_header = s:clang_header
 else
     echoerr 'ft-clang.vim: unable to locate ' . s:clang_header
-endif                                                                " }}}1
+endif
+
+" libclang default compile flags                                       {{{1
+let g:deoplete#sources#clang#flags = ['-x', 'c++', '-std=c++11']     " }}}1
 
 " vim: set foldmethod=marker :
