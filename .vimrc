@@ -178,6 +178,11 @@ call dein#add('rkitover/vimpager', {
             \ 'if'     : 'has("unix")',
             \ 'on_cmd' : ['Page'],
             \ })
+" - iron : read-val-print loop (REPL)                                  {{{3
+call dein#add('hkupty/iron.nvim', {
+            \ 'if'     : 'has("nvim")',
+            \ 'on_cmd' : ['IronRepl', 'IronPromptRepl'],
+            \ })
 " bundles: editing                                                     {{{2
 " - unimpaired : various paired mappings                               {{{3
 call dein#add('tpope/vim-unimpaired', {
