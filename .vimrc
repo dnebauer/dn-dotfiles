@@ -699,6 +699,19 @@ call dein#add('lervag/vimtex', {
 call dein#add('dnebauer/vim-dn-latex', {
             \ 'on_ft' : ['tex','latex'],
             \ })
+" bundles: lua support                                                 {{{2
+" - ftplugin : lua support                                             {{{3
+call dein#add('xolox/vim-lua-ftplugin', {
+            \ 'on_ft' : ['lua'],
+            \ })
+" - luainspect : semantic highlighting                                 {{{3
+call dein#add('xolox/vim-lua-inspect', {
+            \ 'on_ft' : ['lua'],
+            \ })
+" - manual : language support                                          {{{3
+call dein#add('indiefun/vim-lua-manual', {
+            \ 'on_ft' : ['lua'],
+            \ })
 " bundles: markdown support                                            {{{2
 " - markdown2ctags : tag generator                                     {{{3
 call dein#add('jszakmeister/markdown2ctags', {
