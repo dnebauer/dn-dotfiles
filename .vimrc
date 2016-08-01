@@ -592,17 +592,6 @@ call dein#add('zchee/deoplete-go', {
             \ 'on_source' : ['vim-go'],
             \ 'build'     : 'make',
             \ })
-" - gocode : autocompletion daemon for go                              {{{3
-call dein#add('nsf/gocode', {
-            \ 'if'        : 'has("nvim")',
-            \ 'on_source' : ['vim-go'],
-            \ 'rtp'       : 'nvim',
-            \ })
-call dein#add('nsf/gocode', {
-            \ 'if'        : 'has("vim")',
-            \ 'on_source' : ['vim-go'],
-            \ 'rtp'       : 'vim',
-            \ })
 
 " bundles: html support                                                {{{2
 " - html5 : html5 support                                              {{{3
