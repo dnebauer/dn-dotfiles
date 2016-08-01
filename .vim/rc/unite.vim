@@ -17,12 +17,12 @@ function! s:UniteSettings()
     setlocal noswapfile
     setlocal undolevels=-1
 endfunction
-" - ,b : source = buffers                                             {{{1
+" - ,b : source = buffers                                              {{{1
 nnoremap <silent> [unite]b :<C-u>Unite
             \ -buffer-name=buffers
             \ -quick-match
             \ buffer<CR>
-" - ,B : source = bibtex references                                   {{{1
+" - ,B : source = bibtex references                                    {{{1
 nnoremap <silent> [unite]B :call <SID>Unite_BibTeX()<CR>
 function! s:Unite_BibTeX()
     " pybtex is a prerequisite
@@ -70,19 +70,19 @@ function! s:Unite_BibTeX()
     " run unite
     Unite -buffer-name=bibtex bibtex
 endfunction
-" - ,c : source = command history                                    {{{1
+" - ,c : source = command history                                      {{{1
 nnoremap [unite]c :<C-u>Unite
             \ -buffer-name=commands
             \ history/command<CR>
-" - ,f : source = file search                                         {{{1
+" - ,f : source = file search                                          {{{1
 nnoremap <silent> [unite]f :<C-u>Unite
             \ -buffer-name=files
             \ file_rec/async:!<CR>
-" - ,F : source = recent files                                        {{{1
+" - ,F : source = recent files                                         {{{1
 nnoremap <silent> ,F :<C-u>Unite
             \ -buffer-name=recent
             \ file_mru<CR>
-" - ,g : source = grep files                                          {{{1
+" - ,g : source = grep files                                           {{{1
 " set grep command and options                                         {{{2
 function! s:SetGrepOptions()
     " possible utilities to use:
@@ -135,42 +135,42 @@ call s:SetGrepOptions()                                              " }}}2
 nnoremap <silent> ,g :<C-u>Unite
             \ -buffer-name=grep
             \ grep<CR>
-" - ,h : source = help on word under cursor                           {{{1
+" - ,h : source = help on word under cursor                            {{{1
 nnoremap <silent> [unite]h :<C-u>UniteWithCursorWord
             \ -buffer-name=help
             \ help<CR>
-" - ,H : source = help on entered word                                {{{1
+" - ,H : source = help on entered word                                 {{{1
 nnoremap <silent> [unite]H :<C-u>Unite
             \ -buffer-name=help
             \ help<CR>
-" - ,m : source = mappings                                            {{{1
+" - ,m : source = mappings                                             {{{1
 nnoremap <silent> [unite]m :<C-u>Unite
             \ -buffer-name=mappings
             \ mapping<CR>
-" - ,o : source = outline                                             {{{1
+" - ,o : source = outline                                              {{{1
 nnoremap <silent> [unite]o :<C-u>Unite
             \ -buffer-name=outline
             \ outline<CR>
-" - ,r : source = register                                            {{{1
+" - ,r : source = register                                             {{{1
 nnoremap <silent> [unite]r :<C-u>Unite
             \ -buffer-name=registers
             \ -quick-match
             \ register<CR>
-" - ,s : source = search history                                      {{{1
+" - ,s : source = search history                                       {{{1
 nnoremap <silent> [unite]s :<C-u>Unite
             \ -buffer-name=search
             \ history/search<CR>
-" - ,t : source = tags                                                {{{1
+" - ,t : source = tags                                                 {{{1
 nnoremap <silent> [unite]t :<C-u>Unite
             \ -buffer-name=tags
             \ tag:%<CR>
-" - ,u : source = [blank]                                             {{{1
+" - ,u : source = [blank]                                              {{{1
 nnoremap [unite]u :<C-u>Unite
-" - ,U : source = unicode                                             {{{1
+" - ,U : source = unicode                                              {{{1
 nnoremap <silent> [unite]U :<C-u>Unite
             \ -buffer-name=unicode
             \ unicode<CR>
-" - ,y : source = yank history                                        {{{1
+" - ,y : source = yank history                                         {{{1
 let g:unite_source_history_yank_enable = 1
 nnoremap <silent> [unite]y :<C-u>Unite
             \ -buffer-name=yank
