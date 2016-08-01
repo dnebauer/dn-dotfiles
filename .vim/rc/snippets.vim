@@ -3,13 +3,15 @@
 " Select snippets set                                                  {{{1
 " - use honza snippets (installs to vim-snippets/snippets)
 let g:neosnippet#disable_runtime_snippets = { '_' : 1 }
-if exists('g:neosnippet#snippets_directory')
-    unlet g:neosnippet#snippets_directory
+if !exists('g:neosnippet#snippets_directory')
+    let g:neosnippet#snippets_directory = []
 endif
-let g:neosnippet#snippets_directory = []
-call add(g:neosnippet#snippets_directory,
-            \ VrcVimPath('home') .
-            \ '/repos/github.com/vim-snippets/snippets')
+let s:honza = VrcVimPath('plug')
+            \ . '/repos/github.com/honza/vim-snippets'
+
+if !count(g:neosnippet#snippets_directory, s:honza)
+    call add(g:neosnippet#snippets_directory, s:honza)
+endif
 
 " Key mappings                                                         {{{1
 " - <C-k>: expand or jump to next placeholder                          {{{2
