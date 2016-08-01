@@ -21,7 +21,7 @@ endfunction                                                          " }}}2
 " return: string (directory path)
 function! VrcVimPath(target)
     " vim home directory
-    if   a:target ==# 'home'
+    if     a:target ==# 'home'
         let l:os   = VrcOS()
         let l:home = escape($HOME, ' ')
         if     l:os ==# 'windows'
@@ -31,6 +31,9 @@ function! VrcVimPath(target)
         else
             return l:home . '/.vim'
         endif
+    " dein plugin directory root
+    elseif a:target ==# 'plug'
+        return expand('~/.cache/dein')
     endif
 endfunction                                                          " }}}2
 
@@ -64,7 +67,7 @@ endif
 "   . in vim : call dein#update()
 "   . shell  : vim "+call dein#update()" +qall
 " set plugin directories                                               {{{2
-let s:plugins_dir = expand('~/.cache/dein')
+let s:plugins_dir = VrcVimPath('plug')
 function! VrcPluginsDir()
     return s:plugins_dir
 endfunction
