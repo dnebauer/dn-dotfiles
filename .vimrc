@@ -561,14 +561,15 @@ call dein#add('zchee/deoplete-clang', {
             \ 'depends' : ['deoplete.nvim'],
             \ })
 " bundles: docbook support                                             {{{2
-" - jhradilek/vim-snippets : NOT installed using dein                  {{{3
-"   . because its default location clashes with honza/vim-snippets
-"   . instead installed to custom location by ftplugin vim-dn-docbk
-" - docbk : docbook support                                            {{{3
+" - snippets : docbook5 snippets                                       {{{3
+call dein#add('jhradilek/vim-snippets', {
+            \ 'on_ft' : ['docbk'],
+            \ })
+" - docbk : docbook5 support                                           {{{3
 call dein#add('jhradilek/vim-docbk', {
             \ 'on_ft' : ['docbk'],
             \ })
-" - dn-docbk : docbook support                                         {{{3
+" - dn-docbk : docbook5 support                                        {{{3
 call dein#add('dnebauer/vim-dn-docbk', {
             \ 'on_ft' : ['docbk'],
             \ })

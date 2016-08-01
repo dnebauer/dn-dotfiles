@@ -2,7 +2,7 @@
 
 function! s:DocbookSupport()
     " fold by syntax                                                   {{{1
-    setlocal foldmethod=syntax                                       " }}}1
+    setlocal foldmethod=syntax
     " syntax checking                                                  {{{1
     " - used by vim-dn-docbk ftplugin
     let g:dn_docbk_relaxng_schema =
@@ -13,6 +13,15 @@ function! s:DocbookSupport()
     if VrcOS() ==# 'unix'
         let g:dn_docbook_xml_catalog
                     \ = $HOME . '/.config/docbk/catalog.xml'
+    endif
+    " snippets                                                         {{{1
+    if !exists('g:neosnippet#snippets_directory')
+        let g:neosnippet#snippets_directory = []
+    endif
+    let l:repo = VrcVimPath('path')
+                \ . '/repos/github.com/jhradilek/vim-snippets'
+    if !count(g:neosnippet#snippets_directory, l:repo)
+        call add(g:neosnippet#snippets_directory, l:repo)
     endif                                                            " }}}1
 endfunction
 
