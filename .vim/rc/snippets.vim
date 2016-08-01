@@ -13,6 +13,9 @@ if !count(g:neosnippet#snippets_directory, s:honza)
     call add(g:neosnippet#snippets_directory, s:honza)
 endif
 
+" Snipmate compatability                                               {{{1
+let g:neosnippet#enable_snipmate_compatibility = 1
+
 " Key mappings                                                         {{{1
 " - <C-k>: expand or jump to next placeholder                          {{{2
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
