@@ -1,11 +1,15 @@
 " Vim configuration: basic settings
 
 " Encoding: utf-8                                                      {{{1
-" - cannot be set in neovim after initialisation
-"   see (https://github.com/carlhuda/janus/issues/633)
-if !has('nvim')
+" - cannot set in neovim after initialisation
+"   see https://github.com/carlhuda/janus/issues/633
+" - should not reset after being set
+if !exists('g:encoding_set') || !has('nvim')
     set encoding=utf-8
+    let g:encoding_set = 1
 endif
+scriptencoding utf-8
+setglobal fileencoding=utf-8
 
 " Language: Australian English                                         {{{1
 " - fallback to UK English, then US English, then generic English
