@@ -1,24 +1,23 @@
 " Vim configuration: editing
 
 " Clipboard                                                            {{{1
-" - all yanked, deleted, changed and pasted text is
-"   put into the system clipboard and can be pasted
-"   into another vim instance using a vim paste
-"   ('unnamed')
-" - any visually selected text in vim, or globally-
-"   selected text in the windowing system, can be
-"   pasted in any vim instance using the windowing
-"   system's mechanism; and vice versa in that
-"   visually selected text in vim can be pasted into
-"   any other application in the windowing system;
-"   in X that means any mouse-selected text in any
-"   application can be pasted into vim using a
-"   mousewheel click or a vim paste, and vice versa
-"   ('autoselect')
-if !has('nvim')
-    set clipboard=unnamed,autoselect
+" - PRIMARY X11 selection
+"   . vim visual selection (y,d,p,c,s,x, middle mouse button)
+"   . used in writing "* register
+"   CLIPBOARD X11 selection
+"   . X11 cut, copy, paste (Ctrl-c, Ctrl-v)
+"   . used in writing "+ register
+"   unnamed option
+"   . use "* register
+"   . available always in vim and nvim
+"   unnamedplus option
+"   . use "+ register
+"   . available always in nvim
+"   . available in vim is compiled in [has('unnamedplus')]
+set clipboard=unnamed,unnamedplus
+if has('vim') && !has('unnamedplus')
+    set clipboard-=unnamedplus
 endif
-
 " Toggle paste : F2                                               {{{1
 set pastetoggle=<F2>
 
