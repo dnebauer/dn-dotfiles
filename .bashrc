@@ -98,6 +98,10 @@ unset dir
 file="/usr/share/libdncommon-bash/liball"
 [ -f "${file}" ] && export DN_BASH_FNS="${file}"
 unset file
+# - GOPATH                                                             {{{2
+dir="/usr/local/lib/go"
+[ -d "${dir}" ] && export GOPATH="${dir}"
+unset dir
 # - JAVA_HOME                                                          {{{2
 #export JAVA_HOME=/usr/lib/fjsdk
 #export JAVA_HOME=/usr/local/java/j2sdk
@@ -142,6 +146,10 @@ unset dir
 dir="/usr/games"
 [ -d "${dir}" ] && PATH="${PATH}:${dir}"
 dir="/usr/local/games"
+[ -d "${dir}" ] && PATH="${PATH}:${dir}"
+unset dir
+#   + go                                                               {{{3
+dir="/usr/local/lib/go/bin"
 [ -d "${dir}" ] && PATH="${PATH}:${dir}"
 unset dir
 #   + hasktags                                                         {{{3
