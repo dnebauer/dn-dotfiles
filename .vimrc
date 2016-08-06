@@ -39,20 +39,18 @@ function! VrcVimPath(target)
         echoerr "Invalid path target '" . a:target . "'"
     endif
 endfunction
-let s:temp_path = tempname()
-let s:temp_dir  = fnamemodify(s:temp_path, ':p:h')
-let s:temp_file = fnamemodify(s:temp_path, ':p:t')
 " function VrcTemp()                                                   {{{2
 " intent: return path, name or directory of a temporary file
 " params: nil
 " prints: nil
 " return: string (path element)
 function! VrcTemp(part)
+    if !exists('s:temp_path') | let s:temp_path = tempname() | endif
     if     a:part ==# 'path' | return s:temp_path
     elseif a:part ==# 'dir'  | return fnamemodify(s:temp_path, ':p:h')
     elseif a:part ==# 'file' | return fnamemodify(s:temp_path, ':p:t')
     else
-        echoerr "Invalid VrcTemp param'" . a:part . "'"
+        echoerr "Invalid VrcTemp param '" . a:part . "'"
     endif
 endfunction                                                          " }}}2
 
