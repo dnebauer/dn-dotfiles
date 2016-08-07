@@ -209,6 +209,13 @@ PATH='/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/games'
 local_bin="${HOME}/.local/bin"
 [[ -d "${local_bin}" ]] && PATH="${local_bin}:${PATH}"
 unset local_bin
+# - go                                                                 {{{3
+go_dir="/usr/local/lib/go"
+[[ -d "${go_dir}" ]] && GOPATH="${go_dir}"
+unset go_dir
+go_bin="/usr/local/lib/bin"
+[[ -d "${go_bin}" ]] && Path="${PATH}:${go_bin}"
+unset go_bin
 # - haskell-installed binaries on cygwin                               {{{3
 hask_bin='/cygdrive/c/dtn/AppData/Roaming/cabal/bin'
 [[ -d "${hask_bin}" ]] && PATH="${PATH}:${hask_bin}"
