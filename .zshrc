@@ -272,23 +272,6 @@ export EDITOR='vim'
 export USE_EDITOR="$EDITOR"
 export VISUAL="$EDITOR"
 
-# Aliases                                                              {{{1
-# ls                                                                   {{{2
-alias ls='ls -l --almost-all --color=auto'
-# mp3info2 must use only tags, no deducing from file name              {{{2
-alias mp3info2='mp3info2 -C autoinfo=ID3v2,ID3v1'
-# reload zshrc                                                         {{{2
-alias reload=". ~/.zshrc && echo 'ZSH config reloaded from ~/.zshrc'"
-# dictionary and thesaurus                                             {{{2
-alias thes='dict -h localhost -d moby-thesaurus'
-# ag alias                                                             {{{2
-# - set automatically by oh-my-zsh
-# - remove alias if ag binary exists
-if [ -f '/usr/bin/ag' ] ; then
-    if [ $(alias 'ag' >/dev/null ; echo $?) -eq 0 ] ; then
-        unalias 'ag'
-    fi
-fi
                                                                      # }}}1
 
 # Oh My Zsh configuration
@@ -379,6 +362,25 @@ setopt interactive_comments
 export DISABLE_AUTO_TITLE='true'
                                                                      # }}}1
 
+# Aliases (must come last to override aliases set up by modules)
+
+# ls                                                                   {{{1
+alias ls='ls -l --almost-all --color=auto'
+# mp3info2 must use only tags, no deducing from file name              {{{1
+alias mp3info2='mp3info2 -C autoinfo=ID3v2,ID3v1'
+# reload zshrc                                                         {{{1
+alias reload=". ~/.zshrc && echo 'ZSH config reloaded from ~/.zshrc'"
+# dictionary and thesaurus                                             {{{1
+alias thes='dict -h localhost -d moby-thesaurus'
+# ag alias                                                             {{{1
+# - set automatically by oh-my-zsh
+# - remove alias if ag binary exists
+if [ -f '/usr/bin/ag' ] ; then
+    if [ $(alias 'ag' >/dev/null ; echo $?) -eq 0 ] ; then
+        unalias 'ag'
+    fi
+fi                                                                    # }}}1
+
 # Initial apps
 
 # Fortune                                                              {{{1
@@ -394,6 +396,6 @@ if which chuck_cow &>/dev/null ; then
     echo "${RED}Cow has a Chuck Norris fact:${RESET}"
     chuck_cow
     echo
-fi
+fi                                                                   # }}}1
 
 # vim:fdm=marker:
