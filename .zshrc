@@ -205,7 +205,27 @@ compctl -K _completebms unbm
 # paths                                                                {{{2
 # - base PATH                                                          {{{3
 PATH='/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/games'
-# - perl local::lib                                                    {{{3
+# - executables (local)                                                {{{3
+local_bin="${HOME}/.local/bin"
+[[ -d "${local_bin}" ]] && PATH="${local_bin}:${PATH}"
+unset local_bin
+# - haskell-installed binaries on cygwin                               {{{3
+hask_bin='/cygdrive/c/dtn/AppData/Roaming/cabal/bin'
+[[ -d "${hask_bin}" ]] && PATH="${PATH}:${hask_bin}"
+unset hask_bin
+# - node.js-installed binaries on cygwin                               {{{3
+node_js="/cygdrive/c/Program\ Files/nodejs"
+[[ -d "${node_js}" ]] && PATH="${PATH}:${node_js}"
+unset node_js
+# - npm-installedpps                                                   {{{3
+#   . in ~/.npmrc is configured with prefix of ~/.local
+npm_mod="${HOME}/.local/lib/node_modules"
+NODE_PATH="${NODE_PATH}${NODE_PATH+:}${npm_mod}"
+unset npm_mod
+npm_man="${HOME}/.local/share/man"
+manpath="${manpath}${manpath+:}${npm_man}"
+unset npm_man
+# - perl5 local::lib                                                   {{{3
 #   . 2016-03-13: discovered that PERL5LIB and PERL_LOCAL_LIB_ROOT
 #     are set to their desired values before reaching this point,
 #     so check value of vars before adding to them
@@ -223,34 +243,14 @@ unset perl5_root
 perl5_man="${HOME}/perl5/man"
 manpath="${perl5_man}${manpath+:}${manpath}"
 unset perl5_man
-# - node.js-installed binaries on cygwin                               {{{3
-node_js="/cygdrive/c/Program\ Files/nodejs"
-[[ -d "${node_js}" ]] && PATH="${PATH}:${node_js}"
-unset node_js
-# - haskell-installed binaries on cygwin                               {{{3
-hask_bin='/cygdrive/c/dtn/AppData/Roaming/cabal/bin'
-[[ -d "${hask_bin}" ]] && PATH="${PATH}:${hask_bin}"
-unset hask_bin
+# - perl6 rakudobrew                                                   {{{3
+rakudo_bin="${HOME}/.rakudobrew/bin"
+[[ -d "${rakudo_bin}" ]] && PATH="${rakudo_bin}:${PATH}"
+unset rakudo_bin
 # - wordnet                                                            {{{3
 PATH="${PATH}:${wordnet}/bin"
 WNHOME="${wordnet}"
 unset wordnet
-# - perl6/rakudobrew                                                   {{{3
-rakudo_bin="${HOME}/.rakudobrew/bin"
-[[ -d "${rakudo_bin}" ]] && PATH="${rakudo_bin}:${PATH}"
-unset rakudo_bin
-# - executables (local)                                                {{{3
-local_bin="${HOME}/.local/bin"
-[[ -d "${local_bin}" ]] && PATH="${local_bin}:${PATH}"
-unset local_bin
-# - npm-installedpps                                                   {{{3
-#   . in ~/.npmrc is configured with prefix of ~/.local
-npm_mod="${HOME}/.local/lib/node_modules"
-NODE_PATH="${NODE_PATH}${NODE_PATH+:}${npm_mod}"
-unset npm_mod
-npm_man="${HOME}/.local/share/man"
-manpath="${manpath}${manpath+:}${npm_man}"
-unset npm_man
 # - export paths                                                       {{{3
 export PATH
 export PERL5LIB
