@@ -214,7 +214,7 @@ go_dir="/usr/local/lib/go"
 [[ -d "${go_dir}" ]] && GOPATH="${go_dir}"
 unset go_dir
 go_bin="/usr/local/lib/go/bin"
-[[ -d "${go_bin}" ]] && Path="${PATH}:${go_bin}"
+[[ -d "${go_bin}" ]] && PATH="${PATH}:${go_bin}"
 unset go_bin
 # - haskell-installed binaries on cygwin                               {{{3
 hask_bin='/cygdrive/c/dtn/AppData/Roaming/cabal/bin'
